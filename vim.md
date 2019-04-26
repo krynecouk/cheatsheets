@@ -1,15 +1,14 @@
 Basics
 ------ 
 ```yml
-- i # insert
-- **a**(ppend)
-- **0**(~ move cursor to the beginning of the line)
-- **$**(~ move cursor to the end of the line) 
-- **r**(place)
-- **R**(place ~ insert mod)
-- **c**(hange) **e**(nd)
-- **c(hange) **$** (end of line)
-- **c(hange) **w**(ord)
+- i 		# insert
+- a 		# append
+- 0 		# move cursor to the beginning of the line
+- $ 		# move cursor to the end of the line 
+- r 		# replace
+- R 		# replace and insert mod
+- c$		# change from cursor to the end of line 
+- cw		# change word
 ```
 
 ## UNDO & REDO
