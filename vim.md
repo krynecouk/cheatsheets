@@ -1,7 +1,7 @@
-# VIM
-
-## BASICS 
-- **i**(nsert)
+Basics
+------ 
+```yml
+- i # insert
 - **a**(ppend)
 - **0**(~ move cursor to the beginning of the line)
 - **$**(~ move cursor to the end of the line) 
@@ -10,6 +10,7 @@
 - **c**(hange) **e**(nd)
 - **c(hange) **$** (end of line)
 - **c(hange) **w**(ord)
+```
 
 ## UNDO & REDO
 - **u**(ndo)
