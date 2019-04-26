@@ -5,19 +5,19 @@ Basics
 - a 		# append
 - 0 		# move cursor to the beginning of the line
 - $ 		# move cursor to the end of the line 
-- r 		# replace
-- R 		# replace and insert mod
-- c$		# change from cursor to the end of line 
-- cw		# change word
 ```
 
-## UNDO & REDO
-- **u**(ndo)
-- **U**(undo in line)
-- CTRL + **r**(edo)
+Undo & Redo
+-----------
+```yml
+- u		# undo
+- U		# undo line
+- ctrl + r	# redo
+```
 
-## JUMPS
-- **:jumps**
+`:jumps`
+-------
+```yml
 - ctrl + **o**(lder locations)
 - ctrl + **i** (newer locations)
 - 25ctrl + **o**(25th older location)
@@ -33,12 +33,15 @@ Basics
 - **H**(igh of window)
 - **M**(edium of window)
 - **L**(ow of window)
+```
 
 ## CHANGES
 - **:changes**
 - **g;**(o to previous change)
 - **g,**(o to next change) 
 - 4**g;**(o to 4th previous change)
+- c$		# change from cursor to the end of line 
+- cw		# change word
 
 ## MARKS
 - **:marks**
@@ -50,7 +53,8 @@ Basics
 - **d**(elete) **w**(ord)
 - **D**(elete from cursor to the end of line)
 - **d**(elete) **{** (end of paragraph)
-- **r**(eplace char)
+- r 		# replace
+- R 		# replace and insert mod
 - **x** (remove char)
 
 ## CUT, COPY, PASTE
