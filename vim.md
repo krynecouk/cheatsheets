@@ -53,6 +53,7 @@ Undo & Redo
 ```
 
 `:registers :reg`
+-----------------
 ```yml
 - "2p		# paste previously copied text
 ```
