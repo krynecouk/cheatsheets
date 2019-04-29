@@ -134,12 +134,15 @@ Search
 
 `:map`
 ------
+```yml
 - :map		# recursive mapping
 - :noremap 	# non-recursive mapping
 - :nmap		# resurcive mapping in normal mode
 - :nnoremap	# non-recursive mapping in normal mode
 - :vmap 	# recursive mapping in visual mode
 - :vnoremap	# non-recursive mapping in visual mode
+```
 
+``` yml
 - :nnoremap <Space> i_<Esc>r	# insert one char on space
-
+```
