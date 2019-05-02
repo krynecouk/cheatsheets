@@ -111,14 +111,18 @@ function bar() {
 		z: 6
 	};
 }
+```
 
+```js
 var [ a, b, c ] = foo();
 var { x: bam, y: baz, z: bap } = bar();
 
 console.log( a, b, c );			// 1 2 3
 console.log( bam, baz, bap );		// 4 5 6
 console.log( x, y, z );			// ReferenceError
+```
 
+```js
 var a, b, c, x, y, z;
 
 [a,b,c] = foo();
@@ -126,10 +130,54 @@ var a, b, c, x, y, z;
 
 console.log( a, b, c );			// 1 2 3
 console.log( x, y, z );			// 4 5 6
-
 ```
 
+```js
+var [,,c,d] = foo();
+var { w, z } = bar();
 
+console.log( c, z );			// 3 6
+console.log( d, w );			// undefined undefined
+```
+
+**TIP:** Think of it as a `<source>:<target>` pattern
+
+Nested Destructing
+------------------
+
+```js
+var App = {
+	model: {
+		User: function(){ .. }
+	}
+};
+
+var { model: { User } } = App;		// instead of var user = App.model.User
+```
+
+Parameters Destructing
+----------------------
+```js
+function foo( { x, y } ) {
+	console.log( x, y );
+}
+
+foo( { y: 1, x: 2 } );			// 2 1
+foo( { y: 42 } );			// undefined 42
+foo( {} );				// undefined undefined
+```
+
+Computed Property Names
+-----------------------
+```js
+var prefix = "user_";
+
+var o = {
+	baz: function(..){ .. }
+};
+
+o[ prefix + "foo" ] = function(..){ .. };
+```
 
 Sources
 ------
