@@ -179,6 +179,63 @@ var o = {
 o[ prefix + "foo" ] = function(..){ .. };
 ```
 
+Template Literals
+-----------------
+```js
+var name = 'Johnny'
+var hello = 
+`Hello
+${name}!`
+
+console.log( name ); // Hello Johnny!
+
+Tagged Template Literals
+------------------------
+```js
+function foo(strings, ...values) {
+	console.log( strings );
+	console.log( values );
+}
+
+var desc = "awesome";
+
+foo`Everything is ${desc}!`;
+// [ "Everything is ", "!"]
+// [ "awesome" ]
+```
+**TIP:**: Think of it as foo(`Everything is ${desc}!`) before interpolation.
+
+Arrow Functions
+---------------
+```js
+var foo = (x,y) => x + y;
+```
+
+`for..of` Loops
+---------------
+```js
+var a = ["a","b","c","d","e"];
+
+for (var idx in a) {
+	console.log( idx );
+}
+// 0 1 2 3 4
+
+for (var val of a) {
+	console.log( val );
+}
+// "a" "b" "c" "d" "e"
+```
+**TIP:** `for..in` loops keys, `for..of` loops values.
+
+Symbol
+------
+```js
+var sym = Symbol( "some optional description" );
+
+typeof sym;			// "symbol"
+```
+
 Sources
 ------
 [1]: [You Dont't Know JS: ES6 & Beyond](https://github.com/getify/You-Dont-Know-JS/blob/master/es6%20%26%20beyond/ch2.md)
