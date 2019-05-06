@@ -17,9 +17,29 @@ toLowerCase['C']; 							// 'c'
 First Class Functions
 ---------------------
 ```js
-httpGet('/post/2', (json, err) => renderPost(json, err));		// NOTOK
-httpGet('/post/2', renderPost);						// OK
+// NOTOK
+const split = (delimiter, what) => what.split(delimiter);
+const words = str => split(' ', str);
+console.log(words('foo bar'));						// ["foo", "bar"]
+// OK
+const split = (delimiter) => (what) => what.split(delimiter);
+const words = split(' ');
+console.log(words('foo bar'));						// ["foo", "bar"]
 ```
+
+Currying
+--------
+```js
+const match = s => what => what.match(s);
+const matchR = match(/r/g);
+
+console.log(matchR('tru'))    						// ["r"]
+```
+> Currying does exactly this: each single argument returns a new function expecting the remaining arguments.
+
+Composing
+---------
+
 
 Sources
 -------
