@@ -42,19 +42,23 @@ Composing
 > Composition feels like function husbandry. You, breeder of functions, select two with traits you'd like to combine and mash them together to spawn a brand new one.
 
 ```js
-const compose = (f, g) => x => f(g(x));					// double function compositions (not associative - right to left)
+// double function compositions (not associative - right to left)
+const compose = (f, g) => x => f(g(x));					
 ```
 
 ```js
-const compose = (...fns) => x => fns.reduceRight((y, f) => f(y), x);	// multiple function compositions (not associative - right to left)
+// multiple function compositions (not associative - right to left)
+const compose = (...fns) => x => fns.reduceRight((y, f) => f(y), x);
 ```
 
 ```js
-const pipe = (...fns) => x => fns.reduce((y, f) => f(y), x); 		// multiple function compositions (not associative - left to right)
+// multiple function compositions (not associative - left to right)
+const pipe = (...fns) => x => fns.reduce((y, f) => f(y), x); 	
 ```
 
 ```js
-const compose = (...fns) => (...args) => fns.reduceRight((res, fn) => [fn.call(null, ...res)], args)[0];	// multiple function compositions (associative)
+// multiple function compositions (associative)
+const compose = (...fns) => (...args) => fns.reduceRight((res, fn) => [fn.call(null, ...res)], args)[0];	
 ```
 
 ```js
@@ -65,6 +69,26 @@ const shout = compose(exclaim, toUpperCase);
 
 shout('send in the clowns'); // "SEND IN THE CLOWNS!"
 ```
+
+Pointfree
+---------
+> Functions that never mention the data upon which they operate.
+
+```js
+// not pointfree because we mention the data: word
+const snakeCase = word => word.toLowerCase().replace(/\s+/ig, '_');
+
+// pointfree
+const snakeCase = compose(replace(/\s+/ig, '_'), toLowerCase);
+```
+
+Category Theory
+---------------
+> collection with the following components:
+- A collection of objects 			// String, Boolean, Number, Object etc.
+- A collection of morphisms			// standard every day pure functions
+- A notion of composition on the morphisms 	// `compose`
+- A distinguished morphism called identity	// `const id = x => x;`
 
 Sources
 -------
