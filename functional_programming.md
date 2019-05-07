@@ -39,8 +39,34 @@ console.log(matchR('tru'))    						// ["r"]
 
 Composing
 ---------
+> Composition feels like function husbandry. You, breeder of functions, select two with traits you'd like to combine and mash them together to spawn a brand new one.
 
+```js
+const compose = (f, g) => x => f(g(x));					// double function compositions (not associative - right to left)
+```
+
+```js
+const compose = (...fns) => x => fns.reduceRight((y, f) => f(y), x);	// multiple function compositions (not associative - right to left)
+```
+
+```js
+const pipe = (...fns) => x => fns.reduce((y, f) => f(y), x); 		// multiple function compositions (not associative - left to right)
+```
+
+```js
+const compose = (...fns) => (...args) => fns.reduceRight((res, fn) => [fn.call(null, ...res)], args)[0];	// multiple function compositions (associative)
+```
+
+```js
+// example
+const toUpperCase = x => x.toUpperCase();
+const exclaim = x => `${x}!`;
+const shout = compose(exclaim, toUpperCase);
+
+shout('send in the clowns'); // "SEND IN THE CLOWNS!"
+```
 
 Sources
 -------
 [1]: [Mostly Adequate Guide to Functional Programming]e(https://mostly-adequate.gitbooks.io/mostly-adequate-guide/)
+[2]: [Curry and Function Composition](https://medium.com/javascript-scene/curry-and-function-composition-2c208d774983)
