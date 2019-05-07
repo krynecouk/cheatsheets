@@ -84,11 +84,13 @@ const snakeCase = compose(replace(/\s+/ig, '_'), toLowerCase);
 
 Category Theory
 ---------------
-> collection with the following components:
-- A collection of objects 			// String, Boolean, Number, Object etc.
-- A collection of morphisms			// standard every day pure functions
-- A notion of composition on the morphisms 	// `compose`
-- A distinguished morphism called identity	// `const id = x => x;`
+```yml
+collection with the following components:
+- A collection of objects 			# String, Boolean, Number, Object etc.
+- A collection of morphisms			# standard every day pure functions
+- A notion of composition on the morphisms 	# `compose`
+- A distinguished morphism called identity	# `const id = x => x;`
+```
 
 Sources
 -------
