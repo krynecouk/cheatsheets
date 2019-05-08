@@ -42,23 +42,18 @@ Composing
 > Composition feels like function husbandry. You, breeder of functions, select two with traits you'd like to combine and mash them together to spawn a brand new one.
 
 ```js
-// double function compositions (not associative - right to left)
+// double function composition (right to left)
 const compose = (f, g) => x => f(g(x));					
 ```
 
 ```js
-// multiple function compositions (not associative - right to left)
+// multiple function compositions (right to left)
 const compose = (...fns) => x => fns.reduceRight((y, f) => f(y), x);
 ```
 
 ```js
-// multiple function compositions (not associative - left to right)
+// multiple function compositions (left to right)
 const pipe = (...fns) => x => fns.reduce((y, f) => f(y), x); 	
-```
-
-```js
-// multiple function compositions (associative)
-const compose = (...fns) => (...args) => fns.reduceRight((res, fn) => [fn.call(null, ...res)], args)[0];	
 ```
 
 ```js
@@ -92,7 +87,9 @@ collection with the following components:
 - A distinguished morphism called identity	# `const id = x => x;`
 ```
 
+
 Sources
 -------
 [1]: [Mostly Adequate Guide to Functional Programming]e(https://mostly-adequate.gitbooks.io/mostly-adequate-guide/)
 [2]: [Curry and Function Composition](https://medium.com/javascript-scene/curry-and-function-composition-2c208d774983)
+[3]: [ES Fiddle](https://esfiddle.net)
