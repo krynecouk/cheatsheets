@@ -111,6 +111,64 @@ const reduce = curry((f, x, xs) => xs.reduce(f, x));
 Narrowing the Possibility
 -------------------------
 > `parametricity` property states that a function will act on all types in a uniform manner.
+``` js
+// head :: [a] -> a
+```
+> `a` says it cannot be a specific type, which means it can be any type, which leaves us with a function that must work uniformly for every conceivable type.
+
+Free Theorem
+------------
+```js
+// head :: [a] -> a
+compose(f, head) === compose(head, map(f));
+
+// filter :: (a -> Bool) -> [a] -> [a]
+compose(map(f), filter(compose(p, f))) === compose(filter(p), map(f));
+```
+
+Constraints
+-----------
+```js
+// sort :: Ord a => [a] -> [a]
+// assertEqual :: (Eq a, Show a) => a -> a -> Assertion
+// then :: Promise p => (a -> b) -> p a -> p b
+const then = curry((f, anyPromise) => anyPromise.then(f));
+```
+
+Functor
+--------
+```js
+class Container {
+  constructor(x) {
+    this.$value = x;
+  }
+
+  static of(x) {
+    return new Container(x);
+  }
+}
+```
+
+```js
+// (a -> b) -> Container a -> Container b
+Container.prototype.map = function (f) {
+  return Container.of(f(this.$value));
+};
+```
+
+```js
+Container.of(2).map(two => two + 2); 
+// Container(4)
+
+Container.of('flamethrowers').map(s => s.toUpperCase()); 
+// Container('FLAMETHROWERS')
+
+Container.of('bombs').map(append(' away')).map(prop('length')); 
+// Container(10)
+```
+>A Functor is a type that implements map and obeys some laws (simply an interface with a contract ~ Mappable)
+
+
 
 Sources
 -------
@@ -119,3 +177,4 @@ Sources
 [3]: [ES Fiddle](https://esfiddle.net)
 [4]: [So You Still Don't Understand Hindley-Milner](http://akgupta.ca/blog/2013/05/14/so-you-still-dont-understand-hindley-milner/)
 [5]: [Hindley-Milner StackOverflow](https://stackoverflow.com/questions/12532552/what-part-of-hindley-milner-do-you-not-understand)
+[6]: [Wadler's paper](https://ttic.uchicago.edu/~dreyer/course/papers/wadler.pdf)
