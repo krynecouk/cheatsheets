@@ -65,6 +65,12 @@ const shout = compose(exclaim, toUpperCase);
 shout('send in the clowns'); // "SEND IN THE CLOWNS!"
 ```
 
+Map's composition law
+---------------------
+```js
+compose(map(f), map(g)) === map(compose(f, g));
+```
+
 Pointfree
 ---------
 > Functions that never mention the data upon which they operate.
@@ -87,9 +93,29 @@ collection with the following components:
 - A distinguished morphism called identity	# `const id = x => x;`
 ```
 
+Hindley-Milner
+--------------
+```js
+// head :: [a] -> a
+const head = xs => xs[0];
+
+// filter :: (a -> Bool) -> [a] -> [a]
+const filter = curry((f, xs) => xs.filter(f));
+
+// reduce :: (b -> a -> b) -> b -> [a] -> b
+const reduce = curry((f, x, xs) => xs.reduce(f, x));
+
+```
+> `a -> b` can be any type `a` to any type `b`, but `a -> a` means it has to be the same type. For example, `id` may be `String -> String` or `Number -> Number`, but not `String -> Bool`.
+
+Narrowing the Possibility
+-------------------------
+> `parametricity` property states that a function will act on all types in a uniform manner.
 
 Sources
 -------
 [1]: [Mostly Adequate Guide to Functional Programming]e(https://mostly-adequate.gitbooks.io/mostly-adequate-guide/)
 [2]: [Curry and Function Composition](https://medium.com/javascript-scene/curry-and-function-composition-2c208d774983)
 [3]: [ES Fiddle](https://esfiddle.net)
+[4]: [So You Still Don't Understand Hindley-Milner](http://akgupta.ca/blog/2013/05/14/so-you-still-dont-understand-hindley-milner/)
+[5]: [Hindley-Milner StackOverflow](https://stackoverflow.com/questions/12532552/what-part-of-hindley-milner-do-you-not-understand)
