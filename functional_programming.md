@@ -168,7 +168,68 @@ Container.of('bombs').map(append(' away')).map(prop('length'));
 ```
 >A Functor is a type that implements map and obeys some laws (simply an interface with a contract ~ Mappable)
 
+Maybe Container
+---------------
+```js
+class Maybe {
+  static of(x) {
+    return new Maybe(x);
+  }
 
+  get isNothing() {
+    return this.$value === null || this.$value === undefined;
+  }
+
+  constructor(x) {
+    this.$value = x;
+  }
+
+  map(fn) {
+    return this.isNothing ? this : Maybe.of(fn(this.$value));
+  }
+
+  inspect() {
+    return this.isNothing ? 'Nothing' : `Just(${inspect(this.$value)})`;
+  }
+}
+```
+> Implementation will split Maybe into two types: one for something (`Some`) and the other for nothing (`None`).
+
+Either
+------
+```js
+class Either {
+  static of(x) {
+    return new Right(x);
+  }
+
+  constructor(x) {
+    this.$value = x;
+  }
+}
+
+class Left extends Either {
+  map(f) {
+    return this;
+  }
+
+  inspect() {
+    return `Left(${inspect(this.$value)})`;
+  }
+}
+
+class Right extends Either {
+  map(f) {
+    return Either.of(f(this.$value));
+  }
+
+  inspect() {
+    return `Right(${inspect(this.$value)})`;
+  }
+}
+
+const left = x => new Left(x);
+```
 
 Sources
 -------
