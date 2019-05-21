@@ -168,7 +168,7 @@ Container.of('bombs').map(append(' away')).map(prop('length'));
 ```
 >A Functor is a type that implements map and obeys some laws (simply an interface with a contract ~ Mappable)
 
-Maybe Container
+Maybe 
 ---------------
 ```js
 class Maybe {
@@ -233,7 +233,7 @@ const left = x => new Left(x);
 
 Sources
 -------
-[1]: [Mostly Adequate Guide to Functional Programming]e(https://mostly-adequate.gitbooks.io/mostly-adequate-guide/)
+[1]: [Mostly Adequate Guide to Functional Programming](https://mostly-adequate.gitbooks.io/mostly-adequate-guide/)
 [2]: [Curry and Function Composition](https://medium.com/javascript-scene/curry-and-function-composition-2c208d774983)
 [3]: [ES Fiddle](https://esfiddle.net)
 [4]: [So You Still Don't Understand Hindley-Milner](http://akgupta.ca/blog/2013/05/14/so-you-still-dont-understand-hindley-milner/)
