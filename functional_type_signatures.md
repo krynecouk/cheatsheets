@@ -103,6 +103,21 @@ Lens s a = Functor f => (a -> f a) -> s -> f s
 ```
 > This tells us that the type `Lens` is parameterized by two generic variables, `s`, and `a`. We know that there is a constraint on the type of the `f` variable used in a `Lens`: it must be a `Functor`. With that in mind, we see that a `Lens` is a curried function of two parameters, the first being a function from a value of the generic type a to one of the parameterized type `f a`, and the second being a value of generic type `s`. The result is a value of the parameterized type `f s`. But what does it do? We don't know. We can't know. Our type signatures tell us a great deal about a function, but they don't answer questions about what a function actually does. We can assume that somewhere the map method of `f a` must be called, since that is the only function defined by the type `Functor`, but we don't know how or why that map is called. Still, we know that a `Lens` is a function as described, and we can use that to guide our understanding of over.
 
+```js
+const headLens = R.lensIndex(0);
+R.over(headLens, R.toUpper, ['foo', 'bar', 'baz']); //=> ['FOO', 'bar', 'baz']
+```
+> Returns the result of "setting" the portion of the given data structure focused by the given lens to the result of applying the given function to the focused value.
+
+```js
+const headLens = R.lensIndex(0);
+
+R.view(headLens, ['a', 'b', 'c']);            //=> 'a'
+R.set(headLens, 'x', ['a', 'b', 'c']);        //=> ['x', 'b', 'c']
+R.over(headLens, R.toUpper, ['a', 'b', 'c']); //=> ['A', 'b', 'c']
+```
+> Returns a lens whose focus is the specified index.
+
 Sources
 -------
 [1]: [Ramda type signatures](https://github.com/ramda/ramda/wiki/Type-Signatures)
