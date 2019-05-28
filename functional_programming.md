@@ -93,6 +93,22 @@ collection with the following components:
 - A distinguished morphism called identity	# `const id = x => x;`
 ```
 
+Example
+=======
+```yml
+The category Set has "objects," which are sets, and "morphisms" or "arrows," which are functions between the sets.  
+It has a few other interesting properties, notably:
+- If there's a function 𝑓 from some set 𝐴 to some set 𝐵, and there's also a function 𝑔:𝐵→𝐶, then there's a function 𝑔∘𝑓:𝐴→𝐶.
+- Composition is associative: for functions 𝑓:𝐴→𝐵, 𝑔:𝐵→𝐶, and ℎ:𝐶→𝐷, we have that ℎ∘(𝑔∘𝑓)=(ℎ∘𝑔)∘𝑓.
+- For every set 𝐵, there's a special function 1𝐵:𝐵→𝐵, which is the identity for function composition; that is, 1𝐵∘𝑓=𝑓 and 𝑔∘1𝐵=𝑔.
+```
+
+Functor
+-------
+> A Functor is a type that implements map and obeys some laws (simply an interface with a contract ~ Mappable)
+
+> Functor is a map between categories.
+
 Hindley-Milner
 --------------
 ```js
@@ -126,17 +142,16 @@ compose(f, head) === compose(head, map(f));
 compose(map(f), filter(compose(p, f))) === compose(filter(p), map(f));
 ```
 
-Constraints
------------
-```js
-// sort :: Ord a => [a] -> [a]
-// assertEqual :: (Eq a, Show a) => a -> a -> Assertion
-// then :: Promise p => (a -> b) -> p a -> p b
-const then = curry((f, anyPromise) => anyPromise.then(f));
-```
 
+Theory
+------
+ads
+
+Appendix A: Examples
+--------------------
 Functor
---------
+=======
+
 ```js
 class Container {
   constructor(x) {
@@ -166,10 +181,9 @@ Container.of('flamethrowers').map(s => s.toUpperCase());
 Container.of('bombs').map(append(' away')).map(prop('length')); 
 // Container(10)
 ```
->A Functor is a type that implements map and obeys some laws (simply an interface with a contract ~ Mappable)
 
 Maybe 
----------------
+=====
 ```js
 class Maybe {
   static of(x) {
@@ -196,7 +210,7 @@ class Maybe {
 > Implementation will split Maybe into two types: one for something (`Some`) and the other for nothing (`None`).
 
 Either
-------
+======
 ```js
 class Either {
   static of(x) {
@@ -212,23 +226,80 @@ class Left extends Either {
   map(f) {
     return this;
   }
-
-  inspect() {
-    return `Left(${inspect(this.$value)})`;
-  }
 }
 
 class Right extends Either {
   map(f) {
     return Either.of(f(this.$value));
   }
-
-  inspect() {
-    return `Right(${inspect(this.$value)})`;
-  }
 }
 
 const left = x => new Left(x);
+```
+
+IO
+==
+```js
+class IO {
+  static of(x) {
+    return new IO(() => x);
+  }
+
+  constructor(fn) {
+    this.$value = fn;
+  }
+
+  map(fn) {
+    return new IO(compose(fn, this.$value));
+  }
+}
+```
+
+```js
+// url :: IO String
+const url = new IO(() => window.location.href);
+
+// toPairs :: String -> [[String]]
+const toPairs = compose(map(split('=')), split('&'));
+
+// params :: String -> [[String]]
+const params = compose(toPairs, last, split('?'));
+
+// findParam :: String -> IO Maybe [String]
+const findParam = key => map(compose(Maybe.of, filter(compose(eq(key), head)), params), url);
+
+// -- Impure calling code ----------------------------------------------
+
+// run it by calling $value()!
+findParam('searchTerm').$value();
+// Just([['searchTerm', 'wafflehouse']])
+```
+
+Asynchronous Tasks
+===================
+```js
+// getJSON :: String -> {} -> Task Error JSON
+const getJSON = curry((url, params) => new Task((reject, result) => {
+  $.getJSON(url, params, result).fail(reject);
+}));
+
+// blogPage :: Posts -> HTML
+const blogPage = Handlebars.compile(blogTemplate);
+
+// renderPage :: Posts -> HTML
+const renderPage = compose(blogPage, sortBy(prop('date')));
+
+// blog :: Params -> Task Error HTML
+const blog = compose(map(renderPage), getJSON('/posts'));
+
+
+// Impure 
+blog({}).fork(
+  error => $('#error').html(error.message),
+  page => $('#main').html(page),
+);
+
+$('#spinner').show();
 ```
 
 Sources
@@ -239,3 +310,6 @@ Sources
 [4]: [So You Still Don't Understand Hindley-Milner](http://akgupta.ca/blog/2013/05/14/so-you-still-dont-understand-hindley-milner/)
 [5]: [Hindley-Milner StackOverflow](https://stackoverflow.com/questions/12532552/what-part-of-hindley-milner-do-you-not-understand)
 [6]: [Wadler's paper](https://ttic.uchicago.edu/~dreyer/course/papers/wadler.pdf)
+[7]: [Folktale](https://folktale.origamitower.com)
+[8]: [Category Theory - Stanford Edu](https://plato.stanford.edu/entries/category-theory/)
+[9]: [Category Theory - Quora](https://www.quora.com/What-is-category-theory-23346)
