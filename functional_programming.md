@@ -1,5 +1,4 @@
-Function
---------
+## Function
 > A function is a special relationship between values: Each of its input values gives back exactly one output value.
 
 ```js
@@ -14,8 +13,7 @@ const toLowerCase = {
 toLowerCase['C']; 							// 'c'
 ```
 
-First Class Functions
----------------------
+## First Class Functions
 ```js
 // NOTOK
 const split = (delimiter, what) => what.split(delimiter);
@@ -27,8 +25,7 @@ const words = split(' ');
 console.log(words('foo bar'));						// ["foo", "bar"]
 ```
 
-Currying
---------
+## Currying
 ```js
 const match = s => what => what.match(s);
 const matchR = match(/r/g);
@@ -37,8 +34,7 @@ console.log(matchR('tru'))    						// ["r"]
 ```
 > Currying does exactly this: each single argument returns a new function expecting the remaining arguments.
 
-Composing
----------
+## Composing
 > Composition feels like function husbandry. You, breeder of functions, select two with traits you'd like to combine and mash them together to spawn a brand new one.
 
 ```js
@@ -65,14 +61,7 @@ const shout = compose(exclaim, toUpperCase);
 shout('send in the clowns'); // "SEND IN THE CLOWNS!"
 ```
 
-Map's composition law
----------------------
-```js
-compose(map(f), map(g)) === map(compose(f, g));
-```
-
-Pointfree
----------
+## Pointfree
 > Functions that never mention the data upon which they operate.
 
 ```js
@@ -83,8 +72,7 @@ const snakeCase = word => word.toLowerCase().replace(/\s+/ig, '_');
 const snakeCase = compose(replace(/\s+/ig, '_'), toLowerCase);
 ```
 
-Category Theory
----------------
+## Category Theory
 ```yml
 collection with the following components:
 - A collection of objects 			# String, Boolean, Number, Object etc.
@@ -93,8 +81,7 @@ collection with the following components:
 - A distinguished morphism called identity	# `const id = x => x;`
 ```
 
-Example
-=======
+### Example
 ```yml
 The category Set has "objects," which are sets, and "morphisms" or "arrows," which are functions between the sets.  
 It has a few other interesting properties, notably:
@@ -103,37 +90,12 @@ It has a few other interesting properties, notably:
 - For every set 𝐵, there's a special function 1𝐵:𝐵→𝐵, which is the identity for function composition; that is, 1𝐵∘𝑓=𝑓 and 𝑔∘1𝐵=𝑔.
 ```
 
-Functor
--------
+## Functor
 > A Functor is a type that implements map and obeys some laws (simply an interface with a contract ~ Mappable)
 
 > Functor is a map between categories.
 
-Hindley-Milner
---------------
-```js
-// head :: [a] -> a
-const head = xs => xs[0];
-
-// filter :: (a -> Bool) -> [a] -> [a]
-const filter = curry((f, xs) => xs.filter(f));
-
-// reduce :: (b -> a -> b) -> b -> [a] -> b
-const reduce = curry((f, x, xs) => xs.reduce(f, x));
-
-```
-> `a -> b` can be any type `a` to any type `b`, but `a -> a` means it has to be the same type. For example, `id` may be `String -> String` or `Number -> Number`, but not `String -> Bool`.
-
-Narrowing the Possibility
--------------------------
-> `parametricity` property states that a function will act on all types in a uniform manner.
-``` js
-// head :: [a] -> a
-```
-> `a` says it cannot be a specific type, which means it can be any type, which leaves us with a function that must work uniformly for every conceivable type.
-
-Free Theorem
-------------
+## Free Theorem
 ```js
 // head :: [a] -> a
 compose(f, head) === compose(head, map(f));
@@ -142,16 +104,8 @@ compose(f, head) === compose(head, map(f));
 compose(map(f), filter(compose(p, f))) === compose(filter(p), map(f));
 ```
 
-
-Theory
-------
-ads
-
-Appendix A: Examples
---------------------
-Functor
-=======
-
+## Appendix A: Examples
+### Functor
 ```js
 class Container {
   constructor(x) {
@@ -182,8 +136,7 @@ Container.of('bombs').map(append(' away')).map(prop('length'));
 // Container(10)
 ```
 
-Maybe 
-=====
+### Maybe 
 ```js
 class Maybe {
   static of(x) {
@@ -209,8 +162,7 @@ class Maybe {
 ```
 > Implementation will split Maybe into two types: one for something (`Some`) and the other for nothing (`None`).
 
-Either
-======
+### Either
 ```js
 class Either {
   static of(x) {
@@ -237,8 +189,7 @@ class Right extends Either {
 const left = x => new Left(x);
 ```
 
-IO
-==
+### IO
 ```js
 class IO {
   static of(x) {
@@ -275,8 +226,7 @@ findParam('searchTerm').$value();
 // Just([['searchTerm', 'wafflehouse']])
 ```
 
-Asynchronous Tasks
-===================
+### Asynchronous Tasks
 ```js
 // getJSON :: String -> {} -> Task Error JSON
 const getJSON = curry((url, params) => new Task((reject, result) => {
@@ -302,8 +252,7 @@ blog({}).fork(
 $('#spinner').show();
 ```
 
-Sources
--------
+## Sources
 [1]: [Mostly Adequate Guide to Functional Programming](https://mostly-adequate.gitbooks.io/mostly-adequate-guide/)
 [2]: [Curry and Function Composition](https://medium.com/javascript-scene/curry-and-function-composition-2c208d774983)
 [3]: [ES Fiddle](https://esfiddle.net)
