@@ -306,3 +306,4 @@ Maybe.prototype.join = function join() {
 [7]: [Folktale](https://folktale.origamitower.com)
 [8]: [Category Theory - Stanford Edu](https://plato.stanford.edu/entries/category-theory/)
 [9]: [Category Theory - Quora](https://www.quora.com/What-is-category-theory-23346)
+[10]: [Monads - Medium Article](https://medium.com/javascript-scene/javascript-monads-made-simple-7856be57bfe8)
