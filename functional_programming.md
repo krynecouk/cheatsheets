@@ -72,6 +72,11 @@ const snakeCase = word => word.toLowerCase().replace(/\s+/ig, '_');
 const snakeCase = compose(replace(/\s+/ig, '_'), toLowerCase);
 ```
 
+## Functor
+> A Functor is a type that implements `map` and obeys some laws (simply an interface with a contract ~ Mappable)
+
+> Functor is a map between categories.
+
 ## Category Theory
 ```yml
 collection with the following components:
@@ -90,10 +95,14 @@ It has a few other interesting properties, notably:
 - For every set 𝐵, there's a special function 1𝐵:𝐵→𝐵, which is the identity for function composition; that is, 1𝐵∘𝑓=𝑓 and 𝑔∘1𝐵=𝑔.
 ```
 
-## Functor
-> A Functor is a type that implements map and obeys some laws (simply an interface with a contract ~ Mappable)
+> It is a network of objects with morphisms that connect them. So a functor would map the one category to the other without breaking the network. 
 
-> Functor is a map between categories.
+```js
+const nested = Task.of([Either.of('pillows'), left('no sleep for you')]);
+
+map(map(map(toUpperCase)), nested);
+// Task([Right('PILLOWS'), Left('no sleep for you')])
+```
 
 ## Free Theorem
 ```js
@@ -102,6 +111,33 @@ compose(f, head) === compose(head, map(f));
 
 // filter :: (a -> Bool) -> [a] -> [a]
 compose(map(f), filter(compose(p, f))) === compose(filter(p), map(f));
+```
+
+## Pointed Functor
+> A Pointed Functor is a type that implements `of` and obeys some laws (simply an interface with a contract ~ Ofable?)
+
+> Serves to place values in what's called a default minimal context. 
+
+> Also called `pure`, `point`, `unit`, and `return`.
+
+## Monads
+> Monads are pointed functors that can flatten.
+
+> Any functor which defines a `join` method, has an `of` method, and obeys a few laws is a monad.
+
+```js
+// join :: Monad m => m (m a) -> m a
+const join = mma => mma.join();
+```
+
+### Law#1 associativity
+```js
+compose(join, map(join)) === compose(join, join);
+```
+
+### Law#2 identity
+```js
+compose(join, of) === compose(join, map(of)) === id;
 ```
 
 ## Appendix A: Examples
@@ -251,6 +287,14 @@ blog({}).fork(
 
 $('#spinner').show();
 ```
+
+### Maybe.join
+```js
+Maybe.prototype.join = function join() {
+  return this.isNothing() ? Maybe.of(null) : this.$value;
+};
+```
+
 
 ## Sources
 [1]: [Mostly Adequate Guide to Functional Programming](https://mostly-adequate.gitbooks.io/mostly-adequate-guide/)
