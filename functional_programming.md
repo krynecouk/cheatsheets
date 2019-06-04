@@ -121,6 +121,8 @@ compose(map(f), filter(compose(p, f))) === compose(filter(p), map(f));
 > Also called `pure`, `point`, `unit`, and `return`.
 
 ## Monads
+> Monads are pointed functors with `join` function. 
+
 > Monads are pointed functors that can flatten.
 
 > Any functor which defines a `join` method, has an `of` method, and obeys a few laws is a monad.
@@ -138,6 +140,22 @@ compose(join, map(join)) === compose(join, join);
 ### Law#2 identity
 ```js
 compose(join, of) === compose(join, map(of)) === id;
+```
+
+## Applicative Functors
+> An applicative functor is a pointed functor with an ap method.
+
+```js
+Container.prototype.ap = function (otherContainer) {
+  return otherContainer.map(this.$value);
+};
+```
+
+## LiftA2, LiftA3
+```js
+const liftA2 = curry((g, f1, f2) => f1.map(g).ap(f2));
+
+const liftA3 = curry((g, f1, f2, f3) => f1.map(g).ap(f2).ap(f3));
 ```
 
 ## Appendix A: Examples
@@ -293,6 +311,50 @@ $('#spinner').show();
 Maybe.prototype.join = function join() {
   return this.isNothing() ? Maybe.of(null) : this.$value;
 };
+```
+
+### Applying Functors
+```js
+Maybe.of(add).ap(Maybe.of(2)).ap(Maybe.of(3));
+// Maybe(5)
+
+Task.of(add).ap(Task.of(2)).ap(Task.of(3));
+// Task(5)
+```
+
+```js
+// Http.get :: String -> Task Error HTML
+
+const renderPage = curry((destinations, events) => { /* render page */ });
+
+Task.of(renderPage).ap(Http.get('/destinations')).ap(Http.get('/events'));
+// Task("<div>some page with dest and events</div>")
+```
+
+```js
+// $ :: String -> IO DOM
+const $ = selector => new IO(() => document.querySelector(selector));
+
+// getVal :: String -> IO String
+const getVal = compose(map(prop('value')), $);
+
+// signIn :: String -> String -> Bool -> User
+const signIn = curry((username, password, rememberMe) => { /* signing in */ });
+
+IO.of(signIn).ap(getVal('#email')).ap(getVal('#password')).ap(IO.of(false));
+// IO({ id: 3, email: 'gg@allin.com' })
+```
+
+### Lift
+```js
+liftA2(add, Maybe.of(2), Maybe.of(3));
+// Maybe(5)
+
+liftA2(renderPage, Http.get('/destinations'), Http.get('/events'));
+// Task('<div>some page with dest and events</div>')
+
+liftA3(signIn, getVal('#email'), getVal('#password'), IO.of(false));
+// IO({ id: 3, email: 'gg@allin.com' })
 ```
 
 
