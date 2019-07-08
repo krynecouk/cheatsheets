@@ -147,6 +147,63 @@ var StringBuilder.lastChar: Char
     }
 ```
 
+## `vararg` and spread 
+```kotlin
+fun listOf<T>(vararg values: T): List<T> { ... }
+```
+
+```kotlin
+fun main(args: Array<String>) {
+	val list = listOf("args: ", *args)
+	println(list)
+}
+```
+
+## `infix` functions
+```kotlin
+infix fun Any.to(other: Any) = Pair(this, other)
+
+val map = mapOf(1 to "one", 7 to "seven", 53 to "fifty-three")
+```
+
+## destructing variables
+```kotlin
+val (number, name) = 1 to "one"
+```
+
+## `interface`
+```kotlin
+interface Clickable {
+	fun click()
+	fun showOff() = println("I'm clickable!")
+}
+```
+> Like ordinary class but **without a state**.
+
+## `open class` and `open fun`
+```kotlin
+open class RichButton : Clickable {...}
+```
+```kolin
+open fun stopAnimating()
+```
+> In Kotlin, every class is `public final` by default. In order to be able to extend class, you have to mark  `open` class  and every function or property.
+
+## `internal class`
+```kotlin 
+internal class Foo {...}
+```
+> Visible only in the module.
+
+## `inner class`
+```kotlin
+class Outer {
+	inner class Inner {...}
+}
+```
+> In Kotlin, every nested class is `static` by default. In order to contain reference to the `Outer` class, you have to mark it `inner`. 
+
+## `sealed class`
 
 
 ## Sources
