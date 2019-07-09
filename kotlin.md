@@ -204,7 +204,62 @@ class Outer {
 > In Kotlin, every nested class is `static` by default. In order to contain reference to the `Outer` class, you have to mark it `inner`. 
 
 ## `sealed class`
+```kotlin
+sealed class Expr {
+	class Num(val value: Int) : Expr()
+	class Sum(val left: Expr, val right: Expr) : Expr()
+}
+```
+> All subclasses must be nested.
 
+## Constructor
+### Primary Constructor
+> Declared outside of the class body.
+
+```kotlin
+class User(val nickname: String)
+```
+```kotlin
+class TwitterUser(nickname: String) : User(nickname) { ... }
+```
+```kotlin
+class Secretive private constructor() {}
+```
+
+### Secondary Constructor
+> Declared in the class body.
+
+```kotlin
+class MyButton : View {
+	constructor(ctx: Context) : super(ctx) {...}
+}
+```
+
+## Interface properties
+```kotlin
+interface User {
+	val nickname: String
+}
+```
+> Classes implementing the `User` interface need to provide a way to obtain the value of nickname.
+
+```kotlin
+class PrivateUser(override val nickname: String) : User
+```
+
+```kotlin
+class SubscribingUser(val email: String) : User {
+    override val nickname: String
+        get() = email.substringBefore('@') )
+}
+```
+```kotlin
+class FacebookUser(val accountId: Int) : User {
+    override val nickname = getFacebookName(accountId)
+}
+```
+
+## Backing field
 
 ## Sources
 [1]: [Kotlin in Action](https://www.amazon.com/Kotlin-Action-Dmitry-Jemerov/dp/1617293296/ref=cm_cr_arp_d_product_top?ie=UTF8)
