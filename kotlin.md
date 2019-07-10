@@ -260,6 +260,21 @@ class FacebookUser(val accountId: Int) : User {
 ```
 
 ## Backing field
+```kotlin
+class User(val name: String) {
+	var address: String = "unspecified"
+		set(value: String) {
+			println("""$field" -> "$value".""")
+			field = value
+		}
+}
+```
+
+## `==` and `===`
+- `==` value comparison (`equals`)
+- `===` reference comparison 
+
+
 
 ## Sources
 [1]: [Kotlin in Action](https://www.amazon.com/Kotlin-Action-Dmitry-Jemerov/dp/1617293296/ref=cm_cr_arp_d_product_top?ie=UTF8)
