@@ -274,6 +274,60 @@ class User(val name: String) {
 - `==` value comparison (`equals`)
 - `===` reference comparison 
 
+## `data class`
+```kotlin
+data class Client(val name: String, val postalCode: Int)
+```
+> Automatically generates `equals`, `hashcode` and `toString` methods.
+
+## Delegation `by`
+``` kotlin
+class DelegatingCollection<T>(innerList: Collection<T> = ArrayList<T>()) : Collection<T> by innerList {}
+```
+> Decorator pattern without boilerplate.
+
+## `object`
+```kotlin
+object Payroll {
+    val allEmployees = arrayListOf<Person>()
+    fun calculateSalary() {
+        for (person in allEmployees) {
+            ...
+        }
+    }
+}
+```
+> Singleton object.
+
+## `companion object`
+```kotlin
+class User private constructor(val nickname: String) {
+    companion object {
+        fun newSubscribingUser(email: String) =
+                User(email.substringBefore('@'))
+
+        fun newFacebookUser(accountId: Int) =
+                User(getFacebookName(accountId))
+    }
+}
+```
+> Top level `fun` are recommended. But top-level functions can’t access private members of a class. Thus, if you need to write a function that can be called without having a class instance but needs access to the internals of a class, you can write it as a member of an object declaration inside that class.
+
+## `companion object` extension
+```kotlin
+class Person(val firstName: String, val lastName: String) { companion object {} }
+fun Person.Companion.fromJSON(json: String): Person {}
+val p = Person.fromJSON(json)
+```
+
+## anonymous `object`
+```kotlin
+window.addMouseListener(
+        object : MouseAdapter() {
+            override fun mouseClicked(e: MouseEvent) {}
+        }
+}
+``` 
 
 
 ## Sources
