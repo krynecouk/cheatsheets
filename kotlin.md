@@ -329,6 +329,142 @@ window.addMouseListener(
 }
 ``` 
 
+## lambdas
+```kotlin
+people.maxBy( {p: Person -> p.age } )
+people.maxBy { p: Person -> p.age }
+people.maxBy { p -> p.age }
+```
+
+> Kotlin allows to access non-final variables and modify them in a lambda (`captured` variable).
+
+## Member references
+```kotlin
+val getAge = Person::age
+```
+
+```kotlin
+fun salute() = println("Salute!")
+>>> run(::salute)
+```
+
+## Lazy collection operations: sequences
+```kotlin
+people.map(Person::name).filter { it.startsWith("A") }
+```
+> Eager collection -> creates intermediate collections after `map` and `filter` because every element is `mapped` and `filtered`.
+
+```kotlin
+people.asSequence()
+	.map(Person::name)
+	.filter { it.startsWith("A") }
+	.toList()
+```
+> Lazy sequence -> creates only output collection because each element one by one is first `mapped` then `filtered`.  Preferable when large collections.
+
+## Lambdas with receivers: “with” and “apply”
+### `with`
+```kotlin
+fun alphabet() = with(StringBuilder()) {
+	for (letter in 'A'..'Z') {
+		append(letter)
+	}
+	append("\nNow I know the alphabet!")
+	toString()
+}
+```
+> `with` is basically a `fun(T, lambda)`.
+
+### `apply`
+```kotlin
+fun alphabet() = StringBuilder().apply {
+    for (letter in 'A'..'Z') {
+        append(letter)
+    }
+    append("\nNow I know the alphabet!")
+}.toString()
+```
+> Basically the same as `with` but with return type of `receiver` (builder).
+
+## Kotlin type system
+### Nullable type
+```kotlin
+fun strLenSafe(s: String?): Int = if (s != null) s.length else 0
+```
+> Type or `null`
+
+### Safe call operator: `?.`
+```kotlin
+if (s != null) s.toUpperCase() else null
+```
+=>
+```kotlin
+s?.toUpperCase()
+```
+### Elvis oprator `?:`
+```kotlin
+val t: String = s ?: ""
+```
+
+```kotlin
+val t: String = s ?: throw IllegalArgumentException("Empty String")
+```
+
+### Safe cast `as?`
+```kotlin
+val otherPerson = o as? Person ?: return false
+```
+
+### Not-null assertions `!!`
+```kotlin
+val sNotNull: String = s!!
+```
+
+### `let`
+```kotlin
+if (email != null) sendEmailTo(email)
+```
+=>
+```kotlin
+email?.let { email -> sendEmailTo(email) }
+```
+
+### Late-initialized properties `lateinit`
+```kotlin
+private var myService: MyService? = null
+```
+=> 
+```kotlin
+private lateinit var myService: MyService
+```
+
+### Nullable extensions
+```kotlin
+fun String?.isNullOrBlank(): Boolean = this == null || this.isBlank()
+```
+
+### Nullability of type parameters
+```kotlin
+fun <T> printHashCode(t: T) {
+	println(t?.hashCode())
+}
+```
+
+> By default, all type parameters of functions and classes in Kotlin are nullable.
+
+## Primitive types
+- Integer types: `Byte`, `Short`, `Int`, `Long`
+- Floating-point number types: `Float`, `Double`
+- Character type: `Char`
+- Boolean type: `Boolean`
+- void: `Unit`
+- <no return type>: `Nothing`
+
+## Collections & Arrays
+- `kotlin.collections.Collection`: read-only collections (`size`, `iterator()`, `contains()`)
+- `kotlin.collections.Mutable-Collection`: mutable collections (`add()`, `remove()`, `clear()`)
+- `kotlin.collections.Immutable-Collection`: not yet implemented
+- `Array<T>: array of `T` wrappers, in order to use array of primitives, use specific impl e.g. `IntArray`
 
 ## Sources
 [1]: [Kotlin in Action](https://www.amazon.com/Kotlin-Action-Dmitry-Jemerov/dp/1617293296/ref=cm_cr_arp_d_product_top?ie=UTF8)
