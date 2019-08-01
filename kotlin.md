@@ -464,7 +464,7 @@ fun <T> printHashCode(t: T) {
 - `kotlin.collections.Collection`: read-only collections (`size`, `iterator()`, `contains()`)
 - `kotlin.collections.Mutable-Collection`: mutable collections (`add()`, `remove()`, `clear()`)
 - `kotlin.collections.Immutable-Collection`: not yet implemented
-- `Array<T>: array of `T` wrappers, in order to use array of primitives, use specific impl e.g. `IntArray`
+- `Array<T>`: array of `T` wrappers, in order to use array of primitives, use specific impl e.g. `IntArray`
 
 ## Sources
 [1]: [Kotlin in Action](https://www.amazon.com/Kotlin-Action-Dmitry-Jemerov/dp/1617293296/ref=cm_cr_arp_d_product_top?ie=UTF8)
