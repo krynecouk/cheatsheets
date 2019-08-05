@@ -466,5 +466,45 @@ fun <T> printHashCode(t: T) {
 - `kotlin.collections.Immutable-Collection`: not yet implemented
 - `Array<T>`: array of `T` wrappers, in order to use array of primitives, use specific impl e.g. `IntArray`
 
+## Operator Overloading
+### Arithmetic operators
+```kotlin
+operator fun Point.plus(other: Point): Point {
+	return Point(x + other.x, y + other.y)
+}
+```
+```yml
+a * b    |   times
+a / b    |   div
+a % b    |   mod
+a + b    |   plus
+a += b   |   plus
+a - b    |   minus
+a -= b   |   minus
++a	 |   unaryPlus
+-a	 |   unaryMinus
+!a	 |   not
+++a, a++ |   inc
+--a, a-- |   dec
+```
+
+### Comparison operators
+// TODO p. 180
+
+## Collection convetions
+// TODO p. 182
+
+## Desctructing 
+```kotlin
+data class NameComponents(val name: String, val extension: String)
+fun splitFilename(fullName: String): NameComponents {
+	val (name, extension) = fullName.split('.', limit = 2)
+	return NameComponents(name, extension)
+}
+```
+
+## Delegated properties
+
+
 ## Sources
 [1]: [Kotlin in Action](https://www.amazon.com/Kotlin-Action-Dmitry-Jemerov/dp/1617293296/ref=cm_cr_arp_d_product_top?ie=UTF8)
