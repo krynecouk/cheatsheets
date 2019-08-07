@@ -236,6 +236,43 @@ var sym = Symbol( "some optional description" );
 typeof sym;			// "symbol"
 ```
 
+## Import
+------
+> Used to import bindings which are exported by another module. Can be member or default.
+
+-- default import		: imports `export default` from module 
+(e.g. `import React from 'react'`)
+-- member import 		: imports `export` from module 
+(e.g. `import { Component } from 'react'`)
+
+### Import all module
+```js
+import * as myModule from '/modules/my-module.js';
+```
+
+### Import a single export
+```js
+import {myExport} from '/modules/my-module.js';
+```
+
+### Import multiple exports 
+```js
+import {foo, bar} from '/modules/my-module.js';
+```
+
+### Import export with alias
+```js
+import {foo as f} from 'my-module'; // my-module is a dependency name
+```
+
+## `import` vs `require`
+- `import` is a ES2015 modules system
+- `require` is a CommonJS modules system
+
+```js
+val React = require('react');
+```
+
 Sources
 ------
 [1]: [You Dont't Know JS: ES6 & Beyond](https://github.com/getify/You-Dont-Know-JS/blob/master/es6%20%26%20beyond/ch2.md)
