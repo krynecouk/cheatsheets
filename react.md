@@ -4,6 +4,7 @@ npx create-react-app <project-name>
 ```
 
 ## Project structure
+```yaml
 -- src 			: source code
 |
 -- public 		: static files (images) 
@@ -15,7 +16,7 @@ npx create-react-app <project-name>
 -- package-lock.json 	: versions of dependencies 
 |
 -- README.md 		: readme
-
+```
 ## Starting app
 `npm start`
 
