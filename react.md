@@ -73,15 +73,25 @@ var App = function App() {
 - `'` when non-JSX property
 
 ## Tenets of React Compoment
-### Nesting
-> Importing other React components to others. Imported component can be rendered as JSX tag.
+- Nesting
+- Reusability
+- Configuration
 
-### Reusability
-> Using `props` system.
+## `props` system
+> System for passing data from a parent component to a child component. 
+> Goal is to customize or configure a child component. 
 
-### Configuration
-> Using `props` system.
+### `props` attributes
+```js
+<CommentDetail author="Sam" />
+```
+```js
+const CommentDetail = props => {
+	return <div>{ props.author }</div>
+}
+```
 
+### `props` children
 ```js
 const App = () => {
     <ApprovalCard>
@@ -92,19 +102,6 @@ const App = () => {
 const ApprovalCard = props => {
     return <div>{props.children}</div>
 };
-```
-
-## `props` system
-> System for passing data from a parent component to a child component. 
-> Goal is to customize or configure a child component. 
-
-```js
-<CommentDetail author="Sam" />
-```
-```js
-const CommentDetail = props => {
-	return <div>{ props.author }</div>
-}
 ```
 
 ## Sources
