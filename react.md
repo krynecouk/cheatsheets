@@ -68,11 +68,44 @@ var App = function App() {
 <label className = { labelName }></label>
 ```
 
-
-
 ## `'` vs `"` in JSX
 - `"` when JSX string property
 - `'` when non-JSX property
+
+## Tenets of React Compoment
+### Nesting
+> Importing other React components to others. Imported component can be rendered as JSX tag.
+
+### Reusability
+> Using `props` system.
+
+### Configuration
+> Using `props` system.
+
+```js
+const App = () => {
+    <ApprovalCard>
+        <CommentDetail author="goobi" />
+    </ApprovalCard>
+};
+
+const ApprovalCard = props => {
+    return <div>{props.children}</div>
+};
+```
+
+## `props` system
+> System for passing data from a parent component to a child component. 
+> Goal is to customize or configure a child component. 
+
+```js
+<CommentDetail author="Sam" />
+```
+```js
+const CommentDetail = props => {
+	return <div>{ props.author }</div>
+}
+```
 
 ## Sources
 [1]: [Udemy - React Redux](https://www.udemy.com/react-redux/learn/lecture/12531044?start=0#overview)
