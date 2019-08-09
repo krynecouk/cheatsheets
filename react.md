@@ -100,7 +100,7 @@ const App = () => {
 };
 
 const ApprovalCard = props => {
-    return <div>{props.children}</div>
+    return <div>{ props.children }</div>
 };
 ```
 
