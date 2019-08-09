@@ -8,9 +8,10 @@ nvm use node
 
 ## How to install package
 ```sh
-npm i 				// alias for install
-npm install			// install everything in package.json
-npm install <package-name>	// install package
+npm i 					// alias for install
+npm install				// install everything in package.json
+npm install <package-name>		// install package
+npm install --save <package-name>	// install package to the project
 ```
 
 ## How to uninstall package
