@@ -151,7 +151,7 @@ class App extends React.Component {
 ```
 
 ## Component Lifecycle
-```yaml
+```yml
        constructor
 	    |
 	  render
@@ -168,9 +168,6 @@ class App extends React.Component {
 	    |
    componentWillUnmount
 ```
-```
-
-
 
 ## Apendix
 ### CSS importing
