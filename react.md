@@ -104,6 +104,107 @@ const ApprovalCard = props => {
 };
 ```
 
+### `props` defaults
+```js
+App.defaultProps = {
+	author="foo"
+}
+```
+
+## `class` component
+- extends `React.Component`
+- must impl `render`
+
+```js
+class App extends React.Component {
+	render() {
+		return <div>foo</div>;
+	}
+```
+
+## `state`
+- js object that contains data relevant for component
+- updating `state` causes component to instantly rerender
+- must be initialized when component is created 
+- state can *only* be updated using the `setState` function
+
+### Init `state` with constructor
+```js
+class App extends React.Component {
+	constructor(props) {
+		super(props);	
+		// WARN: this is *only* time we do direct assignment
+		this.state = { foo: null };
+		// WARN: this is *only* way how to update state
+		this.setState( { foo: asyncFetchFoo() } );
+	}		
+}
+```
+
+> *WARNING:* `render` function is called multiple times - avoid putting performance heavy operations.
+
+> Can be used with member variables like so:
+```js
+class App extends React.Component {
+	state = { foo: null };
+}
+```
+
+## Component Lifecycle
+```yaml
+       constructor
+	    |
+	  render
+	    |
+* content visible on the screen *
+	    |
+     componentDidMount
+	    |
+   * waits for updates *	
+	    |
+    componentDidUpdate
+	    |
+   * waits for destroy *
+	    |
+   componentWillUnmount
+```
+```
+
+
+
+## Apendix
+### CSS importing
+```js
+import './Foo.css'
+```
+### CSS and root div
+> Use `className` of root `div` (container) same as react component (e.g. `SeasonDisplay` react component has root `<div className={'season-display'}>...</div>`. 
+
+### CSS for center text
+```css
+.foo {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+```
+
+### ES6 config and destroy pattern
+```js
+const FooConfig = {
+	foo: {
+		a: 'a',
+		b: 'b'
+	}
+}
+
+const {a, b} = FooConfig[input];
+```
+
+### `render` and `return`
+> Best practice is to have only one return statement in our `render` function.
+
 ## Sources
 [1]: [Udemy - React Redux](https://www.udemy.com/react-redux/learn/lecture/12531044?start=0#overview)
 [2]: [MDN Import documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
