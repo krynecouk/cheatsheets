@@ -153,23 +153,23 @@ class App extends React.Component {
 ## Component Lifecycle
 ```yml
        constructor
-	    |
-	  render
-	    |
+            |
+          render
+            |
 * content visible on the screen *
-	    |
-     componentDidMount
-	    |
+            |
+    componentDidMount
+            |
    * waits for updates *	
-	    |
+            |
     componentDidUpdate
-	    |
+            |
    * waits for destroy *
-	    |
+            |
    componentWillUnmount
 ```
 
-## Apendix
+## Appendix
 ### CSS importing
 ```js
 import './Foo.css'
