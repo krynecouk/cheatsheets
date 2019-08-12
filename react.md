@@ -169,6 +169,25 @@ class App extends React.Component {
    componentWillUnmount
 ```
 
+## Event Handlers
+- `onClick`
+- `onChange`
+- `onSubmit`
+
+### `onChange`
+```js
+onInputChange(event) {
+	console.log(event.target.value);
+}
+```
+
+```js
+<input type="text" onChange={this.onInputChange} />
+```
+> *WARNING*: function reference, not call.
+
+> `onInputChange` is a function name by convention: on<El><Event>. 
+
 ## Appendix
 ### CSS importing
 ```js
@@ -201,6 +220,9 @@ const {a, b} = FooConfig[input];
 
 ### `render` and `return`
 > Best practice is to have only one return statement in our `render` function.
+
+### Project hiararchy
+> Best practice is to to have all components in `/src/components` folder. 
 
 ## Sources
 [1]: [Udemy - React Redux](https://www.udemy.com/react-redux/learn/lecture/12531044?start=0#overview)
