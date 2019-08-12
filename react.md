@@ -186,7 +186,7 @@ onInputChange(event) {
 ```
 > *WARNING*: function reference, not call.
 
-> `onInputChange` is a function name by convention: on<El><Event>. 
+> `onInputChange` is a function name by convention: on\<El\>\<Event\>. 
 
 ## Appendix
 ### CSS importing
