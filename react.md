@@ -173,8 +173,8 @@ class App extends React.Component {
 - `onClick`
 - `onChange`
 - `onSubmit`
+- [more here](https://reactjs.org/docs/events.html#supported-event)
 
-### `onChange`
 ```js
 onInputChange(event) {
 	console.log(event.target.value);
@@ -187,6 +187,35 @@ onInputChange(event) {
 > *WARNING*: function reference, not call.
 
 > `onInputChange` is a function name by convention: on\<El\>\<Event\>. 
+
+## Controlled vs Uncontrolled elements
+> Example above is uncontrolled element (state is managed by DOM itself). 
+
+> Controlled element is element where its state is managed by react `state`.
+```js
+state = { term: '' }; 
+
+<input type="text" value={ this.state.term } onChange={ (e) => this.setState({ term: e.target.value }) } />
+```
+
+> Controlled element is preferable because we don't have to touch DOM in order to get state.
+
+## Invoking callback in children component
+```js
+class App extends React.Component {
+	render() {
+		<SearchBar onSubmit={ this.foo } />
+	}
+}
+```
+
+```js
+class SearchBar extends React.Component {
+	render() {
+		<form onSubmit={ () => this.props.onSubmit(this.state.term) }>
+	}	
+}
+```
 
 ## Appendix
 ### CSS importing
@@ -223,6 +252,37 @@ const {a, b} = FooConfig[input];
 
 ### Project hiararchy
 > Best practice is to to have all components in `/src/components` folder. 
+
+### `this`
+> Value of `this` depends on how function is called (runtime binding).
+
+> `bind` method can change the `this` value (only once!).
+
+> arrow functions has `this` always same where was created (no matter by who is called).
+
+> More info [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)
+
+### Solving `this` problem
+#### `bind`
+```js
+class Foo {
+	constructor() {
+		this.fun = this.fun.bind(this);
+	}
+}
+```
+
+#### arrow fun
+```js
+class Foo {
+	foo = () => console.log(this);
+}
+```
+
+#### arrow fun in `JSX`
+```js
+<form onSubmit={() => console.log(this)}>
+``` 
 
 ## Sources
 [1]: [Udemy - React Redux](https://www.udemy.com/react-redux/learn/lecture/12531044?start=0#overview)
