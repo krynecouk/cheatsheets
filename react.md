@@ -222,6 +222,7 @@ class SearchBar extends React.Component {
 ```js
 import './Foo.css'
 ```
+
 ### CSS and root div
 > Use `className` of root `div` (container) same as react component (e.g. `SeasonDisplay` react component has root `<div className={'season-display'}>...</div>`. 
 
@@ -235,56 +236,18 @@ import './Foo.css'
 }
 ```
 
-### ES6 config and destroy pattern
-```js
-const FooConfig = {
-	foo: {
-		a: 'a',
-		b: 'b'
-	}
-}
-
-const {a, b} = FooConfig[input];
-```
-
 ### `render` and `return`
 > Best practice is to have only one return statement in our `render` function.
 
 ### Project hiararchy
 > Best practice is to to have all components in `/src/components` folder. 
 
-### `this`
-> Value of `this` depends on how function is called (runtime binding).
-
-> `bind` method can change the `this` value (only once!).
-
-> arrow functions has `this` always same where was created (no matter by who is called).
-
-> More info [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)
-
-### Solving `this` problem
-#### `bind`
-```js
-class Foo {
-	constructor() {
-		this.fun = this.fun.bind(this);
-	}
-}
-```
-
-#### arrow fun
-```js
-class Foo {
-	foo = () => console.log(this);
-}
-```
-
-#### arrow fun in `JSX`
-```js
-<form onSubmit={() => console.log(this)}>
-``` 
+### `import` position
+> By conventions we place imports of third party libs above the ours.
 
 ## Sources
 [1]: [Udemy - React Redux](https://www.udemy.com/react-redux/learn/lecture/12531044?start=0#overview)
 [2]: [MDN Import documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
 [3]: [BabelJS](https://babeljs.io)
+[4]: [Axios](https://github.com/axios/axios)
+[5]: [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
