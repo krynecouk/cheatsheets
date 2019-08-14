@@ -237,7 +237,6 @@ typeof sym;			// "symbol"
 ```
 
 ## Import
-------
 > Used to import bindings which are exported by another module. Can be member or default.
 
 -- default import		: imports `export default` from module 
@@ -273,7 +272,79 @@ import {foo as f} from 'my-module'; // my-module is a dependency name
 val React = require('react');
 ```
 
+## `this`
+> Value of `this` depends on how function is called (runtime binding).
+
+> `bind` method can change the `this` value (only once!).
+
+> arrow functions has `this` always same where was created (no matter by who is called).
+
+> More info [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)
+
+## Solving `this` problem
+### `bind`
+```js
+class Foo {
+        constructor() {
+                this.fun = this.fun.bind(this);
+        }
+}
+```
+
+### arrow fun
+```js
+class Foo {
+        foo = () => console.log(this);
+}
+```
+
+### arrow fun in `JSX`
+```js
+<form onSubmit={() => console.log(this)}>
+```
+
+## `async`/`await`
+> `async`/`await` is a new way to write asynchronous code. Previous alternatives for asynchronous code are callbacks and promises.
+
+> `async`/`await` is actually just syntax sugar built on top of promises.
+
+```js
+const makeRequest = () =>
+  getJSON()
+    .then(data => {
+      console.log(data)
+      return "done"
+    })
+
+makeRequest()
+```
+=> 
+```js
+const makeRequest = async () => {
+  console.log(await getJSON())
+  return "done"
+}
+
+makeRequest()
+```
+
+> `await` waits for async method. Must be used insinde of `async` method.
+
+## Appendix
+## ES6 config and destroy pattern
+```js
+const FooConfig = {
+        foo: {
+                a: 'a',
+                b: 'b'
+        }
+}
+
+const {a, b} = FooConfig[input];
+```
+
 Sources
 ------
 [1]: [You Dont't Know JS: ES6 & Beyond](https://github.com/getify/You-Dont-Know-JS/blob/master/es6%20%26%20beyond/ch2.md)
 [2]: [esfiddle](https://esfiddle.net)
+[3]: [Async/Await tutorial](https://dev.to/gafi/7-reasons-to-always-use-async-await-over-plain-promises-tutorial-4ej9)
