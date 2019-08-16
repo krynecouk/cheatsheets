@@ -33,6 +33,13 @@ Undo & Redo
 - H		# high of window
 - M		# medium of window
 - L		# low of window
+
+- ctrl + U	# UP half page
+- ctrl + D	# DOWN halp page
+
+- zt 		# cursor on top
+- zz		# cursor on the middle
+- zb		# cursor on the bottom
 ```
 
 `:changes`
@@ -74,15 +81,11 @@ Delete
 Cut, copy, paste
 ----------------
 ```yml
-- v		# visual one char
-- V		# visual one line
-- ctrl + v	# visual block
 - y		# yank
 - yw		# yank word
 - p		# paste after cursor
 - P		# paste before cursor
 - I		# insert in visual mode
-- gv		# get last visual
 ```
 
 Time travel
@@ -112,19 +115,37 @@ Time travel
 Search
 ------
 ```yml
-- /		# search
-- / \c		# search ignore case
-- ?		# search backwars
-- n		# next
-- N		# previous
-- f		# find char
-- %		# search `(`
-- :set hls	# highlight search
-- :set nohls	# highlight search  
-- :set ic	# case sensitive 
-- :set noic	# case insensitive 
-- :set is	# instant search
+- /			# search
+- / \c			# search ignore case
+- ?			# search backwars
+- n			# next
+- N			# previous
+- f			# find char
+- %			# search `(`
+- f			# search char in line
+- f;			# search next char in line
+- F			# search char in line opposite direction
+- F,			# search prev char in line
+- :set hls		# highlight search
+- :set nohls		# highlight search  
+- :set ic		# case sensitive 
+- :set noic		# case insensitive 
+- :set ignorecase	# case insensitive 
+- :set is		# instant search
 ```
+
+## Visual
+```yml
+- v		# visual
+- V		# visual line
+- ctrl + v	# visual block 
+- gv 		# reselect visual
+- '<		# mark of beginning
+- '>		# mark of end
+- :'<,'>	# ex command in last selection
+:'<,'>s/a/b	# substitute 'a' for 'b' in last v selection
+```
+
 
 `:help`
 -------
