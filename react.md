@@ -217,6 +217,17 @@ class SearchBar extends React.Component {
 }
 ```
 
+## Unique id of el in list
+> React try to render only new elements with missing id (~hashCode/equals contract).
+```js
+const images = images.map(img => {
+	return <img key=${img.id} src=${img.url} />;
+});
+```
+> *WARNING*: `key` must be on the returning root element.
+
+
+
 ## Appendix
 ### CSS importing
 ```js
@@ -244,6 +255,17 @@ import './Foo.css'
 
 ### `import` position
 > By conventions we place imports of third party libs above the ours.
+
+### `unsplash.js`
+```js
+import axios from 
+
+export default axios.create({baseUrl: 'foo.com'});
+```
+
+```js
+import unsplash from '../api/unsplash'
+```
 
 ## Sources
 [1]: [Udemy - React Redux](https://www.udemy.com/react-redux/learn/lecture/12531044?start=0#overview)
