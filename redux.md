@@ -106,7 +106,7 @@ function todoApp(state = initialState, action) {
 - `connect()`
 
 ### `Provider`
-> The `<Provider />` makes the Redux store available to any nested components that have been wrapped in the connect() function.
+> The `<Provider />` makes the Redux store available to any nested components that have been wrapped in the `connect()` function.
 ```js
 ReactDOM.render(
   <Provider store={store}>
@@ -130,7 +130,19 @@ const mapStateToProps = state => {
 	return { songs: state.songs };
 }
 ```
+> `ownProps` are props passed in JSX.
+
 #### `mapDispatchToProps?: Object | (dispatch, ownProps?) => Object`
+```js
+const mapDispatchToProps = dispatch => {
+  return {
+    // dispatching plain actions
+    increment: () => dispatch({ type: 'INCREMENT' }),
+    decrement: () => dispatch({ type: 'DECREMENT' }),
+    reset: () => dispatch({ type: 'RESET' })
+  }
+}
+```
 > `mapDispatchToProps` may be an object where each field is an action creator.
 
 > It automatically binds action creator to `props`.
@@ -152,7 +164,7 @@ export default connect(
 )(TodoApp)
 ```
 
-[More connect params](https://react-redux.js.org/api/connect)
+[More about connect params](https://react-redux.js.org/api/connect)
 
 
 ## Appendix
