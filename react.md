@@ -226,6 +226,20 @@ const images = images.map(img => {
 ```
 > *WARNING*: `key` must be on the returning root element.
 
+## React `ref`
+> Give access to a single DOM element.
+
+```js
+class ImageCard extends React.Component {
+	constructor(props) {
+		super(props);
+		this.imageRef = React.createRef();
+	}
+
+	render() { return <img ref={this.imageRef} /> }
+}
+```
+
 
 
 ## Appendix
@@ -266,6 +280,10 @@ export default axios.create({baseUrl: 'foo.com'});
 ```js
 import unsplash from '../api/unsplash'
 ```
+
+### `index.js`
+> Can be then imported only as e.g. `import {foo} from '../Actions'`
+
 
 ## Sources
 [1]: [Udemy - React Redux](https://www.udemy.com/react-redux/learn/lecture/12531044?start=0#overview)
