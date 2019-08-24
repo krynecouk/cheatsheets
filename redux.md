@@ -133,6 +133,8 @@ const mapStateToProps = state => {
 > `ownProps` are props passed in JSX.
 
 #### `mapDispatchToProps?: Object | (dispatch, ownProps?) => Object`
+> Maps `actionCreators` with binded `dispatch`(using `bindActionCreators`) to the `props`.
+
 ```js
 const mapDispatchToProps = dispatch => {
   return {
@@ -143,11 +145,8 @@ const mapDispatchToProps = dispatch => {
   }
 }
 ```
-> `mapDispatchToProps` may be an object where each field is an action creator.
 
-> It automatically binds action creator to `props`.
-
-> React-Redux binds the dispatch of your store to each of the action creators using `bindActionCreators`.
+> `mapDispatchToProps` may be an object where each field is an action creator...
 
 ```js
 import { addTodo, deleteTodo, toggleTodo } from './actionCreators'
