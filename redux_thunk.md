@@ -1,11 +1,11 @@
 ## Redux Rules
-- Action Creators *must* return action objects.
-- Actions *must* have a type property.
+- Action Creators **must** return action objects.
+- Actions **must** have a type property.
 - Actions can optionally have a `payload` property.
 
 ## Redux Rules with Redux Thunk
-- Action Creators *can* return action objects or
-- Action Creators *can* return functions.
+- Action Creators **can** return action objects or
+- Action Creators **can** return functions.
 
 ## Redux Cycle with Redux Thunk middleware
 ```yml
@@ -29,7 +29,7 @@
              |
   (is `action` a function?)  ---                       ^
              |                 |                       |
-	    (NO)             (YES) -- (Invoke with `dispatch` and `getState`)
+            (NO)             (YES) -- (Invoke with `dispatch` and `getState`)
 
              |
              ˇ
