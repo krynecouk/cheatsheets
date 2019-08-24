@@ -331,7 +331,7 @@ makeRequest()
 > `await` waits for async method. Must be used insinde of `async` method.
 
 ## Appendix
-## ES6 config and destroy pattern
+### ES6 config and destroy pattern
 ```js
 const FooConfig = {
         foo: {
@@ -341,6 +341,11 @@ const FooConfig = {
 }
 
 const {a, b} = FooConfig[input];
+```
+
+### Spread with new element
+```js
+const newArr = [...oldArr, newElement];
 ```
 
 Sources
