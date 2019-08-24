@@ -167,3 +167,41 @@ Search
 ``` yml
 - :nnoremap <Space> i_<Esc>r	# insert one char on space
 ```
+
+## Tips & Tricks
+### Changing a word at n positions
+```js
+var x = "Foo";
+console.log(x);
+var y = "Bar";
+console.log(y);
+```
+```yml
+> /var
+> cgn
+> const
+> .
+```
+```js
+const x = "Foo";
+console.log(x);
+const y = "Bar";
+console.log(y);
+```
+
+### Record macro
+```yml
+q<letter><commands>q
+```
+```yml
+@<letter>
+```
+> To execute again:
+```yml
+@@
+```
+
+### Find Word under cursor
+`*` or `g*` - forward
+`#` or `g#` - backward
+
