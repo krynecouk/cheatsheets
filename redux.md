@@ -16,6 +16,11 @@
    (forwards actions to..)
              |
              ˇ
+       * Middleware *
+             |
+ (stop, modify etc. action)
+             |
+             ˇ
         * Reducers *
              |
        (creates new)
@@ -40,7 +45,7 @@ function userLoggedIn() {
 
 
 ### Action
-> Actions are plain objects representing event. Must have mandatory field `type` and optional `payload`.
+> Actions *MUST* be a plain js objects representing event. Must have mandatory field `type` and optional `payload`.
 
 ```js
 {
@@ -60,6 +65,13 @@ function userLoggedIn() {
 ```js
 store.dispatch(createUser('Jim', 'Fooler'));
 ```
+
+### Middleware
+> Function that gets called with every dispatched action.
+
+> Has ability to *STOP*, *MODIFY*, or otherwise mess around with actions.
+
+> Most custom Redux middlewares are used for async actions.
 
 ### Reducer
 > Reducers specify how the application's state changes in response to actions sent to the store.
@@ -163,8 +175,42 @@ export default connect(
 )(TodoApp)
 ```
 
-[More about connect params](https://react-redux.js.org/api/connect)
+## General Data Loading with Redux
+```yml
+    Component is rendered 
+              |
+              ˇ
+ `componentDidMount` is called
+              |
+              ˇ
+     Action creator from 
+ `componentDidMount` is called
+              |
+              ˇ
+  Action creator runs code 
+    to make API request
+              |
+              ˇ
+    API responds with data
+              |
+              ˇ
+Action creator returns `action` 
+ with fetched data in payload
+              |
+              ˇ
+   `dispatch` is called, 
+state is modified by reducer
+              |
+              ˇ
+    Component is re-rendered
+```
+> Components are responsible for fetching data.
 
+> Action creators are responsible for making API requests.
+
+> Fetched data are get to the `Component` by updating state and `mapStateToProps`
+
+[More about connect params](https://react-redux.js.org/api/connect)
 
 ## Appendix
 ### Create User Redux Cycle example
