@@ -74,9 +74,11 @@ store.dispatch(createUser('Jim', 'Fooler'));
 > Most custom Redux middlewares are used for async actions.
 
 ### Reducer
-> Reducers specify how the application's state changes in response to actions sent to the store.
-
 > The reducer is a pure function that takes the previous state and an action, and returns the next state.
+
+> **Must** return value.
+
+> **Must NOT** mutate its `state`. 
 
 `(previousState, action) => newState`
 
@@ -267,7 +269,18 @@ const mapStateToProps = state => {...};
 export default connect(mapStateToProps)(SongList);
 ```
 
+### Why reducer **must not** mutate state
+> `combineReducers.js`
+```js
+...
+hasChanged = hasChanged || nextStateForKey !== previousStateForKey
+...
+```
+> If we mutate e.g. array state, then it has still same ref and redux won't notice the change 
+-> won't update state -> won't re-render.
+
 ## Sources
 [1]:[Udemy React Redux](https://www.udemy.com/react-redux/learn/lecture/12531416)
 [2]:[Redux Documentation](https://redux.js.org)
 [3]:[Redux - Remove boilerplate](https://redux.js.org/recipes/reducing-boilerplate#reducers)
+[4]:[Safe State Updates](...)
