@@ -240,6 +240,38 @@ class ImageCard extends React.Component {
 }
 ```
 
+## `react-router-dom`
+
+- `BrowserRouter`	: localhost:3000/**pagetwo**
+- `HashRouter`		: localhost:3000/#/**pagetwo**
+- `MemoryRouter`	: localhost:3000/
+
+```js
+import { BrowserRouter, Route } from 'react-router-dom';
+
+const App = () => {
+  return (
+    <div>
+      <BrowserRouter>
+	<div>
+          <Route path="/" exact component={ PageOne } />
+          <Route path="/pageTwo" component={ PageTwo } />
+	</div>
+      </BrowserRouter>
+    </div>
+  );
+}
+```
+TODO: when use browser or hash?
+
+
+## `Link`
+```js
+import { Link } from 'react-router-dom';
+...
+<Link to="/pagetwo">Navigate to page two</Link>
+```
+> Must **NOT** use `<a href>` tag because it will fetch all resources per every request.
 
 
 ## Appendix
@@ -284,6 +316,12 @@ import unsplash from '../api/unsplash'
 ### `index.js`
 > Can be then imported only as e.g. `import {foo} from '../Actions'`
 
+### Routing - `extractedPath.contains(path)`
+> Router takes the path after port and runs `contains` on router path.
+
+> e.g. extracted `path="/page"` matches `path="/"` **AND** `path="/page"`.
+
+> `exact` means don't apply rule above and show **only** when path exactly matches.
 
 ## Sources
 [1]: [Udemy - React Redux](https://www.udemy.com/react-redux/learn/lecture/12531044?start=0#overview)
