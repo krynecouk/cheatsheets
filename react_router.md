@@ -2,17 +2,17 @@
 ```yml
     (change of browser route)
                 |
-		ˇ
-	     history
-	        |
-	        ˇ
-	      Router
-	        |
-	        ˇ
+                ˇ
+             history
+                |
+                ˇ
+              Router
+                |
+                ˇ
  Route path="<history.location.path>"
-	        |
-	        ˇ
-	    Component
+                |
+                ˇ
+            Component
 ```
 
 ## `react-router-dom`
@@ -83,4 +83,4 @@ import { Router, Route, Switch } from 'react-router-dom';
 
 ## Sources
 [1]:[React Router Documentation](https://reacttraining.com/react-router/web/guides/quick-start)
-[2]:[React History Object](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/history.md_
+[2]:[React History Object](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/history.md)
