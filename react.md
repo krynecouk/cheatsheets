@@ -240,38 +240,91 @@ class ImageCard extends React.Component {
 }
 ```
 
-## `react-router-dom`
-
-- `BrowserRouter`	: localhost:3000/**pagetwo**
-- `HashRouter`		: localhost:3000/#/**pagetwo**
-- `MemoryRouter`	: localhost:3000/
+## Portals
+> React Component attached to the specific DOM element. 
 
 ```js
-import { BrowserRouter, Route } from 'react-router-dom';
-
-const App = () => {
-  return (
-    <div>
-      <BrowserRouter>
-	<div>
-          <Route path="/" exact component={ PageOne } />
-          <Route path="/pageTwo" component={ PageTwo } />
-	</div>
-      </BrowserRouter>
-    </div>
-  );
+const Modal = props => {
+	return ReactDOM.createPortal(<div>Foo</div>, document.querySelector('#modal'));
 }
 ```
-TODO: when use browser or hash?
 
-
-## `Link`
+## Fragments
+> Group a list of children without adding extra nodes to the DOM.
 ```js
-import { Link } from 'react-router-dom';
-...
-<Link to="/pagetwo">Navigate to page two</Link>
+class Columns extends React.Component {
+  render() {
+    return (
+      <>
+        <td>Hello</td>
+        <td>World</td>
+      </>
+    );
+  }
+}
 ```
-> Must **NOT** use `<a href>` tag because it will fetch all resources per every request.
+
+## Context
+> Props System: Passing data to a **direct** child component.
+
+> Context System: Passing data to **any** child component. 
+
+```yml
+Source: Default / Provider
+
+      |        |
+      | Context|
+     \| Object |/
+      \        / 
+       \      /
+        \    /
+         \  /
+          \/
+
+Target: `this.context` / Consumer
+
+```
+### Default
+1. Create Context
+```js
+import React from 'react';
+export default React.createContext('english');
+```
+2. Define Context type
+```js
+class Button extends React.Component {
+	static contextType = LanguageContext;
+}
+```
+> **WARN**: `contextType` is mandatory name. 
+
+3. Get context using `this.context`
+```js
+render() { console.log(this.context); }
+```
+
+### Provider
+```js
+<LanguageContext.Provider value={this.state.language}>
+	<UserCreate />
+</LanguageContext.Provider>
+```
+
+### Consumer
+```js
+render() {
+	return (
+		<LanguageContext.Consumer>
+			{(value) => value}
+		</LanguageContext.Consumer>
+	);
+}
+```
+
+### `this.context` vs `Consumer`
+> `this.context`: Component can take data only from **single** context object.
+
+> `Consumer`: Component can take data from **multiple** context objects. 
 
 
 ## Appendix
@@ -329,3 +382,4 @@ import unsplash from '../api/unsplash'
 [3]: [BabelJS](https://babeljs.io)
 [4]: [Axios](https://github.com/axios/axios)
 [5]: [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
+[6]: [React Fragments](https://reactjs.org/docs/fragments.html)
