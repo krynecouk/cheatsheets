@@ -214,6 +214,19 @@ state is modified by reducer
 
 [More about connect params](https://react-redux.js.org/api/connect)
 
+## Redux Dev Tools
+```js
+import { createStore, applyMiddleware, compose } from 'redux';
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+  reducers,
+  composeEnhancers(applyMiddleware())
+);
+```
+
+`localhost:<port>?debug_session=<some_string>`
+
 ## Appendix
 ### Create User Redux Cycle example
 ```js
@@ -283,4 +296,4 @@ hasChanged = hasChanged || nextStateForKey !== previousStateForKey
 [1]:[Udemy React Redux](https://www.udemy.com/react-redux/learn/lecture/12531416)
 [2]:[Redux Documentation](https://redux.js.org)
 [3]:[Redux - Remove boilerplate](https://redux.js.org/recipes/reducing-boilerplate#reducers)
-[4]:[Safe State Updates](...)
+[4]:[Redux Dev Tools extension](https://github.com/zalmoxisus/redux-devtools-extension)
