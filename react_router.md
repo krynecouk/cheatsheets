@@ -82,6 +82,5 @@ import { Router, Route, Switch } from 'react-router-dom';
 
 
 ## Sources
-[1]:[Udemy](https://www.udemy.com/react-redux/learn/lecture/12803163#overview)
-[2]:[React Router Documentation](https://reacttraining.com/react-router/web/guides/quick-start)
-[3]:[React History Object](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/history.md_
+[1]:[React Router Documentation](https://reacttraining.com/react-router/web/guides/quick-start)
+[2]:[React History Object](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/history.md_

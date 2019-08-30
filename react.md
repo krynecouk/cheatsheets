@@ -377,7 +377,7 @@ import unsplash from '../api/unsplash'
 > `exact` means don't apply rule above and show **only** when path exactly matches.
 
 ## Sources
-[1]: [Udemy - React Redux](https://www.udemy.com/react-redux/learn/lecture/12531044?start=0#overview)
+[1]: [React Documentation](https://reactjs.org/docs/getting-started.html)
 [2]: [MDN Import documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
 [3]: [BabelJS](https://babeljs.io)
 [4]: [Axios](https://github.com/axios/axios)

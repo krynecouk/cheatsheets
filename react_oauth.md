@@ -29,6 +29,5 @@ class GoogleAuth extends React.Component {
 
 
 ## Sources
-[1]:[Udemy](https://www.udemy.com/react-redux/learn/lecture/12700573)
-[2]:[Google OAuth Scopes](https://developers.google.com/identity/protocols/googlescopes)
-[3]:[Api Client JS library](https://developers.google.com/api-client-library/)
+[1]:[Google OAuth Scopes](https://developers.google.com/identity/protocols/googlescopes)
+[2]:[Api Client JS library](https://developers.google.com/api-client-library/)

@@ -293,7 +293,6 @@ hasChanged = hasChanged || nextStateForKey !== previousStateForKey
 -> won't update state -> won't re-render.
 
 ## Sources
-[1]:[Udemy React Redux](https://www.udemy.com/react-redux/learn/lecture/12531416)
-[2]:[Redux Documentation](https://redux.js.org)
-[3]:[Redux - Remove boilerplate](https://redux.js.org/recipes/reducing-boilerplate#reducers)
-[4]:[Redux Dev Tools extension](https://github.com/zalmoxisus/redux-devtools-extension)
+[1]:[Redux Documentation](https://redux.js.org)
+[2]:[Redux - Remove boilerplate](https://redux.js.org/recipes/reducing-boilerplate#reducers)
+[3]:[Redux Dev Tools extension](https://github.com/zalmoxisus/redux-devtools-extension)

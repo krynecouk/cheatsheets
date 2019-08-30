@@ -64,5 +64,5 @@ export const fetchPosts = () => async (dispatch, getState) => {
 ```
 
 ## Sources
-[1]: [Udemy Redux Thunk](https://www.udemy.com/react-redux/learn/lecture/12586858#overview)
+[1]: [Redux Thunk Github](https://github.com/reduxjs/redux-thunk)
 [2]: [Thunks in Redux](https://medium.com/fullstack-academy/thunks-in-redux-the-basics-85e538a3fe60)
