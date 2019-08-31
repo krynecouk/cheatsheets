@@ -326,6 +326,39 @@ render() {
 
 > `Consumer`: Component can take data from **multiple** context objects. 
 
+## Hooks
+> Let you use state and other React features without writing a class.
+
+> Hook methods:
+
+- `useState`
+- `useEffect`
+- `useContext`
+- `useReducer`
+- `useCallback`
+- `useMemo`
+- `useRef`
+- `useImparativeHandle`
+- `useLayoutEffect`
+- `useDebugValue` 
+
+### `useState`
+```js
+const [ currentValue, setCurrentValue ] = useState( inititalValue )
+//          ||               ||                          ||       
+//      this.state     this.setState           state = { foo: null }
+```
+
+### `useEffect`
+> Combination of `componentDidMount` and `componentDidUpdate`.
+
+```js
+useEffect( () => {} , [ 'foo' ]
+//          effect    previous value
+```
+
+> `effect` is called **only** when previous value is different from current value.
+
 
 ## Appendix
 ### CSS importing
@@ -376,6 +409,13 @@ import unsplash from '../api/unsplash'
 
 > `exact` means don't apply rule above and show **only** when path exactly matches.
 
+### Hooks return
+> Best practice is to return array from separeted hook method.
+
+```js
+const [lat, errorMessage] = useLocation();
+```
+
 ## Sources
 [1]: [React Documentation](https://reactjs.org/docs/getting-started.html)
 [2]: [MDN Import documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
@@ -383,3 +423,4 @@ import unsplash from '../api/unsplash'
 [4]: [Axios](https://github.com/axios/axios)
 [5]: [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
 [6]: [React Fragments](https://reactjs.org/docs/fragments.html)
+[7]: [React Hooks](https://reactjs.org/docs/hooks-reference.html)
