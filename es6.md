@@ -348,6 +348,16 @@ const {a, b} = FooConfig[input];
 const newArr = [...oldArr, newElement];
 ```
 
+### Clusures behind the hood
+- every function is a closure because it contains `[[Scopes]]` object (Lexical env, Lexical scope etc.)
+- Closure is a object that refers both to function object and the scope object
+- the closure (function + reference to the current scope chain) is created when the function is defined
+- the new scope object is created (and used to augment the closure's scope chain) when the function is invoked
+- `[[Scopes]]` object is where js store its local variables
+- `[[Scopes]]` are chained in the *Scope Chain*
+- any reference to a function in JavaScript refers to function object, which, in turn, has a reference to the scope object
+
+
 Sources
 ------
 [1]: [You Dont't Know JS: ES6 & Beyond](https://github.com/getify/You-Dont-Know-JS/blob/master/es6%20%26%20beyond/ch2.md)
