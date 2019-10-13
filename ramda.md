@@ -138,6 +138,7 @@ R.evolve(transformations, tomato); //=> {firstName: 'Tomato', data: {elapsed: 10
 ```
 
 ## Sources
+
 [1]:[Ramda](https://ramdajs.com/docs/)
 [2]:[Thinking in Ramda](http://randycoulman.com/blog/categories/thinking-in-ramda/)
 [3]:[Ramda REPL](https://ramdajs.com/repl/)
