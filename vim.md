@@ -205,3 +205,30 @@ q<letter><commands>q
 `*` or `g*` - forward
 `#` or `g#` - backward
 
+### Absolute vs Relative vs Hybrid numbers
+> Absolute
+```yml
+set nu
+set nonu
+set number
+set nonumber
+```
+> Relative
+```yml
+```yml
+set rnu
+set nornu
+set relativenumber
+set norelativenumber
+```
+
+> Hybrid
+```yml
+set nu rnu
+set nonu nornu
+set number relativenumber
+set nonumber norelativenumber
+```
+
+### Change to the search pattern
+`c/<pattern>`
