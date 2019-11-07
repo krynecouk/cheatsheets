@@ -178,6 +178,7 @@
 
 ### `<q>`
 > Quote from another source. 
+
 `<q cite="https://www.w3.org/Consortium/">To lead the World Wide..</q>`
 
 ### `<dfn>`
@@ -185,14 +186,17 @@
 
 ### `<abbr>`
 > Abbreviation/acronym. 
+
 `<abbr title="World Health Organization">WHO</abbr>`
 
 ### `<data>`
 > Machine-readable form of data. `value` is mandatory attribute. 
+
 `<data value="8">Eight</data>`
 
 ### `<time>`
 > Machine-readable form of time. `datetime` is optional.
+
 `<time class="dtstart" datetime="2005-10-05">October 5</time>`
 
 ### `<code>`
@@ -222,3 +226,4 @@ end.</code></pre>
 ## Sources
 [1]:[whatwg](https://html.spec.whatwg.org/multipage/sections.html)
 [2]:[Stop-div](https://dev.to/kenbellows/stop-using-so-many-divs-an-intro-to-semantic-html-3i9i)
+
