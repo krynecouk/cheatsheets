@@ -1,8 +1,8 @@
-# Section elements
-## `<body>`
+## Section elements
+### `<body>`
 > The body element represents the contents of the document. Only one in document.
 
-## `<article>`
+### `<article>`
 > Represents independent item of content (forum post, magazine or newspaper article, a blog entry, a user-submitted comment etc.).
 
 ```html
@@ -21,7 +21,7 @@
 </article>
 ```
 
-## `<section>`
+### `<section>`
 > `<div>` with special semantic meaning. Use if block is needed (feels like) that belongs to a table of contents.
 
 > `<article>` element instead of the `<section>` element when it would make sense to syndicate the sections of the article.
@@ -46,10 +46,10 @@
 </article>
 ```
 
-## `<header>` & `<footer>`
+### `<header>` & `<footer>`
 > Designed to be used within any part of your document that represents a chunk of content with a clear beginning and end. This can include things like forms, articles, sections of articles, posts on a social media site, cards, etc.
 
-## `<main>`
+### `<main>`
 > The main content area of a document includes content that is unique to that document and excludes content that is repeated across a set of documents (logo, banner, search forms etc.).
 
 > There must not be more than one visible main element in a document. If more than one main element is present in a document, all other instances must have `hidden` attribute.
@@ -69,7 +69,7 @@
 </footer>
 ```
 
-## `<nav>`
+### `<nav>`
 > Designed to clearly identify the main navigation blocks on the page.
 
 ```html
@@ -80,7 +80,7 @@
 </nav>
 ```
 
-## `<aside>`
+### `<aside>`
 > Represents a section of a page that consists of content that is tangentially related to the content around the aside element, and which could be considered separate from that content.
 
 ```html
@@ -92,10 +92,10 @@
 ...
 ```
 
-## `<figure>`
+### `<figure>`
 > Single unit separated from main flow with `figcaption`.
 
-## `<hgroup>`
+### `<hgroup>`
 > Group of headings.
 
 ```html
@@ -105,7 +105,7 @@
 </hgroup>
 ```
 
-## `<adress>`
+### `<adress>`
 > The address element represents the contact information for its nearest article or body element ancestor. If that is the body element, then the contact information applies to the document as a whole.
 
 ```html
@@ -116,35 +116,35 @@
 </address>
 ```
 
-# Grouping elements
-## `<p>`
+## Grouping elements
+### `<p>`
 > Paragraph.
 
-## `<hr>`
+### `<hr>`
 > Paragraph level break.
 
-## `<pre>`
+### `<pre>`
 > Block of preformatted text.
 
-## `<blockquote>`
+### `<blockquote>`
 > Section that is quoted from another source.
 
-## `<ol>`
+### `<ol>`
 > Ordered list.
 
-## `<ul>`
+### `<ul>`
 > Unordered list.
 
-## `<li>`
+### `<li>`
 > List item.
 
-## `<dl>`
+### `<dl>`
 > Description list.
 
-## `<dt>`
+### `<dt>`
 > Description term. 
 
-## `<dd>`
+### `<dd>`
 > Descriptin definition.
 
 ```html
@@ -161,41 +161,41 @@
 </dl>
 ```
 
-# Text level semantics
-## `<em>`
+## Text level semantics
+### `<em>`
 > Emphasis.
 
-## `<strong>`
+### `<strong>`
 > Bold.
 
-## `<small>`
+### `<small>`
 
-## `<s>`
+### `<s>`
 > Strikethrough.
 
-## `<cite>`
+### `<cite>`
 >  Title of a work (e.g. a book, a paper, an essay, a poem, a score, a song, a script...)
 
-## `<q>`
+### `<q>`
 > Quote from another source. 
 `<q cite="https://www.w3.org/Consortium/">To lead the World Wide..</q>`
 
-## `<dfn>`
+### `<dfn>`
 > Defining instance of a term
 
-## `<abbr>`
+### `<abbr>`
 > Abbreviation/acronym. 
 `<abbr title="World Health Organization">WHO</abbr>`
 
-## `<data>`
+### `<data>`
 > Machine-readable form of data. `value` is mandatory attribute. 
 `<data value="8">Eight</data>`
 
-## `<time>`
+### `<time>`
 > Machine-readable form of time. `datetime` is optional.
 `<time class="dtstart" datetime="2005-10-05">October 5</time>`
 
-## `<code>`
+### `<code>`
 > Programming code formatting.
 ```html
 <pre><code class="language-pascal">var i: Integer;
@@ -204,23 +204,21 @@ begin
 end.</code></pre>
 ```
 
-## `<samp>`
+### `<samp>`
 > Output from different computing system.
 
-## `<var>`
+### `<var>`
 > Variable.
 
-## `<b>`
+### `<b>`
 > Bold. But not so bold like `<strong>`. 
 
-## `<mark>`
+### `<mark>`
 > Mark like with marker.
 
-## `<del>`
+### `<del>`
 > Like `<s>` but for lists.
-
-
 
 ## Sources
 [1]:[whatwg](https://html.spec.whatwg.org/multipage/sections.html)
-[2]:[Stop using so much div](https://dev.to/kenbellows/stop-using-so-many-divs-an-intro-to-semantic-html-3i9i)
+[2]:[Stop-div](https://dev.to/kenbellows/stop-using-so-many-divs-an-intro-to-semantic-html-3i9i)
