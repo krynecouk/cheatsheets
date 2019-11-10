@@ -238,21 +238,21 @@ grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 minmax(100px, max-content)
 ```
 
-#### min-content
+#### `min-content`
 > Minimum in `minmax` function of content (e.g. text length). 
 
 ```scss
 grid-template-columns: minmax(min-content, 200px) 1fr 1fr;
 ```
 
-#### max-content
+#### `max-content`
 > Maximum in `minmax` function of content (e.g. text length). 
 
 ```scss
 grid-template-columns: minmax(100px, max-content) 1fr 1fr;
 ```
 
-#### fit-content
+#### `fit-content`
 > Function that creates size of column (column-size, max-size). Basically its combination of `auto` and `max-width`.
 
 ```scss
@@ -261,7 +261,7 @@ grid-template-columns: fit-content(200px) 1fr 1fr;
 
 > Create column that fits its content but max size is 200px.
 
-#### subgrid
+#### `subgrid`
 > Rather than being specified explicitly, the sizes of the grid rows/columns will be taken from the parent grid’s definition.
 
 ```scss
