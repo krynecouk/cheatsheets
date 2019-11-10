@@ -163,7 +163,6 @@ grid-template-columns: 150px 1fr;
 
 - `column-gap`
 > size of column gutter.
-```
 
 #### `justify-items` (stretch | center | start | end)
 > Default `justify-self` for every item in container. `justify` is for **inline** (horizontal) axis.
