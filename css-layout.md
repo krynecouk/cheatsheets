@@ -214,45 +214,45 @@ grid-area: 2 / 1 / 2 / 4;
 #### `order`
 > Order of item in grid.
 
-#### Bonus
-- `repeat`
+### Bonus
+#### `repeat`
 > How many columns/rows should be repeated and what is their sizes. 
 
 ```scss
 repeat(4, [col-start] 250px [col-end])
 ```
-- `auto-fill`
+#### `auto-fill`
 > Creates columns and wraps them if the content is too large/small.
 
 ```scss
 grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 ```
 
-- `auto-fit`
+#### `auto-fit`
 > Creates columns and wraps them if the content is too large/small. Fits the whole row/column (like fr).
 
-- `minmax`
+#### `minmax`
 > Is a functional notation that defines a size range greater than or equal to min and less than or equal to max.
 
 ```scss
 minmax(100px, max-content)
 ```
 
-- min-content
+#### min-content
 > Minimum in `minmax` function of content (e.g. text length). 
 
 ```scss
 grid-template-columns: minmax(min-content, 200px) 1fr 1fr;
 ```
 
-- max-content
+#### max-content
 > Maximum in `minmax` function of content (e.g. text length). 
 
 ```scss
 grid-template-columns: minmax(100px, max-content) 1fr 1fr;
 ```
 
-- fit-content
+#### fit-content
 > Function that creates size of column (column-size, max-size). Basically its combination of `auto` and `max-width`.
 
 ```scss
@@ -261,7 +261,7 @@ grid-template-columns: fit-content(200px) 1fr 1fr;
 
 > Create column that fits its content but max size is 200px.
 
-- subgrid
+#### subgrid
 > Rather than being specified explicitly, the sizes of the grid rows/columns will be taken from the parent grid’s definition.
 
 ```scss
