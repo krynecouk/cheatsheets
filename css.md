@@ -7,7 +7,7 @@ Load HTML --> Parse HTML --------------------------> Document Object Model (DOM)
               Load CSS   ------ Parse CSS ---------> CSS Object Model (CSSOM)
                          (resolve conflicts-cascade)           |
                             (process CSS values)               |
-	                                                       |
+                                                               |
                                                                ˇ
                                                          Render tree
                                                                |
@@ -171,6 +171,17 @@ html {
 - **Element is removed from the normal flow**
 - Impact on surrounding content or elements;
 
+> Parent thatn contains only floated elements is set height to 0 (parent collapsing). 
+In order to fix this - `clearfix`.
+
+```css
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+```
+
 #### Absolutes
 - `position: absolute`, `position: fixed`
 - **Element is removed from the normal flow**
@@ -189,6 +200,12 @@ html {
 - Block		: standalone component that its meaningful on its own
 - Element	: part of a block that has no standalone meaning
 - Modifier 	: a different version of a block **or** an element
+
+## Basic principles of Responsive design
+
+- Fluid grids and layouts (float, flexbox, css grid)
+- Flexible/responsive images
+- Media queries
 
 ## Appendix
 ### CSS naming
@@ -322,4 +339,6 @@ body {
 
 ## Sources
 [1]:[Advanced CSS cource](https://github.com/jonasschmedtmann/advanced-css-course)
+[2]:[HTML Standard - text level semantics](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-var-element)
+[3]:[HTML semantics](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-var-element)
 
