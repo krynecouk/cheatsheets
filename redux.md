@@ -296,3 +296,7 @@ hasChanged = hasChanged || nextStateForKey !== previousStateForKey
 [1]:[Redux Documentation](https://redux.js.org)
 [2]:[Redux - Remove boilerplate](https://redux.js.org/recipes/reducing-boilerplate#reducers)
 [3]:[Redux Dev Tools extension](https://github.com/zalmoxisus/redux-devtools-extension)
+[4]:[Dan Abramov - how to persist redux state](https://egghead.io/lessons/javascript-redux-persisting-the-state-to-the-local-storage)
+[5]:[Medium - persist state](https://medium.com/@jrcreencia/persisting-redux-state-to-local-storage-f81eb0b90e7e)
+[6]:[Redux Hooks](https://react-redux.js.org/next/api/hooks#recipe-useshallowequalselector)
+[7]:[Redux setup codepen](https://codesandbox.io/s/w02m7jm3q7)
