@@ -369,10 +369,62 @@ interface User {
 
 > `User` has `events`. `events` is object with string keys and values of `Callback`.
 
+## Optional chaining
 
+> Immediately stop execution some expressions encounters `null` or `undefined`.
 
+```ts
+// Before
+let x = (foo === null || foo === undefined) ?
+    undefined :
+    foo.bar.baz();
 
+// Now
+let x = foo?.bar.baz();
+```
 
+```ts
+// Before
+if (foo && foo.bar && foo.bar.baz) {
+    // ...
+}
+
+// After-ish
+if (foo?.bar?.baz) {
+    // ...
+}
+```
+
+```ts
+// Before 
+if (log != null) {
+	log(`Request started at ${new Date().toISOString()}`);
+}
+
+// Now
+log?.(`Request finished at at ${new Date().toISOString()}`);
+```
+
+## Nullish Coalescing
+
+```ts
+let x = foo ?? bar();
+```
+
+> Call `bar()` when foo is `null` or `undefined`.
+
+## Assertions functions
+
+> Throws an error if assert function is `false`.
+
+```ts
+function multiply(x, y) {
+    assert(typeof x === "number");
+    assert(typeof y === "number");
+
+    return x * y;
+}
+```
 
 ## Sources
 [1]: [Typescript Docs](http://www.typescriptlang.org/docs/home.html)
