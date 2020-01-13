@@ -207,6 +207,83 @@ In order to fix this - `clearfix`.
 - Flexible/responsive images
 - Media queries
 
+
+## CSS properties
+
+### `box-shadow`
+> Described by X and Y offsets relative to the element, blur and spread radii, and color.
+
+```css
+/* Keyword values */
+box-shadow: none;
+
+/* offset-x | offset-y | color */
+box-shadow: 60px -16px teal;
+
+/* offset-x | offset-y | blur-radius | color */
+box-shadow: 10px 5px 5px black;
+
+/* offset-x | offset-y | blur-radius | spread-radius | color */
+box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+
+/* inset | offset-x | offset-y | color */
+box-shadow: inset 5em 1em gold;
+
+/* Any number of shadows, separated by commas */
+box-shadow: 3px 3px red, -1em 0 0.4em olive;
+
+/* Global keywords */
+box-shadow: inherit;
+box-shadow: initial;
+box-shadow: unset;
+```
+
+> [Box Shadow Generator](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Background_and_Borders/Box-shadow_generator)
+
+### `translate()`
+
+> The `translate()` CSS function repositions an element in the horizontal and/or vertical directions. Its result is a `<transform-function>` data type.
+
+```css
+/* Double <length-percentage> values */
+transform: translate(100px, 200px);
+transform: translate(100px, 50%);
+transform: translate(30%, 200px);
+transform: translate(30%, 50%);
+```
+
+### `transition`
+
+> The `transition` CSS property is a shorthand property for `transition-property`, `transition-duration`, `transition-timing-function`, and `transition-delay`.
+
+```css
+/* Apply to 1 property */
+/* property name | duration */
+transition: margin-right 4s;
+
+/* property name | duration | delay */
+transition: margin-right 4s 1s;
+
+/* property name | duration | timing function */
+transition: margin-right 4s ease-in-out;
+
+/* property name | duration | timing function | delay */
+transition: margin-right 4s ease-in-out 1s;
+
+/* Apply to 2 properties */
+transition: margin-right 4s, color 1s;
+
+/* Apply to all changed properties */
+transition: all 0.5s ease-out;
+
+/* Global values */
+transition: inherit;
+transition: initial;
+transition: unset;
+```
+
+> More info [here](https://developer.mozilla.org/en-US/docs/Web/CSS/transition).
+
 ## Appendix
 ### CSS naming
 
@@ -333,8 +410,6 @@ body {
 > [clip-path examples](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)
 
 > [clippy](https://bennettfeely.com/clippy/)
-
-
 
 
 ## Sources

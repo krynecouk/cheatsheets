@@ -330,6 +330,33 @@ makeRequest()
 
 > `await` waits for async method. Must be used insinde of `async` method.
 
+## Array and Object manipulation
+
+### []
+- remove	: [].filter(el => el !=='foo')
+- add		: [...[], 'foo'] 
+- replace	: [].map(el === 'foo' ? 'bar' : el)
+
+### {}
+- update	: { ...{}, foo: 'foo' } 
+- add		: { ...{}, foo }
+- remove	: { ...{}, foo: undefined } 
+		  _.omit({}, foo) // lodash
+
+## Tagged Template Literals
+
+`styled.button()` === `styled.button`` `` `
+
+### Interpolation
+
+```js
+const favoriteFood = 'pizza'
+const favoriteDrink = 'obi'
+
+logArgs`I like ${favoriteFood} and ${favoriteDrink}.`
+// -> ["I like ", " and ", "."] "pizza" "obi"
+```
+
 ## Appendix
 ### ES6 config and destroy pattern
 ```js
