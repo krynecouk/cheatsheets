@@ -35,13 +35,13 @@ them have to do with windows, files, buffers, and related things.
 - M->	       beginning of text
 
 ```yml
-			  Previous line, C-p
-				  :
-				  :
-   Backward, C-b .... Current cursor position .... Forward, C-f
-				  :
-				  :
-			    Next line, C-n
+         Previous line, C-p
+                  :
+                  :
+  Backward, C-b .... Current cursor position .... Forward, C-f
+                  :
+                  :
+            Next line, C-n
 ```
 
 ## Cut/Copy/Delete
