@@ -413,8 +413,92 @@
    %Example.User{name: "Steve"}
    #+END_SRC
 ** Composition
-*** alias
-*** import
-*** filtering
+*** ~alias~
+    Allows us to alias module names; used quite frequently in Elixir code:
+    #+BEGIN_SRC elixir
+    defmodule Example do
+      alias Sayings.Greetings, as: Hi
+      def print_message(name), do: Hi.basic(name)
+    end
+    #+END_SRC
+*** ~import~
+    If we want to import functions rather than aliasing the module we can use import:
+    #+BEGIN_SRC elixir
+    import List
+    last([1, 2, 3])
+    #+END_SRC
+*** Filtering
+    ~import~ can be filtered with ~:only~ and ~:except~ options
+    #+BEGIN_SRC elixir
+    import List, only: [last: 1]
+    import List, except: [last: 1]
+    import List, only: :functions
+    import List, only: :macros
+    #+END_SRC
 *** require
-*** use
+    Same as ~import~ but *only* for macros.
+    #+BEGIN_SRC elixir
+    defmodule Example do
+      require SuperMacros
+      SuperMacros.do_stuff
+    end
+    #+END_SRC
+*** TODO use
+* Mix
+  Elixirs maven.
+** Create Project
+   ~mix new <project-name>~
+** =mix.exs=
+   ~pom.xml
+   #+BEGIN_SRC
+   defmodule Example.Mixfile do
+     use Mix.Project
+
+     def project do
+       [
+         app: :example,
+         version: "0.1.0",
+         elixir: "~> 1.5",
+         start_permanent: Mix.env() == :prod,
+         deps: deps()
+       ]
+     end
+
+     def application do
+       [
+         extra_applications: [:logger]
+       ]
+     end
+
+     defp deps do
+       []
+     end
+   end
+   #+END_SRC
+   - project: name of our application (app), specify our version (version), Elixir version (elixir), and finally our dependencies (deps).
+** Interactive =mix.exs=
+   ~iex -S mix~
+** Compilation
+   ~mix compile~
+** Dependencies
+   #+BEGIN_SRC 
+   def deps do
+     [
+       {:phoenix, "~> 1.1 or ~> 1.2"},
+       {:phoenix_html, "~> 2.3"},
+       {:cowboy, "~> 1.0", only: [:dev, :test]},
+       {:slime, "~> 0.14"}
+     ]
+   end
+   #+END_SRC
+   
+   To update dependecies:
+   #+BEGIN_SRC elixir
+   mix deps.get
+   #+END_SRC
+** Environments
+   ~:dev~, ~:test~ and ~:prod~ and set in =Mix.env=
+   #+BEGIN_SRC 
+   $ MIX_ENV=prod mix compile
+   #+END_SRC
+* Sigils
