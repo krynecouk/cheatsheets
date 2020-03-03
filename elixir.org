@@ -252,6 +252,7 @@
    end
    #+END_SRC
 ** ~case/2~
+   Uses pattern matching. In order to not rebind existing variable, use =pin= operator.
    #+BEGIN_SRC elixir
    case {:ok, "Hello World"} do
      {:ok, result} -> result
@@ -259,3 +260,161 @@
      _ -> "Catch all"
    end
    #+END_SRC
+** ~guards~ 
+*** TODO [[https://hexdocs.pm/elixir/guards.html#list-of-allowed-expressions][link]]
+** ~cond/1~
+   Returns first ~true~ condition. If none ~true~ condition is met, then error is thrown.
+   #+BEGIN_SRC elixir
+   cond do
+     2 + 2 == 5 -> "This will not be true"
+     2 * 2 == 3 -> "Nor this"
+     1 + 1 == 2 -> "But this will"
+   end
+   #+END_SRC
+** ~with/1~
+*** TODO [[https://elixirschool.com/en/lessons/basics/control-structures/#with][link]]
+* Functions
+** Anonymous Functions
+   ~fn~ <params> ~->~ <body> ~end~
+   #+BEGIN_SRC elixir
+   sum = fn (a, b) -> a + b end
+   sum.(2, 3)
+   sum = &(&1 + &2) # shorthand
+   sum.(2, 3)
+   #+END_SRC
+** Pattern Matching
+   #+BEGIN_SRC elixir
+   fn
+     {:ok, result} -> IO.puts "Handling result..."
+     {:ok, _} -> IO.puts "This would be never run as previous will be matched beforehand."
+     {:error} -> IO.puts "An error has occurred!"
+   end
+   some_result = 1
+   handle_result.({:ok, some_result}) # Handling result...
+   handle_result.({:error}) # An error has occurred!
+   #+END_SRC
+** Named Functions
+   #+BEGIN_SRC elixir
+   defmodule Greeter do
+   def hello(name) do
+       "Hello, " <> name
+     end
+   end
+
+   Greeter.hello("Sean")
+   
+   # shorthand version
+   defmodule Greeter do
+     def hello(name), do: "Hello, " <> name
+   end
+   #+END_SRC
+   
+   Recursion example:
+   #+BEGIN_SRC elixir
+   defmodule Length do
+     def of([]), do: 0
+     def of([_ | tail]), do: 1 + of(tail)
+   end
+   #+END_SRC
+
+   Function defined by *name* and *arity*. So "overloads" are possible.
+   #+BEGIN_SRC elixir
+   defmodule Greeter2 do
+     def hello(), do: "Hello, anonymous person!"   # hello/0
+     def hello(name), do: "Hello, " <> name        # hello/1
+     def hello(name1, name2), do: "Hello, #{name1} and #{name2}"
+   end
+   #+END_SRC
+** Functions and Pattern Matching
+   - Everything is pattern matched.
+   - Elixir matches: 1) arity 2) pattern
+   - Each side will pattern match against the incoming argument and bind to whatever it matches with.
+   #+BEGIN_SRC elixir
+   defmodule Greeter1 do
+     def hello(%{name: person_name} = person) do
+       IO.puts "Hello, " <> person_name
+       IO.inspect person
+     end
+   end
+   
+   Greeter1.hello(%{:name: "Fred", age: "95", favourite_color: "Taupe"})
+   #+END_SRC
+   
+   - ~person = %{name: "Fred", age: "95", favorite_color: "Taupe"}~
+   - ~%{name: person_name} = %{name: "Fred", age: "95", favorite_color: "Taupe"}~
+   - ~%{name: person_name} = %{name: "Fred", age: "95", favorite_color: "Taupe"}~
+
+*** What if person = %{name: person_name}
+    Same result. It doesn't matter on order. Each argument is pattern matched with passed arg.
+   - ~%{name: person_name} = %{name: "Fred", age: "95", favorite_color: "Taupe"}~
+   - ~person = %{name: "Fred", age: "95", favorite_color: "Taupe"}~
+   - ~%{name: "Fred", age: "95", favorite_color: "Taupe"} = %{name: "Fred"}~
+** Private Functions
+   ~defp~ and its private within module
+   #+BEGIN_SRC elixir
+   defmodule Greeter do
+     def hello(name), do: phrase() <> name
+     defp phrase, do: "Hello, "
+   end
+   #+END_SRC
+** Guards
+   ~when~
+   #+BEGIN_SRC elixir
+   defmodule Greeter do
+     def hello(names) when is_list(names) do
+       names
+       |> Enum.join(", ")
+       |> hello
+     end
+
+     def hello(name) when is_binary(name) do
+       phrase() <> name
+     end
+
+     defp phrase, do: "Hello, "
+   end
+   #+END_SRC
+** Default Arguments
+   ~\\~
+   #+BEGIN_SRC elixir
+   def hello(names, language_code \\ "en") when is_list(names) do
+     names
+       |> Enum.join(", ")
+       |> hello(language_code)
+   end
+   #+END_SRC
+* Pipe Operator
+  ~|>~
+  #+BEGIN_SRC elixir
+  "Elixir rocks" |> String.upcase() |> String.split()
+  #+END_SRC
+* Modules
+  Modules allow us to organize functions into a namespace.
+  #+BEGIN_SRC elixir
+  defmodule Example.Greetings do
+    def morning(name) do
+      "Good morning #{name}."
+    end
+  
+    def evening(name) do
+      "Good night #{name}."
+    end
+  end
+  #+END_SRC
+** Module Attributes
+   ~@<name> <value>~ e.g. ~@greeting "Hello"~
+** Structs
+   ~defstruct~
+   Special maps with a defined set of keys and default values. A struct must be defined within a module, which it takes its name from.
+   #+BEGIN_SRC elixir
+   defmodule Example.User do
+     defstruct name: "Sean", roles: []
+   end
+   %Example.User{name: "Steve"}
+   #+END_SRC
+** Composition
+*** alias
+*** import
+*** filtering
+*** require
+*** use
