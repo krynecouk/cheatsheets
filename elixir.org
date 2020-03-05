@@ -260,7 +260,7 @@
      _ -> "Catch all"
    end
    #+END_SRC
-** ~guards~ 
+** ~guards~
 *** TODO [[https://hexdocs.pm/elixir/guards.html#list-of-allowed-expressions][link]]
 ** ~cond/1~
    Returns first ~true~ condition. If none ~true~ condition is met, then error is thrown.
@@ -302,13 +302,13 @@
    end
 
    Greeter.hello("Sean")
-   
+
    # shorthand version
    defmodule Greeter do
      def hello(name), do: "Hello, " <> name
    end
    #+END_SRC
-   
+
    Recursion example:
    #+BEGIN_SRC elixir
    defmodule Length do
@@ -336,10 +336,10 @@
        IO.inspect person
      end
    end
-   
+
    Greeter1.hello(%{:name: "Fred", age: "95", favourite_color: "Taupe"})
    #+END_SRC
-   
+
    - ~person = %{name: "Fred", age: "95", favorite_color: "Taupe"}~
    - ~%{name: person_name} = %{name: "Fred", age: "95", favorite_color: "Taupe"}~
    - ~%{name: person_name} = %{name: "Fred", age: "95", favorite_color: "Taupe"}~
@@ -395,7 +395,7 @@
     def morning(name) do
       "Good morning #{name}."
     end
-  
+
     def evening(name) do
       "Good night #{name}."
     end
@@ -481,7 +481,7 @@
 ** Compilation
    ~mix compile~
 ** Dependencies
-   #+BEGIN_SRC 
+   #+BEGIN_SRC
    def deps do
      [
        {:phoenix, "~> 1.1 or ~> 1.2"},
@@ -491,14 +491,283 @@
      ]
    end
    #+END_SRC
-   
+
    To update dependecies:
    #+BEGIN_SRC elixir
    mix deps.get
    #+END_SRC
 ** Environments
    ~:dev~, ~:test~ and ~:prod~ and set in =Mix.env=
-   #+BEGIN_SRC 
+   #+BEGIN_SRC
    $ MIX_ENV=prod mix compile
    #+END_SRC
 * Sigils
+  Alternative syntax for representing and working with literals.
+  - ~C Generates a character list with no escaping or interpolation
+  - ~c Generates a character list with escaping and interpolation
+  - ~R Generates a regular expression with no escaping or interpolation
+  - ~r Generates a regular expression with escaping and interpolation
+  - ~S Generates a string with no escaping or interpolation
+  - ~s Generates a string with escaping and interpolation
+  - ~W Generates a word list with no escaping or interpolation
+  - ~w Generates a word list with escaping and interpolation
+  - ~N Generates a NaiveDateTime struct
+  - ~U Generates a DateTime struct (since Elixir 1.9.0)
+  [[https://elixirschool.com/en/lessons/basics/sigils/][Examples]]
+* Documentation
+  ~iex> h <function name>
+** Inline
+   ~#~
+   #+BEGIN_SRC elixir
+   # Outputs 'Hello, chum.' to the console.
+   IO.puts("Hello, " <> "chum.")
+   #+END_SRC
+** Modules
+   ~@moduledoc~
+   #+BEGIN_SRC elixir
+   defmodule Greeter do
+     @moduledoc """
+     Provides a function `hello/1` to greet a human
+     """
+
+     def hello(name) do
+       "Hello, " <> name
+     end
+   end
+   #+END_SRC
+** Functions
+   ~@doc~
+   #+BEGIN_SRC elixir
+   defmodule Greeter do
+     @moduledoc """
+     ...
+     """
+
+     @doc """
+     Prints a hello message
+
+     ## Parameters
+
+       - name: String that represents the name of the person.
+
+     ## Examples
+
+         iex> Greeter.hello("Sean")
+         "Hello, Sean"
+
+         iex> Greeter.hello("pete")
+         "Hello, pete"
+
+     """
+     @spec hello(String.t()) :: String.t()
+     def hello(name) do
+       "Hello, " <> name
+     end
+   end
+   #+END_SRC
+** ExDoc
+   Example [[https://elixirschool.com/en/lessons/basics/documentation/#exdoc][here]].
+* Testing
+  ~mix text~
+** ExUnit
+   #+BEGIN_SRC elixir
+   defmodule ExampleTest do
+     use ExUnit.Case
+     doctest Example
+
+     test "greets the world" do
+       assert Example.hello() == :world
+     end
+   end
+   #+END_SRC
+*** ~assert~
+    Test if ~true~.
+*** ~refute~
+    Test if ~false~.
+*** ~assert_raise~
+    Test if ~error~ raised.
+*** ~assert_receive~
+    Test that ~message~ is received.
+    #+BEGIN_SRC elixir
+    defmodule SendingProcess do
+      def run(pid) do
+        send(pid, :ping)
+      end
+    end
+
+    defmodule TestReceive do
+      use ExUnit.Case
+
+      test "receives ping" do
+        SendingProcess.run(self())
+        assert_received :ping
+      end
+    end
+    #+END_SRC
+*** ~capture_io~ and ~capture_log~
+    Test app output.
+    #+BEGIN_SRC elixir
+    defmodule OutputTest do
+      use ExUnit.Case
+      import ExUnit.CaptureIO
+
+      test "outputs Hello World" do
+        assert capture_io(fn -> IO.puts("Hello World") end) == "Hello World\n"
+      end
+    end
+    #+END_SRC
+** Test Setup
+   ~setup~ & ~setup_all~
+   #+BEGIN_SRC elixir
+   defmodule ExampleTest do
+     use ExUnit.Case
+     doctest Example
+
+     setup_all do
+       {:ok, recipient: :world}
+     end
+
+     test "greets", state do
+       assert Example.hello() == state[:recipient]
+     end
+   end
+   #+END_SRC
+* Comprehensions
+  ~for <generator>, do...j~
+** Basics
+*** Lists
+    #+BEGIN_SRC elixir
+    for x <- [1, 2, 3, 4, 5], do: x*x # [1, 4, 9, 16, 25]
+    #+END_SRC
+*** Keywords
+    #+BEGIN_SRC elixir
+    for {_key, val} <- [one: 1, two: 2, three: 3], do: val # [1, 2, 3]
+    #+END_SRC
+*** Maps
+    #+BEGIN_SRC elixir
+    for {k, v} <- %{"a" => "A", "b" => "B"}, do: {k, v} # [{"a", "A"}, {"b", "B"}]
+    #+END_SRC
+*** Binaries
+    #+BEGIN_SRC elixir
+    for <<c <- "hello">>, do: <<c>> # ["h", "e", "l", "l", "o"]
+    #+END_SRC
+*** Pattern Matching
+    #+BEGIN_SRC elixir
+    for {:ok, val} <- [ok: "Hello", error: "Unknown", ok: "World"], do: val # ["Hello", "World"]
+    #+END_SRC
+*** Multiple
+    #+BEGIN_SRC elixir
+    for n <- [1, 2, 3, 4], times <- 1..n do
+      String.duplicate("*", times)
+    end
+    #+END_SRC
+** Filters
+   When a filtered value returns false or nil it is excluded from the final list.
+   #+BEGIN_SRC elixir
+   for x <- 1..10, is_even(x), do: x
+   #+END_SRC
+   #+BEGIN_SRC elixir
+   for x <- 1..100,
+       is_even(x),
+       rem(x, 3) == 0, do: x
+   #+END_SRC
+** ~:into~
+   Different output than ~List~. *Must* implement ~Collectable~ protocol.
+   #+BEGIN_SRC elixir
+   for {k, v} <- [one: 1, two: 2, three: 3], into: %{}, do: {k, v}
+   for c <- [72, 101, 108, 108, 111], into: "", do: <<c>>
+   #+END_SRC
+* Strings
+  More [[https://elixirschool.com/en/lessons/basics/strings/][here]].
+** Strings
+   Nothing but a sequence of bytes.
+   ~string = <<104,101,108,108,111>>~
+** Chars
+   Elixir strings are enclosed with double quotes, while char lists are enclosed with single quotes.
+   ~'hello'~
+** Graphemes
+   #+BEGIN_SRC elixir
+   String.codepoints string
+   String.graphemes string
+   #+END_SRC
+** Functions
+*** ~length/1~
+    ~String.length "Hello"~
+*** ~replace/3~
+    ~String.replace("Hello", "e", "a")~
+*** ~duplicate/2~
+    ~String.duplicate("Oh my ", 3)~
+*** ~split/2~
+    ~String.split("Hello", " ")~
+*** Example
+    #+BEGIN_SRC elixir
+    defmodule Anagram do
+      def anagrams?(a, b) when is_binary(a) and is_binary(b) do
+        sort_string(a) == sort_string(b)
+      end
+
+      def sort_string(string) do
+        string
+        |> String.downcase()
+        |> String.graphemes()
+        |> Enum.sort()
+      end
+    end
+    #+END_SRC
+* Date and Time
+** Time
+   #+BEGIN_SRC elixir
+   Time.utc_now
+   t = ~T[19:39:31.056226]
+   t.hour
+   t.minute
+   t.day
+   #+END_SRC
+** Date
+   #+BEGIN_SRC elixir
+   Date.utc_today
+   {:ok, date} = Date.new(2020, 12,12) # {:ok, ~D[2020-12-12]}
+   Date.day_of_week date # 6
+   Date.leap_year? date # true
+   #+END_SRC
+** DateTime
+   #+BEGIN_SRC elixir
+   DateTime.from_naive(~N[2016-05-24 13:26:08.003], "Etc/UTC")
+   #+END_SRC
+** Timezones
+   Follow Docs [[https://elixirschool.com/en/lessons/basics/date-time/#working-with-timezones][here]].
+* Mix Tasks
+** Custom Mix Task
+   ~mix hello~
+   =lib/hello.ex=
+   #+BEGIN_SRC elixir
+   defmodule Hello do
+     @doc """
+     Outputs `Hello, World!` every time.
+     """
+     def say do
+       IO.puts("Hello, World!")
+     end
+   end
+   #+END_SRC
+
+   =hello/lib/mix/tasks/hello.ex=
+   #+BEGIN_SRC elixir
+   defmodule Mix.Tasks.Hello do
+     use Mix.Task
+
+     @shortdoc "Simply calls the Hello.say/0 function."
+     def run(_) do
+       # calling our Hello.say() function from earlier
+       Hello.say()
+     end
+   end
+   #+END_SRC
+* IEx Helpers
+  - ~h~ : help
+  - ~i~ : data type info
+  - ~r~ : recompile
+  - ~t~ : type
+* Best Practices
+  [[https://github.com/christopheradams/elixir_style_guide][Elixir style guide]]
+  [[https://github.com/elixir-lang/elixir/blob/master/lib/elixir/pages/Naming%2520Conventions.md][Naming conventions]]
