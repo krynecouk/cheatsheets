@@ -94,6 +94,22 @@
    - Keys are atoms.
    - Keys are ordered.
    - Keys do not have to be unique.
+*** Omitting brackets
+    1. With {}
+    #+BEGIN_SRC elixir
+    if(false, [{:do, :this}, {:else, :that}])
+    #+END_SRC
+    
+    2. With []
+    #+BEGIN_SRC elixir
+    if(false, [do: :this, else: :that])
+    #+END_SRC
+    
+    3. If keyword list is an last argument then:
+    #+BEGIN_SRC elixir
+    if false, do: :this, else: :that
+    #+END_SRC
+
 ** Maps
 *** READ
    #+BEGIN_SRC elixir
@@ -382,6 +398,10 @@
        |> Enum.join(", ")
        |> hello(language_code)
    end
+   #+END_SRC
+** Function reference
+   #+BEGIN_SRC elixir
+   Enum.map(&mirror_row/1) 
    #+END_SRC
 * Pipe Operator
   ~|>~
@@ -769,5 +789,28 @@
   - ~r~ : recompile
   - ~t~ : type
 * Best Practices
-  [[https://github.com/christopheradams/elixir_style_guide][Elixir style guide]]
-  [[https://github.com/elixir-lang/elixir/blob/master/lib/elixir/pages/Naming%2520Conventions.md][Naming conventions]]
+  - [[https://github.com/christopheradams/elixir_style_guide][Elixir style guide]]
+  [[https://github.com/elixir-lang/elixir/blob/master/lib/elixir/pages/Naming%2520Conventions.md][- Naming conventions]]
+* Playground
+  #+BEGIN_SRC elixir
+  defmodule Cards do
+    def create_deck do
+      values = ["Ace", "Two", "Three", "Four", "Five"]
+      suits = ["Spades", "Clubs", "Hearts", "Diamonds"]
+
+      for suit <- suits, value <- values do
+        "#{value} of #{suit}"
+      end
+    end
+  end
+  Cards.create_deck
+  #+END_SRC
+
+  #+RESULTS:
+  : ** (ArgumentError) cannot invoke def/2 outside module
+  :     (elixir 1.10.2) lib/kernel.ex:5425: Kernel.assert_module_scope/3
+  :     (elixir 1.10.2) lib/kernel.ex:4186: Kernel.define/4
+  :     (elixir 1.10.2) expanding macro: Kernel.def/2
+  :     iex:1: (file)
+  :     (iex 1.10.2) expanding macro: IEx.Helpers.import_file/1
+  :     iex:3: (file)
