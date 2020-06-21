@@ -1,0 +1,16 @@
+* Installation
+** =rustup=
+   #+BEGIN_SRC
+   $ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+   #+END_SRC
+
+* Commands
+  - ~rustup update~
+  - ~rustup doc~
+  - ~cargo new project~
+  - ~cargo build~
+  - ~cargo run~
+  - ~cargo check~
+
+* Sources 
+  - [1]: [[https://doc.rust-lang.org/book/title-page.html][Rust Book]]
