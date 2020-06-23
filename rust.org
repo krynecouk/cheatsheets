@@ -359,10 +359,121 @@
    let slice = &a[1..3];
    #+END_SRC
 
+* Structs 
+  Object definition (structure). Unlike tuples, strucs attribute doesn't have to be in the same order.
+
+** Struct Types
+   - basic struct
+   - tuple struct
+   - unit-like struct
+
+*** Basic Struct
+  
+    #+BEGIN_SRC rust
+    ...
+    User {
+        email,
+        username,
+        active: true,
+        sign_in_count: 1,
+    }
+    ...
+    #+END_SRC
+
+**** Update Syntax (spread)
+     #+BEGIN_SRC rust
+     ...
+     let user1 = User {
+         email: String::from("someone@example.com"),
+         username: String::from("someusername123"),
+         active: true,
+         sign_in_count: 1,
+     };
+   
+     let user2 = User {
+         email: String::from("another@example.com"),
+         username: String::from("anotherusername567"),
+         ..user1
+     };
+     ...
+     #+END_SRC
+
+*** Tuple Struct
+    Struct with name but don’t have names associated with their fields; rather, they just have the types of the fields.
+
+    #+BEGIN_SRC rust
+    fn main() {
+        struct Color(i32, i32, i32);
+        let black = Color(0, 0, 0);
+    }
+    #+END_SRC
+
+*** Unit-like Struct
+    Struct without any field.
+
+** Struct Methods
+   #+BEGIN_SRC rust
+   struct Rectangle {
+       width: u32,
+       height: u32,
+   }
+   impl Rectangle {
+       fn can_hold(&self, other: &Rectangle) -> bool {
+           self.width > other.width && self.height > other.height
+       }
+   }
+   fn main() {
+       let rect1 = Rectangle {
+           width: 30,
+           height: 50,
+       };
+       let rect2 = Rectangle {
+           width: 10,
+           height: 40,
+       };
+
+       println!("Can rect1 hold rect2? {}", rect1.can_hold(&rect2));
+   }
+   #+END_SRC
+
+*** Automatic (De)Referencing
+    Here’s how it works: when you call a method with object.something(), Rust automatically adds in &, &mut, or * so object matches the signature of the method. In other words, the following are the same:
+    #+BEGIN_SRC rust
+    p1.distance(&p2);
+    (&p1).distance(&p2);
+    #+END_SRC
+
+** Associated Functions
+   Like ~static~. Recognized by missing ~self~.
+
+   #+BEGIN_SRC rust
+   struct Rectangle {
+       width: u32,
+       height: u32,
+   }
+    
+   impl Rectangle {
+       fn square(size: u32) -> Rectangle {
+           Rectangle {
+               width: size,
+               height: size,
+           }
+       }
+   }
+    
+   fn main() {
+       let sq = Rectangle::square(3);
+   }
+   #+END_SRC
+
+* Enums 
+
 * Sources 
   - [1]: [[https://doc.rust-lang.org/book/title-page.html][Rust Book]]
 * Pomodoros
   :LOGBOOK:
+  CLOCK: [2020-06-23 Út 15:36]
+  CLOCK: [2020-06-23 Út 15:02]--[2020-06-23 Út 15:27] =>  0:25
   CLOCK: [2020-06-23 Út 09:42]--[2020-06-23 Út 10:07] =>  0:25
   CLOCK: [2020-06-23 Út 09:01]--[2020-06-23 Út 09:27] =>  0:25
   CLOCK: [2020-06-23 Út 08:25]--[2020-06-23 Út 08:50] =>  0:25
