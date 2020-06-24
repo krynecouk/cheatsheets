@@ -216,6 +216,55 @@
        println!("LIFTOFF!!!");
    }
    #+END_SRC
+** ~match~
+   Pattern matching +operator+ expression.
+   #+BEGIN_SRC 
+   match <expression> {
+      <pattern> => <some code>
+   }
+   #+END_SRC
+
+   #+BEGIN_SRC rust
+   fn main() {
+       fn plus_one(x: Option<i32>) -> Option<i32> {
+           match x {
+               None => None,
+               Some(i) => Some(i + 1),
+           }
+       }
+   
+       let five = Some(5);
+       let six = plus_one(five);
+       let none = plus_one(None);
+   }
+   #+END_SRC
+** ~if let~
+   Shorthand for ~match~ with only one pattern.
+   #+BEGIN_SRC 
+   if let <pattern> = <expression> {<some code>}
+   #+END_SRC
+   This:
+   #+BEGIN_SRC rust
+   fn main() {
+       let some_u8_value = Some(0u8);
+       match some_u8_value {
+           Some(3) => println!("three"),
+           _ => (),
+       }
+   }
+   #+END_SRC
+   Is same as this:
+   #+BEGIN_SRC rust
+   fn main() {
+       let some_u8_value = Some(0u8);
+       if let Some(3) = some_u8_value {
+          println!("three")
+       } else {
+          ...
+       }
+   }
+   
+   #+END_SRC
 * Ownership
   Rules of managing parts of heap memory that are no longer needed. For every value in heap there is only one variable on stack (owner of the value).
 ** Rules
@@ -466,13 +515,36 @@
    }
    #+END_SRC
 
+
 * Enums 
+  #+BEGIN_SRC rust
+  fn main() {
+      enum Message {
+          Quit,
+          Move { x: i32, y: i32 },
+          Write(String),
+          ChangeColor(i32, i32, i32),
+      }
+  
+      impl Message {
+          fn call(&self) {
+              // method body would be defined here
+          }
+      }
+  
+      let m = Message::Write(String::from("hello"));
+      m.call();
+  }
+  #+END_SRC
+
+* Packages, crates and modules 
 
 * Sources 
   - [1]: [[https://doc.rust-lang.org/book/title-page.html][Rust Book]]
 * Pomodoros
   :LOGBOOK:
-  CLOCK: [2020-06-23 Út 15:36]
+  CLOCK: [2020-06-24 St 08:33]--[2020-06-24 St 08:58] =>  0:25
+  CLOCK: [2020-06-23 Út 15:36]--[2020-06-23 Út 16:01] =>  0:25
   CLOCK: [2020-06-23 Út 15:02]--[2020-06-23 Út 15:27] =>  0:25
   CLOCK: [2020-06-23 Út 09:42]--[2020-06-23 Út 10:07] =>  0:25
   CLOCK: [2020-06-23 Út 09:01]--[2020-06-23 Út 09:27] =>  0:25
