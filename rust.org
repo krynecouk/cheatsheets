@@ -515,7 +515,6 @@
    }
    #+END_SRC
 
-
 * Enums 
   #+BEGIN_SRC rust
   fn main() {
@@ -538,11 +537,127 @@
   #+END_SRC
 
 * Packages, crates and modules 
+  - Packages: A Cargo feature that lets you build, test, and share crates
+  - Crates: A tree of modules that produces a library or executable
+  - Modules and use: Let you control the organization, scope, and privacy of paths
+  - Paths: A way of naming an item, such as a struct, function, or module
+
+** Packages
+   A package is one or more crates that provide a set of functionality. A package contains a Cargo.toml file that describes how to build those crates.
+*** Rules
+    - package *must* contain 0 or 1 library crate;
+    - package *can* contain 0 or N binary crates;
+    - package *must* contain at least 1 crate (either library or binary);
+
+** Crate
+   A crate is a binary or library.
+*** Rules
+    - if ~main.rs~ then it's binary crate;
+    - if ~lib.rs~ then its's library crate;
+    - both are =crate-roots=
+
+** Modules
+   Modules let us organize code within a crate into groups for readability and easy reuse.
+   
+   #+BEGIN_SRC rust
+   mod front_of_house {
+       mod hosting {
+           fn add_to_waitlist() {}
+           fn seat_at_table() {}
+       }
+   
+       mod serving {
+           fn take_order() {}
+           fn serve_order() {}
+           fn take_payment() {}
+       }
+   }
+   #+END_SRC
+   
+   Represents module tree:
+   #+BEGIN_SRC 
+   crate
+    └── front_of_house
+        ├── hosting
+        │   ├── add_to_waitlist
+        │   └── seat_at_table
+        └── serving
+            ├── take_order
+            ├── serve_order
+            └── take_payment
+   #+END_SRC
+
+** Path
+   Way of finding item in module tree.
+
+*** Absolute
+    Starts from a crate root by using a crate name or a literal crate.
+    
+    #+BEGIN_SRC rust
+     pub fn eat_at_restaurant() {
+         // Absolute path
+         crate::front_of_house::hosting::add_to_waitlist();
+     }
+    #+END_SRC
+
+*** Relative
+    Starts from the current module and uses self, super, or an identifier in the current module.
+     
+     #+BEGIN_SRC rust
+     pub fn eat_at_restaurant() {
+         // Relative path
+         front_of_house::hosting::add_to_waitlist();
+     }
+     #+END_SRC
+
+**** ~super~
+     Analogy to ~..~ in shell.
+
+**** ~self~
+     Analogy to ~.~ in shell.
+
+*** ~pub~ keyword
+    All items are private by default. Parent module can't see to the child module. Child module can access parent. In order to expose parts of module, use ~pub~.
+
+*** ~use~ keyword
+    Adding use and a path in a scope is similar to creating a symbolic link in the filesystem.
+
+    #+BEGIN_SRC rust
+    use std::fmt::Result;
+    pub use std::io::Result as IoResult;
+    #+END_SRC
+
+*** nested ~use~ paths
+    #+BEGIN_SRC rust
+    use std::cmp::Ordering;
+    use std::io;
+    #+END_SRC
+    
+    Is the same as:
+    #+BEGIN_SRC rust
+    use std::{cmp::Ordering, io};
+    #+END_SRC
+
+*** glob ~use~ operator
+    #+BEGIN_SRC rust
+    use std::collections::*;
+    #+END_SRC
+
+*** ~mod~ without ~{}~
+    Loads content of different module. Must be included in ~use~ of module in different file.
+    
+    #+BEGIN_SRC rust
+    mod front_of_house;
+    pub use crate::front_of_house::hosting;
+    #+END_SRC
 
 * Sources 
   - [1]: [[https://doc.rust-lang.org/book/title-page.html][Rust Book]]
 * Pomodoros
   :LOGBOOK:
+  CLOCK: [2020-06-26 Pá 17:49]--[2020-06-26 Pá 18:14] =>  0:25
+  CLOCK: [2020-06-26 Pá 17:09]--[2020-06-26 Pá 17:34] =>  0:25
+  CLOCK: [2020-06-26 Pá 16:39]--[2020-06-26 Pá 17:04] =>  0:25
   CLOCK: [2020-06-24 St 08:33]--[2020-06-24 St 08:58] =>  0:25
   CLOCK: [2020-06-23 Út 15:36]--[2020-06-23 Út 16:01] =>  0:25
   CLOCK: [2020-06-23 Út 15:02]--[2020-06-23 Út 15:27] =>  0:25
