@@ -12,7 +12,7 @@
   - ~cargo run~
   - ~cargo check~
   - ~cargo doc --open~
-
+    
 * Variable vs. Constant
   By default everything is immutable. ~mut~ makes variable mutable. ~const~ must have type annotation and be known by compile time.
 
@@ -650,11 +650,71 @@
     mod front_of_house;
     pub use crate::front_of_house::hosting;
     #+END_SRC
+* Collections
+  - Vector
+  - String
+  - Hash Map
+** Vector
+   List of elements of the same type.
+   
+   #+BEGIN_SRC rust
+   fn main() {
+       let v1: Vec<i32> = Vec::new();
+       let v2 = vec![1, 2, 3];
+       let mut v3 = Vec::new();
+       v3.push(5);
+       let does_not_exist = &v2[100];    // panic
+       let does_not_exist = v2.get(100); // None
+
+       for i in &v2 {
+           println!("{}", i);
+       }
+   }
+   #+END_SRC
+** String
+   Rust core lang uses and knows *only* /string slice/ (~str~ or in borrowed form ~&str~). Reference to some UTF-8 encoded string in binary.
+
+   ~String~ type comes from ~std~ library. Represents growable, mutable, owned, UTF-8 encoded string type. There are another string types in ~std~ like ~OsString~, ~OsStr~, ~CString~ and ~CStr~.
+   
+   ~String~ is just a wrapper aroud ~Vec<u8>~.
+   
+   ~String~ is represented as bytes, scalar values or grapheme clusters. That is the reason why rust don't know how to index ~String~ (which form of string?).
+   
+   #+BEGIN_SRC rust
+   let mut s1 = String::from("foo");
+   let s2 = "bar";
+   s1.push_str(s2);
+   println!("s2 is {}", s2);
+
+   let s1 = String::from("tic");
+   let s2 = String::from("tac");
+   let s3 = String::from("toe");
+   let s = format!("{}-{}-{}", s1, s2, s3);
+
+   let hello = "Здравствуйте";
+   // let answer = &hello[0]; // compile error
+   hello.chars(); // ok
+   hello.bytes(); // ok
+   #+END_SRC
+
+** Hash Map
+   The type ~HashMap<K, V>~ stores a mapping of keys of type K to values of type V.
+   
+   #+BEGIN_SRC rust
+   fn main() {
+       use std::collections::HashMap;
+       let mut scores = HashMap::new();
+       scores.insert(String::from("Yellow"), 50);
+       scores.entry(String::from("Yellow")).or_insert(50); // check if exists and if not then insert
+   }
+   #+END_SRC
 
 * Sources 
   - [1]: [[https://doc.rust-lang.org/book/title-page.html][Rust Book]]
 * Pomodoros
   :LOGBOOK:
+  CLOCK: [2020-06-29 Po 10:30]--[2020-06-29 Po 10:55] =>  0:25
+  CLOCK: [2020-06-27 So 11:10]--[2020-06-27 So 11:35] =>  0:25
   CLOCK: [2020-06-26 Pá 17:49]--[2020-06-26 Pá 18:14] =>  0:25
   CLOCK: [2020-06-26 Pá 17:09]--[2020-06-26 Pá 17:34] =>  0:25
   CLOCK: [2020-06-26 Pá 16:39]--[2020-06-26 Pá 17:04] =>  0:25
