@@ -603,12 +603,12 @@
 *** Relative
     Starts from the current module and uses self, super, or an identifier in the current module.
      
-     #+BEGIN_SRC rust
+    #+BEGIN_SRC rust
      pub fn eat_at_restaurant() {
          // Relative path
          front_of_house::hosting::add_to_waitlist();
      }
-     #+END_SRC
+    #+END_SRC
 
 **** ~super~
      Analogy to ~..~ in shell.
@@ -777,11 +777,143 @@
     }
     #+END_SRC
 
+* Generic Types 
+  #+BEGIN_SRC rust
+  fn largest<T>(list: &[T]) -> T {...}
+
+  struct Point<T> {
+      x: T,
+      y: T,
+  }
+
+  impl<T> Point<T> {
+      fn x(&self) -> &T {
+          &self.x
+      }
+  }
+  #+END_SRC
+
+* Trait
+  A trait tells the Rust compiler about functionality a particular type has and can share with other types (~interface).
+  
+  #+BEGIN_SRC rust
+  #![allow(unused_variables)]
+  trait Summary {
+      fn summarize(&self) -> String;
+  }
+
+  trait DefaultSummary {
+      fn summarize(&self) -> String {
+          "foo".to_string();
+      }
+  }
+
+  struct NewsArticle {
+      pub headline: String,
+      pub location: String,
+      pub author: String,
+      pub content: String,
+  }
+
+  impl Summary for NewsArticle {
+      fn summarize(&self) -> String {
+          format!("{}, by {} ({})", self.headline, self.author, self.location)
+      }
+  }
+
+  // this
+  fn notify(item: &impl Summary) {
+      println!("Breaking news! {}", item.summarize());
+  }
+
+  // same as this
+  fn notify<T: Summary>(item: &T) {
+      println!("Breaking news! {}", item.summarize());
+  }
+  #+END_SRC
+
+** Trait Bounds
+   #+BEGIN_SRC rust
+   // must implement ~Summary~ AND ~Display~
+   pub fn notify(item: &(impl Summary + Display)) {}
+
+   // same
+   pub fn notify<T: Summary + Display>(item: &T) {}
+   
+   // with where trait bound
+   fn some_function<T, U>(t: &T, u: &U) -> i32
+       where T: Display + Clone,
+             U: Clone + Debug
+   {}
+   #+END_SRC
+
+** Blanket Implementations
+   Implement a trait for any type that implements an another trait.
+   
+   #+BEGIN_SRC rust
+   // Implement ~ToString~ for any ~is-a Display~
+   impl<T: Display> ToString for T {}
+   #+END_SRC
+
+* Lifetimes
+  Every reference in Rust has a /lifetime/, which is the scope for which that reference is valid.
+  #+BEGIN_SRC rust
+  fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+      if x.len() > y.len() {
+          x
+      } else {
+          y
+      }
+  }
+  #+END_SRC
+
+** Borrow Checker
+   Rust checks if the inner scopes lives long as the outer ones.
+   - Short life
+     #+BEGIN_SRC 
+     fn main() {
+         {
+             let r;                // ---------+-- 'a
+             {                     //          |
+                 let x = 5;        // -+-- 'b  |
+                 r = &x;           //  |       |
+             }                     // -+       |
+             println!("r: {}", r); //          |
+         }                         // ---------+
+     }
+     #+END_SRC
+
+   - Long life
+     #+BEGIN_SRC rust
+     fn main() {
+         {
+             let x = 5;            // ----------+-- 'b
+                                   //           |
+             let r = &x;           // --+-- 'a  |
+                                   //   |       |
+             println!("r: {}", r); //   |       |
+         }                         // ----------+
+     }
+     #+END_SRC
+
+** Lifetime Elision Rules
+   1. Implicit lifetimes
+      Every function gets an implicit lifetime.
+
+   2. output lifetime
+      If one input lifetime then the output's lifetime is the same.
+
+   3. ~self~ lifetime
+      If multiple input lifetimes but one is ~&self~ or ~&mut self~ then output lifetime is that of ~self~.
+
+   4. other
+      If none of above then the lifetime annotation must be specified.
+
 * Sources 
   - [1]: [[https://doc.rust-lang.org/book/title-page.html][Rust Book]]
 * Pomodoros
   :LOGBOOK:
-  CLOCK: [2020-06-29 Po 12:21]
+  CLOCK: [2020-06-29 Po 12:21]--[2020-06-29 Po 12:46] =>  0:25
   CLOCK: [2020-06-29 Po 11:27]--[2020-06-29 Po 11:52] =>  0:25
   CLOCK: [2020-06-29 Po 10:30]--[2020-06-29 Po 10:55] =>  0:25
   CLOCK: [2020-06-27 So 11:10]--[2020-06-27 So 11:35] =>  0:25
