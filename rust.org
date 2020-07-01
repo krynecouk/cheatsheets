@@ -12,6 +12,9 @@
   - ~cargo run~
   - ~cargo check~
   - ~cargo doc --open~
+  - ~cargo test~
+  - ~cargo test <name of test>~
+  - ~cargo test <prefix of tests>~
     
 * Variable vs. Constant
   By default everything is immutable. ~mut~ makes variable mutable. ~const~ must have type annotation and be known by compile time.
@@ -908,11 +911,93 @@
 
    4. other
       If none of above then the lifetime annotation must be specified.
+* Testing
+  - ~assert!~
+    #+BEGIN_SRC rust
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        #[test]
+        fn greeting_contains_name() {
+            let result = greeting("Carol");
+            assert!(
+                result.contains("Carol"),
+                "Greeting did not contain name, value was `{}`", result
+            );
+        }
+    }
+    #+END_SRC
+  - ~assert_eq!~
+    #+BEGIN_SRC rust
+    pub fn add_two(a: i32) -> i32 {
+        a + 2
+    }
+    
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+    
+        #[test]
+        fn it_adds_two() {
+            assert_eq!(4, add_two(2));
+        }
+    }
+    #+END_SRC
+  - ~assert_ne!~
+  - ~[should_panic]~
+    #+BEGIN_SRC rust
+    #[test]
+    #[should_panic(expected = "Guess value must be less than or equal to 100")]
+    fn greater_than_100() {
+        Guess::new(200);
+    }
+    #+END_SRC
+  - ~[ignore]~
+  - custom
+    #+BEGIN_SRC rust
+    #[test]
+    fn it_works() -> Result<(), String> {
+        if 2 + 2 == 4 {
+            Ok(())
+        } else {
+            Err(String::from("two plus two does not equal four"))
+        }
+    }
+    #+END_SRC
+** Unit
+   - Small and more focused, testing one module in isolation at a time, and can test private interfaces.
+   - In the code which testing (module ~tests~ with ~cfg(test)~).
+     #+BEGIN_SRC rust
+     fn main() {...}
 
+     #[cfg(test)]
+     mod tests {
+         use super::*;
+         #[test]
+         ...
+     }
+     #+END_SRC
+   - ~cfg(test)~ (configuration) tells compiler to not include test code in the build.
+** Integration
+   - Entirely external to your library and use your code in the same way any other external code would, using only the public interface and potentially exercising multiple modules per test.
+   - In =crate/tests/<name>_test.rs=.
+   - ~common~ functions must be in =tests/common/mod.rs=
+     #+BEGIN_SRC rust
+     mod common;
+     
+     #[test]
+     fn it_adds_two() {
+         common::setup();
+         assert_eq!(4, adder::add_two(2));
+     }
+     #+END_SRC
+    
 * Sources 
   - [1]: [[https://doc.rust-lang.org/book/title-page.html][Rust Book]]
 * Pomodoros
   :LOGBOOK:
+  CLOCK: [2020-07-02 Čt 00:04]--[2020-07-02 Čt 00:29] =>  0:25
+  CLOCK: [2020-07-01 St 18:05]--[2020-07-01 St 18:30] =>  0:25
   CLOCK: [2020-06-29 Po 12:21]--[2020-06-29 Po 12:46] =>  0:25
   CLOCK: [2020-06-29 Po 11:27]--[2020-06-29 Po 11:52] =>  0:25
   CLOCK: [2020-06-29 Po 10:30]--[2020-06-29 Po 10:55] =>  0:25
