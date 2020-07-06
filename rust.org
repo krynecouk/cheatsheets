@@ -991,11 +991,253 @@
          assert_eq!(4, adder::add_two(2));
      }
      #+END_SRC
-    
+* Closures
+  #+BEGIN_SRC rust
+  fn  add_one_v1   (x: u32) -> u32 { x + 1 }
+  let add_one_v2 = |x: u32| -> u32 { x + 1 };
+  let add_one_v3 = |x|             { x + 1 };
+  let add_one_v4 = |x|               x + 1  ;
+  #+END_SRC
+* Iterator
+  - /iterator adaptors/  - allow to change iterators into different kinds of iterators (e.g. ~map~, ~fileter~ etc)
+  - /consuming adaptors/ - get result of iterator (e.g. ~collect~)
+
+    #+BEGIN_SRC rust
+    pub trait Iterator {
+        type Item;
+        fn next(&mut self) -> Option<Self::Item>;
+        // methods with default implementations elided
+    }
+    #+END_SRC
+    #+BEGIN_SRC rust
+    let sum: u32 = Counter::new()
+        .zip(Counter::new().skip(1))
+        .map(|(a, b)| a * b)
+        .filter(|x| x % 3 == 0)
+        .sum();
+    #+END_SRC
+* Comment
+** Documentation Comment
+   #+BEGIN_SRC rust
+   /// Adds one to the number given.
+   ///
+   /// # Examples
+   ///
+   /// ```
+   /// let arg = 5;
+   /// let answer = my_crate::add_one(arg);
+   ///
+   /// assert_eq!(6, answer);
+   /// ```
+   pub fn add_one(x: i32) -> i32 {
+   x + 1
+   }
+   #+END_SRC
+** Items Comment
+   #+BEGIN_SRC rust
+   //! # My Crate
+   //!
+   //! `my_crate` is a collection of utilities to make performing certain
+   //! calculations more convenient.
+   #+END_SRC
+* Cargo Workspace
+  #+BEGIN_SRC rust
+  [workspace]
+  members = [
+      "adder",
+      "add-one",
+  ]
+  #+END_SRC
+  #+BEGIN_SRC rust
+  [dependencies]
+  add-one = { path = "../add-one" }
+  #+END_SRC
+* ~Deref~ Trait
+  Implementing the Deref trait allows to customize the behavior of the dereference operator ~*~.
+  #+BEGIN_SRC rust
+  use std::ops::Deref;
+  struct MyBox<T>(T);
+  impl<T> MyBox<T> {
+      fn new(x: T) -> MyBox<T> {
+          MyBox(x)
+      }
+  }
+  impl<T> Deref for MyBox<T> {
+      type Target = T;
+  
+      fn deref(&self) -> &T {
+          &self.0
+      }
+  }
+  #+END_SRC
+** ~Deref~ Coercion
+   /Deref coercion/ is a convenience that Rust performs on arguments to functions and methods. Deref coercion works only on types that implement the Deref trait. Deref coercion converts such a type into a reference to another type.
+
+   - From ~&T~ to ~&U~ when ~T: Deref<Target=U>~
+   - From ~&mut T~ to ~&mut U~ when ~T: DerefMut<Target=U>~
+   - From ~&mut T~ to ~&U~ when ~T: Deref<Target=U>~
+
+* ~Drop~ Trait
+  Particular bit of code to be run whenever a value goes out of scope, and the compiler will insert this code automatically.
+  
+  #+BEGIN_SRC rust
+  struct CustomSmartPointer {
+    data: String,
+  }
+
+  impl Drop for CustomSmartPointer {
+      fn drop(&mut self) {
+          println!("Dropping CustomSmartPointer with data `{}`!", self.data);
+      }
+  }
+  
+  fn main() {
+      let c = CustomSmartPointer {
+          data: String::from("my stuff"),
+      };
+      let d = CustomSmartPointer {
+          data: String::from("other stuff"),
+      };
+      println!("CustomSmartPointers created.");
+  }
+  #+END_SRC
+
+* Smart Pointers
+  Data structures (usually ~struct~ with ~Deref~ and ~Drop~ traits) that not only act like a pointer but also have additional metadata and capabilities (e.g. ~String~ or ~Vec<T>~).
+  - ~Box<T>~
+  - ~Rc<T>~
+  - ~Ref<T>~
+  - ~RefMut<T>~
+** ~Box<T>~
+   All values in Rust are stack allocated by default. Values can be boxed (allocated on the heap) by creating a Box<T>
+
+   #+BEGIN_SRC rust
+   fn main() {
+       let b = Box::new(5);
+       println!("b = {}", b);
+   }
+   #+END_SRC
+
+   - When you have a type whose size can’t be known at compile time and you want to use a value of that type in a context that requires an exact size
+   - When you have a large amount of data and you want to transfer ownership but ensure the data won’t be copied when you do so
+   - When you want to own a value and you care only that it’s a type that implements a particular trait rather than being of a specific type
+** ~Rc<T>~
+   Keeps track of the number of references to a value which determines whether or not a value is still in use. If there are zero references to a value, the value can be cleaned up without any references becoming invalid.
+
+   #+BEGIN_SRC rust
+   fn main() {
+      let a = Rc::new(Cons(5, Rc::new(Cons(10, Rc::new(Nil)))));
+      println!("count after creating a = {}", Rc::strong_count(&a));          // 1
+      let b = Cons(3, Rc::clone(&a));
+      println!("count after creating b = {}", Rc::strong_count(&a));          // 2
+      {
+          let c = Cons(4, Rc::clone(&a));
+          println!("count after creating c = {}", Rc::strong_count(&a));      // 3
+      }
+      println!("count after c goes out of scope = {}", Rc::strong_count(&a)); // 2
+   }
+   #+END_SRC
+** ~RefCell<T>~
+   Type that we can use when we need an immutable type but need to change an inner value of that type; it also enforces the borrowing rules at runtime instead of at compile time.
+* Threads
+  - M:N - /green/ threads - M language threads : N OS threads
+  - 1:1 - 1 language thread : 1 OS thread (used in Rust)
+    #+BEGIN_SRC rust
+    fn main() {
+        let v = vec![1, 2, 3];
+        let handle = thread::spawn(move || {
+            println!("Here's a vector: {:?}", v);
+        });
+        handle.join().unwrap();
+    }
+    #+END_SRC
+  - ~move~ moves ownership to the closure (default is immutable borrow)
+
+* Channels
+  Do not communicate by sharing memory; instead, share memory by communicating.
+  #+BEGIN_SRC rust
+  use std::sync::mpsc;    // multiple producers, single consumer
+  use std::thread;
+  use std::time::Duration;
+  fn main() {
+      // tx - transmitter (producer)
+      // rx - receiver (consumer)
+      let (tx, rx) = mpsc::channel();
+      let tx1 = mpsc::Sender::clone(&tx);
+      thread::spawn(move || {
+          let vals = vec![
+              String::from("hi"),
+              String::from("from"),
+              String::from("the"),
+              String::from("thread"),
+          ];
+  
+          for val in vals {
+              tx1.send(val).unwrap();
+              thread::sleep(Duration::from_secs(1));
+          }
+      });
+  
+      thread::spawn(move || {
+          let vals = vec![
+              String::from("more"),
+              String::from("messages"),
+              String::from("for"),
+              String::from("you"),
+          ];
+  
+          for val in vals {
+              tx.send(val).unwrap();
+              thread::sleep(Duration::from_secs(1));
+          }
+      });
+  
+      for received in rx {
+          println!("Got: {}", received);
+      }
+  }
+  #+END_SRC
+* Mutex
+  Communication by sharing memory.
+  #+BEGIN_SRC rust
+  use std::sync::{Arc, Mutex};
+  use std::thread;
+
+  fn main() {
+      let counter = Arc::new(Mutex::new(0)); // Atomic version of ~Rc<T>~
+      let mut handles = vec![];
+  
+      for _ in 0..10 {
+          let counter = Arc::clone(&counter);
+          let handle = thread::spawn(move || {
+              let mut num = counter.lock().unwrap();
+  
+              *num += 1;
+          });
+          handles.push(handle);
+      }
+  
+      for handle in handles {
+          handle.join().unwrap();
+      }
+  
+      println!("Result: {}", *counter.lock().unwrap());
+  }
+  #+END_SRC
+     
 * Sources 
   - [1]: [[https://doc.rust-lang.org/book/title-page.html][Rust Book]]
+  - [2]: [[https://doc.rust-lang.org/stable/rust-by-example/index.html][Rust By Example]]
 * Pomodoros
   :LOGBOOK:
+  CLOCK: [2020-07-06 Po 21:43]--[2020-07-06 Po 22:08] =>  0:25
+  CLOCK: [2020-07-06 Po 21:11]--[2020-07-06 Po 21:36] =>  0:25
+  CLOCK: [2020-07-06 Po 17:36]--[2020-07-06 Po 18:01] =>  0:25
+  CLOCK: [2020-07-06 Po 13:07]--[2020-07-06 Po 13:32] =>  0:25
+  CLOCK: [2020-07-06 Po 12:13]--[2020-07-06 Po 12:38] =>  0:25
+  CLOCK: [2020-07-04 So 17:10]--[2020-07-04 So 17:35] =>  0:25
+  CLOCK: [2020-07-04 So 09:24]--[2020-07-04 So 09:49] =>  0:25
+  CLOCK: [2020-07-02 Čt 19:29]--[2020-07-02 Čt 19:54] =>  0:25
   CLOCK: [2020-07-02 Čt 00:04]--[2020-07-02 Čt 00:29] =>  0:25
   CLOCK: [2020-07-01 St 18:05]--[2020-07-01 St 18:30] =>  0:25
   CLOCK: [2020-06-29 Po 12:21]--[2020-06-29 Po 12:46] =>  0:25
