@@ -1224,12 +1224,211 @@
       println!("Result: {}", *counter.lock().unwrap());
   }
   #+END_SRC
-     
+* ~async~/~await~ 
+  #+BEGIN_SRC rust
+  async fn learn_and_sing() {
+    // Wait until the song has been learned before singing it.
+    // We use `.await` here rather than `block_on` to prevent blocking the
+    // thread, which makes it possible to `dance` at the same time.
+    let song = learn_song().await;
+    sing_song(song).await;
+  }
+
+  async fn async_main() {
+      let f1 = learn_and_sing();
+      let f2 = dance();
+  
+      // `join!` is like `.await` but can wait for multiple futures concurrently.
+      // If we're temporarily blocked in the `learn_and_sing` future, the `dance`
+      // future will take over the current thread. If `dance` becomes blocked,
+      // `learn_and_sing` can take back over. If both futures are blocked, then
+      // `async_main` is blocked and will yield to the executor.
+      futures::join!(f1, f2);
+  }
+  
+  fn main() {
+      block_on(async_main());
+  }
+  #+END_SRC
+* Trait Object
+  Any type inside a ~Box~ (or ~&~) that implements the trait and:
+  - The return type isn’t Self.
+  - There are no generic type parameters.
+
+  #+BEGIN_SRC rust
+  pub struct Screen {
+      pub components: Vec<Box<dyn Draw>>,
+  }
+  #+END_SRC
+* Pattern Matching
+** Syntax
+*** ~let~
+    #+BEGIN_SRC 
+    let PATTERN = EXPRESSION;
+    #+END_SRC
+
+*** ~fn~
+    #+BEGIN_SRC 
+    fn foo(PATTERN)
+    #+END_SRC
+
+*** ~match~
+    #+BEGIN_SRC 
+    match VALUE {
+        PATTERN => EXPRESSION,
+        PATTERN => EXPRESSION,
+        PATTERN => EXPRESSION,
+    }
+    #+END_SRC
+
+*** ~if let~
+    #+BEGIN_SRC 
+    if let PATTERN = VALUE {
+        EXPRESSION
+    }
+    #+END_SRC
+
+*** ~while let~
+    #+BEGIN_SRC 
+    while let PATTERN = VALUE {
+        EXPRESSION
+    }
+    #+END_SRC
+
+*** ~for~
+    #+BEGIN_SRC 
+    for PATTERN in VALUE {
+        EXPRESSION
+    }
+    #+END_SRC
+** refutable
+   Patterns that can fail to match for some possible value (e.g. ~let Some(x) = a_value~).
+   - *can*: ~if let~, ~while let~
+
+** irrefutable 
+   Patterns that will match for any possible value passed (e.g. ~let x = 5~).
+   - *must*: ~let~, ~fn~, ~for~
+   - *can*: ~if let~, ~while let~ (but with warning because always matched)
+** examples
+*** Multiple Patterns
+    #+BEGIN_SRC rust
+    let x = 1;
+    match x {
+        1 | 2 => println!("one or two"),
+        3 => println!("three"),
+        _ => println!("anything"),
+    }
+    #+END_SRC
+*** Matching Ranges
+    #+BEGIN_SRC rust
+    let x = 'c';
+    match x {
+        'a'..='j' => println!("early ASCII letter"),
+        'k'..='z' => println!("late ASCII letter"),
+        _ => println!("something else"),
+    }
+    #+END_SRC
+*** Destructing ~struct~
+    #+BEGIN_SRC rust
+    struct Point {
+        x: i32,
+        y: i32
+    }
+    
+    fn foo() {
+        let point = Point { x: 10 y: 20 };
+        let Point { x: a, b: y} = point; // OK
+        let Point { x, y } = point;      // OK
+    }
+    #+END_SRC
+*** Destructing ~enum~
+    #+BEGIN_SRC rust
+    enum Color {
+        Rgb(i32, i32, i32),
+        Hsv(i32, i32, i32),
+    }
+    
+    enum Message {
+        Quit,
+        Move { x: i32, y: i32 },
+        Write(String),
+        ChangeColor(Color),
+    }    
+
+    fn main() {
+        let msg = Message::ChangeColor(Color::Hsv(0, 160, 255));
+    
+        match msg {
+            Message::ChangeColor(Color::Rgb(r, g, b)) => println!(
+                "Change the color to red {}, green {}, and blue {}",
+                r, g, b
+            ),
+            Message::ChangeColor(Color::Hsv(h, s, v)) => println!(
+                "Change the color to hue {}, saturation {}, and value {}",
+                h, s, v
+            ),
+            _ => (),
+        }
+    }
+    #+END_SRC
+
+*** Desctructing ~struct~ and ~tuple~
+    #+BEGIN_SRC rust
+    let ((feet, inches), Point { x, y }) = ((3, 10), Point { x: 3, y: -10 });
+    #+END_SRC
+
+*** Ingoring Value
+    #+BEGIN_SRC rust
+    fn foo(_: i32, y: i32) {
+        println!("This code only uses the y parameter: {}", y);
+    }
+    #+END_SRC
+
+*** Ignoring Remaining Parts
+    #+BEGIN_SRC rust
+    let origin = Point { x: 0, y: 0, z: 0 };
+
+    match origin {
+        Point { x, .. } => println!("x is {}", x),
+    }
+    #+END_SRC
+
+*** Match Guards
+    #+BEGIN_SRC rust
+    let origin = Point { x: 0, y: 0, z: 0 };
+
+    match origin {
+        Point { x, .. } => println!("x is {}", x),
+    }
+    #+END_SRC
+
+*** ~@~ Bindings
+    #+BEGIN_SRC rust
+    fn main() {
+        enum Message {
+            Hello { id: i32 },
+        }
+
+        let msg = Message::Hello { id: 5 };
+
+        match msg {
+            Message::Hello { id: foo @ 3..=7 } => println!("Found an id in range: {}", foo),
+            Message::Hello { id: 10..=12 } => println!("Found an id in another range"),
+            Message::Hello { id } => println!("Found some other id: {}", id),
+        }
+    }
+    #+END_SRC
 * Sources 
   - [1]: [[https://doc.rust-lang.org/book/title-page.html][Rust Book]]
   - [2]: [[https://doc.rust-lang.org/stable/rust-by-example/index.html][Rust By Example]]
+  - [3]: [[https://rust-unofficial.github.io/too-many-lists/index.html][Rust Linked List]]
+  - [4]: [[https://doc.rust-lang.org/nomicon/index.html][Rust Rustonomicon]]
 * Pomodoros
   :LOGBOOK:
+  CLOCK: [2020-07-08 St 21:23]
+  CLOCK: [2020-07-08 St 09:53]--[2020-07-08 St 10:18] =>  0:25
+  CLOCK: [2020-07-08 St 09:17]--[2020-07-08 St 09:42] =>  0:25
+  CLOCK: [2020-07-07 Út 15:38]--[2020-07-07 Út 16:03] =>  0:25
   CLOCK: [2020-07-06 Po 21:43]--[2020-07-06 Po 22:08] =>  0:25
   CLOCK: [2020-07-06 Po 21:11]--[2020-07-06 Po 21:36] =>  0:25
   CLOCK: [2020-07-06 Po 17:36]--[2020-07-06 Po 18:01] =>  0:25
