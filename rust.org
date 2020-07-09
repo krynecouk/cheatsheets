@@ -1418,6 +1418,58 @@
         }
     }
     #+END_SRC
+
+* Newtype
+  #+BEGIN_SRC rust
+  struct Wrapper(Vec<String>);
+  #+END_SRC
+
+* Type Alias
+  Alias for a type.
+  #+BEGIN_SRC rust
+  fn main() {
+      type Kilometers = i32;
+      let x: i32 = 5;
+      let y: Kilometers = 5;
+      println!("x + y = {}", x + y);
+  }
+  #+END_SRC
+
+* Associated types
+  Alias type abstraction.
+  #+BEGIN_SRC rust
+  pub trait Iterator {
+      type Item;
+      fn next(&mut self) -> Option<Self::Item>;
+  }
+  #+END_SRC
+
+* Default Generic Type
+  #+BEGIN_SRC rust
+  trait Add<RHS=Self> {
+      type Output;
+      fn add(self, rhs: RHS) -> Self::Output;
+  }
+  #+END_SRC
+
+* Fn Name Ambiguity
+  #+BEGIN_SRC
+  <Type as Trait>::function(receiver_if_method, next_arg, ...);
+  #+END_SRC
+
+* Never Type
+  #+BEGIN_SRC rust
+  fn bar() -> ! {
+      panic!();
+  }
+  #+END_SRC
+
+* Dynamically Sized Types
+  Rust compiler *must* know how much space every type needs. If there is a type with uknown size at compile type, than reference is needed. If ~trait~ type, than with ~dyn~. 
+  #+BEGIN_SRC rust
+  Box<dyn Fn() + Send + 'static>
+  #+END_SRC
+
 * Sources 
   - [1]: [[https://doc.rust-lang.org/book/title-page.html][Rust Book]]
   - [2]: [[https://doc.rust-lang.org/stable/rust-by-example/index.html][Rust By Example]]
@@ -1425,7 +1477,9 @@
   - [4]: [[https://doc.rust-lang.org/nomicon/index.html][Rust Rustonomicon]]
 * Pomodoros
   :LOGBOOK:
-  CLOCK: [2020-07-08 St 21:23]
+  CLOCK: [2020-07-09 Čt 06:27]
+  CLOCK: [2020-07-08 St 21:53]--[2020-07-08 St 22:18] =>  0:25
+  CLOCK: [2020-07-08 St 21:23]--[2020-07-08 St 21:48] =>  0:25
   CLOCK: [2020-07-08 St 09:53]--[2020-07-08 St 10:18] =>  0:25
   CLOCK: [2020-07-08 St 09:17]--[2020-07-08 St 09:42] =>  0:25
   CLOCK: [2020-07-07 Út 15:38]--[2020-07-07 Út 16:03] =>  0:25
