@@ -1,0 +1,113 @@
+#+TITLE: Rust WebAssembly
+
+* Prerequisites
+- cargo
+- rustup
+- rustc
+- wasm-pack
+- OPTIONAL: create-wasm-app
+
+* Installation
+#+BEGIN_SRC sh
+cargo generate --git https://github.com/rustwasm/wasm-pack-template
+#+END_SRC
+* Project
+#+BEGIN_SRC
+wasm-game-of-life/
+├── Cargo.toml
+├── LICENSE_APACHE
+├── LICENSE_MIT
+├── README.md
+└── src
+    ├── lib.rs
+    └── utils.rs
+#+END_SRC
+* ~wasm_bindgen~
+Interface for importing and exporting fn from/to JavaScript.
+#+BEGIN_SRC rust
+use wasm_bindgen::prelude::*;
+#[wasm_bindgen]
+extern {
+    fn alert(s: &str);
+}
+
+#[wasm_bindgen]
+pub fn greet() {
+    alert("Hello, wasm-game-of-life!");
+}
+#+END_SRC
+* Build
+#+BEGIN_SRC sh
+wasm-pack build
+#+END_SRC
+* Build Target
+#+BEGIN_SRC
+pkg/
+├── package.json
+├── README.md
+├── wasm_game_of_life_bg.wasm
+├── wasm_game_of_life.d.ts
+└── wasm_game_of_life.js
+#+END_SRC
+* Package
+#+BEGIN_SRC sh
+npm init wasm-app www
+#+END_SRC
+* Package Target
+#+BEGIN_SRC
+wasm-game-of-life/www/
+├── bootstrap.js
+├── index.html
+├── index.js
+├── LICENSE-APACHE
+├── LICENSE-MIT
+├── package.json
+├── README.md
+└── webpack.config.js
+#+END_SRC
+* Wasm Dependency
+#+BEGIN_SRC json
+  "dependencies": {
+    "wasm-game-of-life": "file:../pkg"
+  },
+#+END_SRC
+#+BEGIN_SRC js
+import * as wasm from "wasm-game-of-life";
+wasm.greet();
+#+END_SRC
+* Interfacing Rust and JS
+WebAssembly has *no direct access* to garbage-collected heap of JS.
+JS has access to WebAssembly linear memory space but *only* as an ~ArrayBuffer~ of scalar values.
+* Interfacing rules
+- Minimaze copying into and out of the WASM linear memory
+- Minimaze (de)serializing
+- Long-lived data structures are implemented as Rust types that live in WASM linear memory and exposes to JS pointers
+- JS calls functions with these pointers and return is small copy-able result
+* Testing
+#+BEGIN_SRC rust
+#[wasm_bindgen_test]
+#+END_SRC
+#+BEGIN_SRC sh
+wasm-pack test --firefox --headless
+#+END_SRC
+* Debugging
+#+BEGIN_SRC rust
+# #![allow(unused_variables)]
+#fn main() {
+pub fn new() -> Universe {
+    utils::set_panic_hook();
+}
+#}
+#+END_SRC
+#+BEGIN_SRC toml
+[dependencies.web-sys]
+version = "0.3"
+features = [
+  "console",
+]
+#+END_SRC
+More [[https://rustwasm.github.io/docs/book/game-of-life/debugging.html][here]].
+
+* Sources
+1. [[https://rustwasm.github.io/docs/book][Rust WebAssembly Book]]
+2. [[https://rustwasm.github.io/docs/book/reference/index.html][Rust WebAssembly Reference]]
