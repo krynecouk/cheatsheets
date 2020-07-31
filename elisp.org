@@ -1,0 +1,99 @@
+#+TITLE: Elisp
+
+* List
+List in Lisp consists of parentheses surrounding atoms separated by whitespace or surrounding other lists or surrounding both atoms and other lists.
+#+BEGIN_SRC emacs-lisp
+'(rose violet daisy buttercup)
+#+END_SRC
+A single-quote ‘'’ tells the Lisp interpreter that it should return the following expression as written, and not evaluate it as it would if the quote were not there.
+
+* Functions
+A function always returns a value when it is evaluated (unless it gets an error); in addition, it may also carry out some action that is a side effect.
+#+BEGIN_SRC emacs-lisp
+(concat "The " (number-to-string (+ 2 fill-column)) " red foxes.")
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+(defun function-name (arguments...)
+  "optional-documentation..."
+  (interactive argument-passing-info)     ; optional
+  body...)
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+(defun add-two-numbers (a b)
+  "Add A to B."
+  (interactive "P\nbFrobnicate buffer: ") ; interactive argument
+  (+ a b))
+#+END_SRC
+
+** Interactive arguments
+List of interactive argument codes is [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Interactive-Codes.html#Interactive-Codes][here]].
+
+* Variables
+#+BEGIN_SRC emacs-lisp
+fill-column
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(fill-column) ; Error because function call instead of variable evaluation.
+#+END_SRC
+
+** ~set~
+As a side effect, the symbol flowers is bound to the list;
+#+BEGIN_SRC emacs-lisp
+(set 'flowers '(rose violet daisy buttercup))
+flowers
+#+END_SRC
+
+** ~setq~ (set quoted)
+Shorthand for ~set~ with quoted first argument.
+#+BEGIN_SRC emacs-lisp
+(setq trees '(pine fir oak maple)
+      herbivores '(gazelle antelope zebra))
+#+END_SRC
+
+** ~let~
+Scoped and local ~set~.
+#+BEGIN_SRC emacs-lisp
+(let ((variable value) ; varlist
+      (variable value)
+      ...)
+  body...)
+#+END_SRC
+
+* ~if~
+#+BEGIN_SRC emacs-lisp
+(if (> 4 5)                               ; if-part
+    (message "4 falsely greater than 5!") ; then-part
+)
+#+END_SRC
+
+* ~if else~
+#+BEGIN_SRC emacs-lisp
+(if (> 4 5)                               ; if-part
+    (message "4 falsely greater than 5!") ; then-part
+  (message "4 is not greater than 5!"))   ; else-part
+#+END_SRC
+
+* ~or~
+#+BEGIN_SRC emacs-lisp
+(or condition else)
+#+END_SRC
+
+* ~nil~
+- ~()~ or ~nil~
+- everything ~nil~ is ~false~. Everything that is not ~nil~ is ~true~.
+
+* ~save-excursion~
+Saves point in buffer and restores it after ~body~ eval.
+#+BEGIN_SRC emacs-lisp
+(save-excursion
+  first-expression-in-body
+  second-expression-in-body
+  third-expression-in-body
+  ...
+  last-expression-in-body)
+#+END_SRC
+
+
+* Sources
+1. [[https://www.gnu.org/software/emacs/manual/html_node/eintr/index.html][Introduction to Emacs Lisp]]
