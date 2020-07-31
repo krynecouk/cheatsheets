@@ -51,14 +51,23 @@ Shorthand for ~set~ with quoted first argument.
       herbivores '(gazelle antelope zebra))
 #+END_SRC
 
-** ~let~
-Scoped and local ~set~.
+* ~progn~
+Combination of sexps. Return of the last.
+#+BEGIN_SRC emacs-lisp
+(progn
+  (switch-to-buffer-other-window "*test*")
+  (hello "you"))
+#+END_SRC
+
+* ~let~
+Scoped and local ~set~. Also like ~progn~ because it takes multiple sexps.
 #+BEGIN_SRC emacs-lisp
 (let ((variable value) ; varlist
       (variable value)
       ...)
   body...)
 #+END_SRC
+
 
 * ~if~
 #+BEGIN_SRC emacs-lisp
@@ -94,6 +103,69 @@ Saves point in buffer and restores it after ~body~ eval.
   last-expression-in-body)
 #+END_SRC
 
+* ~car~
+“Contents of the Address part of the Register”
+First elemenet of list.
+#+BEGIN_SRC emacs-lisp
+(car '(rose violet daisy buttercup))
+#+END_SRC
+
+* ~nth~
+#+BEGIN_SRC emacs-lisp
+(nth 0 '("one" "two" "three"))
+⇒ "one"
+
+(nth 1 '("one" "two" "three"))
+⇒ "two"
+#+END_SRC
+
+* ~setcar~
+#+BEGIN_SRC emacs-lisp
+(setq animals '(antelope giraffe lion tiger))
+(setcar animals 'hippopotamus)
+#+END_SRC
+
+* ~cdr~
+“Contents of the Decrement part of the Register”
+Rest of list after the first (~car~) element.
+#+BEGIN_SRC emacs-lisp
+(cdr '(rose violet daisy buttercup))
+#+END_SRC
+
+* ~nthcdr~
+#+BEGIN_SRC emacs-lisp
+(nthcdr 0 '(pine fir oak maple))
+⇒ (pine fir oak maple)
+
+;; Return a copy of the list without three elements.
+(nthcdr 3 '(pine fir oak maple))
+⇒ (maple)
+#+END_SRC
+
+* ~setcdr~
+#+BEGIN_SRC emacs-lisp
+(setq domesticated-animals '(horse cow sheep goat))
+(setcdr domesticated-animals '(cat dog))
+#+END_SRC
+
+* ~cons~
+"Construct"
+Creates new list by pushing symbols at the beggining.
+#+BEGIN_SRC emacs-lisp
+(cons 'pine '(fir oak maple))
+#+END_SRC
+
+* ~mapcar~
+Apply FUNCTION to each element of SEQUENCE, and make a list of the results.
+#+BEGIN_SRC emacs-lisp
+(setq list-of-names '("Sarah" "Chloe" "Mathilde"))
+
+(defun hello (name)
+  (insert (format "Hello %s!\n" name)))
+
+(mapcar 'hello list-of-names)
+#+END_SRC
 
 * Sources
-1. [[https://www.gnu.org/software/emacs/manual/html_node/eintr/index.html][Introduction to Emacs Lisp]]
+1. [[https://www.gnu.org/software/emacs/manual/html_node/eintr/index.html][Introduction to Emacs Lisp]] (8th chapter)
+2. [[https://learnxinyminutes.com/docs/elisp/][Learn Elisp in Y Minutes]]
