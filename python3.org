@@ -1,0 +1,449 @@
+#+TITLE: Python3
+
+* Installation
+- python
+- [[https://pypi.org/project/setuptools/][setuptools]] (~maven)
+- [[https://packaging.python.org/tutorials/installing-packages/][pip]]
+** Ubuntu
+  #+BEGIN_SRC sh
+  python get-pip.py --user
+  python -m pip install --upgrade pip setuptools wheel
+  pip install --user pipenv
+  sudo snap install pyls
+  #+END_SRC
+
+* Project Structure
+#+BEGIN_SRC
+README.rst
+LICENSE
+setup.py
+requirements.txt
+sample/__init__.py
+sample/core.py
+sample/helpers.py
+docs/conf.py
+docs/index.rst
+tests/test_basic.py
+tests/test_advanced.py
+#+END_SRC
+** Actual Module
+|----------+------------------------------|
+| Location | =./sample/= or =./sample.py= |
+| Purpose  | The code interest            |
+|----------+------------------------------|
+** License
+|----------+---------------|
+| Location | =./LICENCE=   |
+| Purpose  | Lawyering up. |
+|----------+---------------|
+** Setup.py
+|----------+--------------------------------------|
+| Location | =./setup.py=                         |
+| Purpose  | Package and distribution management. |
+|----------+--------------------------------------|
+** Requirements File
+|----------+---------------------------|
+| Location | =./requirements.txt=      |
+| Purpose  | Development dependencies. |
+|----------+---------------------------|
+** Documentation
+|----------+---------------------------------|
+| Location | =./docs=                        |
+| Purpose  | Package reference documentation |
+|----------+---------------------------------|
+** Test Suite
+|----------+---------------------------------|
+| Location | =./tests= or =./test_sample.py= |
+| Purpose  | Integration and unit tests.     |
+|----------+---------------------------------|
+** Makefile
+|----------+---------------------------|
+| Location | =./Makefile=              |
+| Purpose  | Generic management tasks. |
+|----------+---------------------------|
+
+* Glossary
+** Pypi (Python Package Index)
+The Python Package Index (aka PyPI) is the official third-party software repository for the Python.
+** PyPy
+PyPy is Python interpreter and JIT compiler.
+** pip (Python Package Manager)
+~pip~ (package manager). ~pip~ is a is a command-line program used to {install, remove, update, …} software packages written in Python.
+** pipenv
+Pipenv is a dependency manager for Python projects. Like ~pip~ but more high level and easier. Manages automatically ~pip~ and ~venv~.
+** setuptools
+~setuptools~ is a python module. It is used by easy_install and pip.
+** venv
+The venv module provides support for creating lightweight "virtual environments" with their own site directories, optionally isolated from system site directories.
+** pyls
+Python Language Server.
+
+* ~pipenv~ commands
+ - ~pipenv install~ : install dependencies
+ - ~pipenv clean~   : clean dependencies
+ - ~pipenv lock~    : generates lock file
+ - ~pipenv sync~    : install packages from lock
+ - ~pipenv update~  : lock && sync
+ - ~pipenv --where~ : locate project
+ - ~pipenv --venv~  : locate virtual environment
+ - ~pipenv --py~    : locate python interpreter
+
+* Comments
+#+BEGIN_SRC python
+# this is comment
+#+END_SRC
+
+* Num Operations
+~int~, ~float~, ~Decimal~ and ~Fraction~
+#+BEGIN_SRC python
+2 + 2
+50 - 5*6
+17 / 3
+17 // 3 # without fraction
+5 ** 2  # 5 to the power of 2
+# ...
+#+END_SRC
+
+* String
+#+BEGIN_SRC python
+'this is string'
+"this is string"
+"this" + " is " + "string"
+"this" " is " "string"
+("this" " is " "string")
+"this is first char"[0]
+"this is last char"[-1]
+"this is string slice"[0:2] # <0, 2)
+"this is string slice with default"[:2] # <0, 2)
+"this is string slice with default"[2:] # <2, end>
+"this is string slice with default"[-2:]
+r'this is raw string'
+"""this is multiline string"""
+"""\
+this is string without first newline
+"""
+#+END_SRC
+
+Indexes:
+#+BEGIN_SRC
+ +---+---+---+---+---+---+
+ | P | y | t | h | o | n |
+ +---+---+---+---+---+---+
+ 0   1   2   3   4   5   6
+-6  -5  -4  -3  -2  -1
+#+END_SRC
+
+* List
+#+BEGIN_SRC python
+squares = [1, 4, 9, 16, 25]
+squares[-3:]  # slicing returns a new list
+squares[:]    # shallow copy
+squares + [36, 49, 64, 81, 100]
+squares.append(123) # lists are mutable!!!
+#+END_SRC
+** List Comprehensions
+*** Example 1
+#+BEGIN_SRC python
+squares = []
+for x in range(10):
+    squares.append(x**2)
+#+END_SRC
+Is the same as:
+#+BEGIN_SRC python
+squares = [x**2 for x in range(10)]
+#+END_SRC
+*** Example 2
+#+BEGIN_SRC python
+combs = []
+for x in [1,2,3]:
+    for y in [3,1,4]:
+        if x != y:
+            combs.append((x, y))
+
+combs # [(1, 3), (1, 4), (2, 3), (2, 1), (2, 4), (3, 1), (3, 4)]
+#+END_SRC
+Is the same as:
+#+BEGIN_SRC python
+combs = [(x, y) for x in [1, 2, 3] for y in [3, 1, 4] if x != y]
+#+END_SRC
+
+* Tuple
+#+BEGIN_SRC python
+t = 123, 456, 'foo'     # (123, 456, 'foo')
+x, y, z = t             # x=123, y=456, z='foo'
+empty = ()
+singleton = 'hello',    # <-- note trailing comma
+#+END_SRC
+
+* Set
+#+BEGIN_SRC python
+basket = {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}
+'orange' in basket     # True
+#+END_SRC
+** Set Comprehension
+#+BEGIN_SRC python
+a = {x for x in 'abracadabra' if x not in 'abc'} # {'r', 'd'}
+#+END_SRC
+
+* Dictionary
+#+BEGIN_SRC python
+tel = {'jack': 4098, 'sape': 4139}
+tel['guido'] = 4127
+#+END_SRC
+
+* Bool
+Any non-zero integer is ~True~.
+#+BEGIN_SRC python
+print("True") if 0 else print("False")         # false
+print("True") if 1 else print("False")         # true
+print("True") if [] else print("False")        # false
+print("True") if ["foo"] else print("False")   # true
+#+END_SRC
+
+* Control Flow
+** ~if~
+#+BEGIN_SRC python
+if x < 0:
+    x = 0
+    print('Negative')
+elif x == 0:
+    print('Zero')
+else:
+    print('foo')
+
+print("Positive") if x >= 0 else print("Negative")
+#+END_SRC
+** ~for~
+#+BEGIN_SRC python
+# Strategy:  Create a new collection
+active_users = {}
+for user, status in users.items():
+    if status == 'active':
+        active_users[user] = status
+#+END_SRC
+** ~for break else~
+#+BEGIN_SRC python
+for n in range(2, 10):
+    for x in range(2, n):
+        if n % x == 0:
+            print(n, 'equals', x, '*', n//x)
+            break
+    else: # runs when no break occures
+        print(n, 'is a prime number')
+#+END_SRC
+** ~pass~
+Do nothing.
+#+BEGIN_SRC python
+while True:
+   pass  # Busy-wait for keyboard interrupt (Ctrl+C)
+#+END_SRC
+
+* Functions
+#+BEGIN_SRC python
+def fib(n=10):  # return Fibonacci series up to n
+    """Return a list containing the Fibonacci series up to n."""
+    result = []
+    a, b = 0, 1
+    while a < n:
+        result.append(a)    # see below
+        a, b = b, a+b
+    return result
+
+fib()
+fib(100)
+fib(n=100)
+f100 = fib(100)    # call it
+f100               # write the result [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+#+END_SRC
+** Parameter Position Restriction (~/~ and ~*~)
+#+BEGIN_SRC
+def f(pos1, pos2, /, pos_or_kwd, *, kwd1, kwd2):
+      -----------    ----------     ----------
+        |             |                  |
+        |        Positional or keyword   |
+        |                                - Keyword only
+         -- Positional only
+#+END_SRC
+** ~*args~
+Non-keyworded variable list.
+** ~**kwargs~
+Keyworded variable list.
+** unpack with ~*~
+Function called with upacked e.g. list ~foo(*params)~
+** Lamda
+#+BEGIN_SRC python
+def make_incrementor(n):
+   return lambda x: x + n
+#+END_SRC
+** Type Annotations
+#+BEGIN_SRC python
+def f(ham: str, eggs: str = 'eggs') -> str:
+    print("Annotations:", f.__annotations__)
+    print("Arguments:", ham, eggs)
+    return ham + ' and ' + eggs
+#+END_SRC
+
+* Modules
+#+BEGIN_SRC python
+import fibo
+import fibo as fib
+from fibo import fib, fib2
+from fibo import *
+#+END_SRC
+** Executing Module
+#+BEGIN_SRC python
+if __name__ == "__main__":
+    import sys
+    fib(int(sys.argv[1]))
+#+END_SRC
+
+* Packages
+In order to structure project and import with dotted notation.
+#+BEGIN_SRC
+sound/                          Top-level package
+      __init__.py               Initialize the sound package
+      formats/                  Subpackage for file format conversions
+              __init__.py
+              wavread.py
+              wavwrite.py
+              aiffread.py
+              aiffwrite.py
+              auread.py
+              auwrite.py
+              ...
+      effects/                  Subpackage for sound effects
+              __init__.py
+              echo.py
+              surround.py
+              reverse.py
+              ...
+      filters/                  Subpackage for filters
+              __init__.py
+              equalizer.py
+              vocoder.py
+              karaoke.py
+              ...
+#+END_SRC
+#+BEGIN_SRC python
+import sound.effects.echo
+sound.effects.echo.echofilter(input, output, delay=0.7, atten=4)
+#+END_SRC
+#+BEGIN_SRC python
+from sound.effects import echo
+echo.echofilter(input, output, delay=0.7, atten=4)
+#+END_SRC
+#+BEGIN_SRC python
+import . echo
+import .. formats
+#+END_SRC
+
+* Exception Handling
+#+BEGIN_SRC python
+try:
+    this_fails()
+except ZeroDivisionError as err:
+    print(err)
+finally:
+    print("Bye!")
+else:
+    print("it didnt failed")
+#+END_SRC
+** ~raise~
+#+BEGIN_SRC python
+raise ValueError
+raise # for rethrow
+#+END_SRC
+** User defined exceptions
+#+BEGIN_SRC python
+class Error(Exception):
+    """Base class for exceptions in this module."""
+    pass
+
+class InputError(Error):
+    """Exception raised for errors in the input.
+
+    Attributes:
+        expression -- input expression in which the error occurred
+        message -- explanation of the error
+    """
+
+    def __init__(self, expression, message):
+        self.expression = expression
+        self.message = message
+#+END_SRC
+
+* Classes
+#+BEGIN_SRC python
+class Dog(Animal):
+
+    kind = 'canine'         # class variable shared by all instances
+
+    def __init__(self, name):
+        self.name = name       # instance variable unique to each instance
+        super().__init__(name) # access the parent
+
+    # An instance method. All methods take "self" as the first argument
+    def say(self, msg):
+        print("{name}: {message}".format(name=self.name, message=msg))
+
+    # A class method is shared among all instances
+    # They are called with the calling class as the first argument
+    @classmethod
+    def get_species(cls):
+        return cls.species
+
+    # A static method is called without a class or instance reference
+    @staticmethod
+    def grunt():
+        return "*grunt*"
+
+nick = Dog("Nick")
+#+END_SRC
+** Inheritance
+#+BEGIN_SRC python
+class DerivedClassName(modname.BaseClassName):
+#+END_SRC
+
+* Generators
+#+BEGIN_SRC python
+def reverse(data):
+    for index in range(len(data)-1, -1, -1):
+        yield data[index]
+#+END_SRC
+** Generator Expressions
+#+BEGIN_SRC python
+sum(i*i for i in range(10))
+unique_words = set(word for line in page  for word in line.split())
+#+END_SRC
+
+* Decorators
+#+BEGIN_SRC python
+# Decorators
+# In this example `beg` wraps `say`. If say_please is True then it
+# will change the returned message.
+from functools import wraps
+
+def beg(target_function):
+    @wraps(target_function)
+    def wrapper(*args, **kwargs):
+        msg, say_please = target_function(*args, **kwargs)
+        if say_please:
+            return "{} {}".format(msg, "Please! I am poor :(")
+        return msg
+
+    return wrapper
+
+
+@beg
+def say(say_please=False):
+    msg = "Can you buy me a beer?"
+    return msg, say_please
+
+
+print(say())                 # Can you buy me a beer?
+print(say(say_please=True))  # Can you buy me a beer? Please! I am poor :(
+#+END_SRC
+
+* Sources
+1. [[https://docs.python.org/3/tutorial/index.html][The Python Tutorial]]
+2. [[https://docs.python-guide.org/][The Hitchhiker’s Guide to Python!]]
