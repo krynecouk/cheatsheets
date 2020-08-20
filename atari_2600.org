@@ -1,0 +1,141 @@
+#+TITLE: Atari_2600
+
+* How to assembly
+#+BEGIN_SRC
+dasm <file>.asm -f3 -v0 -ocart.bin
+#+END_SRC
+
+* How to debug with Stella
+Press the ~`~.
+
+* ~ld~ vs ~st~
+~ld~ loads the value
+~st~ stores at address
+** Example
+#+BEGIN_SRC asm
+ldx #10      ; loads the *value* 10
+ldx #$10     ; loads the *value* $10
+ldx $10      ; loads the *value* from RAM address $10!!!
+stx $FF      ; stores it to the RAM address $FF
+#+END_SRC
+
+* Memory Map
+- from ~$00~ to ~$7F~    : TIA registers (television interface adapter)
+- from ~$80~ to ~$FF~    : PIA RAM
+- from ~F000~ to ~$FFFF~ : ROM
+
+* Assembly Binary Convention
+| #10  | 10 |
+| #$10 | 16 |
+| #%10 |  2 |
+
+* Sceleton
+1. Include & segment code origin
+   #+BEGIN_SRC asm
+    processor 6502
+
+    include "vcs.h"
+    include "macro.h"
+
+    seg code
+    org $F000
+   #+END_SRC
+2. Start Label with Clean
+   #+BEGIN_SRC asm
+    Reset:
+    CLEAN_START
+    ...
+   #+END_SRC
+3. Frame Label
+   #+BEGIN_SRC asm
+    NextFrame:
+        ...
+   #+END_SRC
+4. VSYNC
+   #+BEGIN_SRC asm
+    ;; turn on
+    lda #2
+    sta VSYNC
+    sta VBLANK
+
+    ;; 3 lines
+    sta WSYNC
+    sta WSYNC
+    sta WSYNC
+
+    ;; turn off
+    lda #0
+    sta VSYNC
+   #+END_SRC
+5. VBLANK
+   #+BEGIN_SRC asm
+    ;; 37 lines
+    REPEAT 37
+        sta WSYNC
+    REPEND
+
+    ;; turn off
+    lda #0
+    sta VBLANK
+   #+END_SRC
+6. OVERSCAN
+   #+BEGIN_SRC asm
+    ;; overscan
+    lda #2
+    sta VBLANK
+    REPEAT 30
+        sta WSYNC
+    REPEND
+    lda #0
+    sta VBLANK
+   #+END_SRC
+7. ~jmp~ back to ~NextFrame~
+   #+BEGIN_SRC asm
+   jmp NextFrame
+   #+END_SRC
+* Horizontal Position
+#+BEGIN_SRC
+CPU cycles = (X + 68)/3
+#+END_SRC
+
+#+BEGIN_SRC asm
+    ldx #5
+    sta WSYNC
+Loop:
+    dex
+    bne Loop
+
+    sta RESP0
+#+END_SRC
+But that takes 75 TIA cycles.
+** Golden Rule/Recipe
+1. ~WSYNC~
+2. ~remainder=(x+68)%15~ (15 for the one loop)
+3. ~remainder~ to find "fine" offset
+4. ~sta RESP0~ to store low-res position
+5. ~sta HMP0~ to store the fine position (-8/+7)
+6. ~WSYNC~
+7. ~sta HMOVE~ to apply changes
+
+* TIA Screen Objects
+- Background
+- Playfield
+- Player
+
+** Background
+- 160x192
+- ~COLUBK~ register per scanline
+- always behind
+** Playfield
+- 20 bit pattern
+- only left side, right side repeated/reflected
+- ~PF0~, ~PF1~, ~PF2~, ~COLUPF~,
+  ~CTRLPF~ (~D0~: reflect, ~D1~: score, ~D2~: priority, ~D4~-~D5~: ball size)
+** Player
+- independent 8-bit pattern (~GRP0~, ~GRP1~)
+- each player can be stretched (~NUSIZ0~, ~NUSIZ1~), multiplied or inverted (~REFP0~, ~REFP1~)
+** Missiles/balls
+- just one pixel
+- ~M0~ and ~M1~
+* Sources
+1. [[https://cdn.hackaday.io/files/1646277043401568/Atari_2600_Programming_for_Newbies_Revised_Edition.pdf][Programming Atari 2600 for Newbies]]

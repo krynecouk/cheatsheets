@@ -88,6 +88,12 @@ If the last computation was negative.
 1 - Negative Value
 0 = Positive Vaiue
 #+END_SRC
+*** About ~carry~ and ~overflow~
+In unsigned arithmetic, watch the carry flag to detect errors.
+In unsigned arithmetic, the overflow flag tells you nothing interesting.
+
+In signed arithmetic, watch the overflow flag to detect errors.
+In signed arithmetic, the carry flag tells you nothing interesting.
 
 * Instruction Set
 ** ADC  Add Memory to Accumulator with Carry
@@ -766,3 +772,5 @@ If the last computation was negative.
 * Sources
 1. [[https://twitalu.wordpress.com/2013/06/25/introductions-and-the-6502-alu/][Twitalu Blog]]
 2. [[http://archive.6502.org/datasheets/mos_6500-1_one-chip_microcomputer_oct_1986.pdf][6500 processor docs]]
+3. [[http://teaching.idallen.com/dat2343/10f/notes/040_overflow.txt][Carry and Overflow]]
+4. [[http://www.righto.com/2012/12/the-6502-overflow-flag-explained.html][Oveflow flag explained]]
