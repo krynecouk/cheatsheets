@@ -1,0 +1,188 @@
+#+TITLE: C++
+* Compilers
+- gcc
+- g++
+- clang
+- clang++
+** How to upgrade to v7?
+#+BEGIN_SRC sh
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt-get update
+sudo apt-get install gcc-7 g++-7
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 20 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+#+END_SRC
+** How to compile with assembly output?
+#+BEGIN_SRC sh
+g++ -S <file.cpp>
+#+END_SRC
+* Namespaces
+#+BEGIN_SRC cpp
+#include <iostream>
+int main() {
+  std::cout << "Foo";
+}
+#+END_SRC
+or
+#+BEGIN_SRC cpp
+#include <iostream>
+using namespace std;
+int main() {
+  cout << "Foo";
+}
+#+END_SRC
+or
+#+BEGIN_SRC cpp
+#include <iostream>
+using std::cout;
+int main() {
+  cout << "Foo";
+}
+#+END_SRC
+* ~cout~
+Console output stream.
+#+BEGIN_SRC cpp
+cout << "foo"; // insertion operator
+#+END_SRC
+* ~cin~
+Console input stream.
+#+BEGIN_SRC cpp
+string foo;
+cin >> foo; // extraction operator
+#+END_SRC
+* Variable Initializations
+#+BEGIN_SRC cpp
+int i = 20; // asignement
+int i (20); // constructor
+int i {20}; // initialization
+#+END_SRC
+* Primitive Types
+|------------------------+-------------------+---------------------------------|
+| Type                   | Typical Bit Width | Typical Range                   |
+|------------------------+-------------------+---------------------------------|
+| char                   | 1byte             | -127 to 127 or 0 to 255         |
+| unsigned char          | 1byte             | 0 to 255                        |
+| signed char            | 1byte             | -127 to 127                     |
+| int                    | 4bytes            | -2147483648 to 2147483647       |
+| unsigned int           | 4bytes            | 0 to 4294967295                 |
+| signed int             | 4bytes            | -2147483648 to 2147483647       |
+| short int              | 2bytes            | -32768 to 32767                 |
+| unsigned short int     | 2bytes            | 0 to 65,535                     |
+| signed short int       | 2bytes            | -32768 to 32767                 |
+| long int               | 8bytes            | -2,147,483,648 to 2,147,483,647 |
+| signed long int        | 8bytes            | same as long int                |
+| unsigned long int      | 8bytes            | 0 to 4,294,967,295              |
+| long long int          | 8bytes            | -(2^63) to (2^63)-1             |
+| unsigned long long int | 8bytes            | 0 to 18,446,744,073,709,551,615 |
+| float                  | 4bytes            |                                 |
+| double                 | 8bytes            |                                 |
+| long double            | 12bytes           |                                 |
+| wchar_t                | 2 or 4 bytes      | 1 wide character                |
+| bool                   | 1byte             | false/true                      |
+|------------------------+-------------------+---------------------------------|
+* Primitive Type Alias
+#+BEGIN_SRC cpp
+typedef int feet;
+feet distance {0};
+#+END_SRC
+* ~enum~
+#+BEGIN_SRC cpp
+enum color { red, green, blue } c;
+c = blue;
+#+END_SRC
+* ~bool~
+~false~ is 0
+~true~ is everything except 0
+#+BEGIN_SRC cpp
+cout << 2 + 2 == 5;    // 0
+cout << std::boolalpha;
+cout << 2 + 2 == 5;    // false
+#+END_SRC
+* ~std::sizeof~
+#+BEGIN_SRC cpp
+sizeof(char);  // 1 bytes
+#+END_SRC
+* ~climits~ and ~cfloats~
+#+BEGIN_SRC cpp
+#+BEGIN_SRC cpp
+climits::CHAR_MAX; // 127
+#+END_SRC
+* constants
+- literal                        // x = 12
+- declared (~const~)             // const pi {3.1415}
+- expression (~constexpr~)       // constexpr int factorial(int n) {...}
+- enumerated (~enum~)            // enum foo {bar} f;
+- defined (~#define~)            // #define pi 3.14
+* arrays
+#+BEGIN_SRC cpp
+int foo [3];           // sized array of 3
+int foo [] {1, 2, 3};  // automatically sized array
+int foo [3] {0};       // sized and init all to 0
+int foo [3] {};        // same as {0}
+foo[0] = 20;           // assignement
+foo[0];                // reading
+int foo [3][4] {}      // 2 dim
+int foo [3][4] {
+    {1,2,3,4},
+    {},
+    {},
+};
+#+END_SRC
+* ~std::vector~
+#+BEGIN_SRC cpp
+std::vector <char> vowels;
+std::vector <char> vowels (5);                         // sized 5
+std::vector <char> vowels (5, 'a');                    // sized 5 and initialized all to 'a'
+std::vector <char> vowels {'a', 'e', 'i', 'o', 'u'};   // sized 5 and initialized
+std::vector <vector<char>>;                            // 2 dim vector
+vowels[0];
+vowels.at(0);                                          // same
+vowels.at(2) = 'i';
+#+END_SRC
+* ~static_cast~
+#+BEGIN_SRC cpp
+static_cast<double>(12);
+(double) 12;             // obsolete
+#+END_SRC
+* Operator Precedence
+|-------------------+-----------------------------------------------------------+-------------------------------------------------+---------------|
+| Precedence        | Operator                                                  | Description                                     | Associativity |
+|-------------------+-----------------------------------------------------------+-------------------------------------------------+---------------|
+| 1                 | ::                                                        | Scope resolution                                | Left-to-right |
+| 2                 | a++   a--                                                 | Suffix/postfix increment and decrement          |               |
+| type()   type{}   | Functional cast                                           |                                                 |               |
+| a()               | Function call                                             |                                                 |               |
+| a[]               | Subscript                                                 |                                                 |               |
+| .   ->            | Member access                                             |                                                 |               |
+| 3                 | ++a   --a                                                 | Prefix increment and decrement                  | Right-to-left |
+| +a   -a           | Unary plus and minus                                      |                                                 |               |
+| !   ~             | Logical NOT and bitwise NOT                               |                                                 |               |
+| (type)            | C-style cast                                              |                                                 |               |
+| *a                | Indirection (dereference)                                 |                                                 |               |
+| &a                | Address-of                                                |                                                 |               |
+| sizeof            | Size-of[note 1]                                           |                                                 |               |
+| co_await          | await-expression (C++20)                                  |                                                 |               |
+| new   new[]       | Dynamic memory allocation                                 |                                                 |               |
+| delete   delete[] | Dynamic memory deallocation                               |                                                 |               |
+| 4                 | .*   ->*                                                  | Pointer-to-member                               | Left-to-right |
+| 5                 | a*b   a/b   a%b                                           | Multiplication, division, and remainder         |               |
+| 6                 | a+b   a-b                                                 | Addition and subtraction                        |               |
+| 7                 | <<   >>                                                   | Bitwise left shift and right shift              |               |
+| 8                 | <=>                                                       | Three-way comparison operator (since C++20)     |               |
+| 9                 | <   <=                                                    | For relational operators < and ≤ respectively   |               |
+| >   >=            | For relational operators > and ≥ respectively             |                                                 |               |
+| 10                | ==   !=                                                   | For relational operators = and ≠ respectively   |               |
+| 11                | &                                                         | Bitwise AND                                     |               |
+| 12                | ^                                                         | Bitwise XOR (exclusive or)                      |               |
+| 13                | \vert                                                     | Bitwise OR (inclusive or)                       |               |
+| 14                | &&                                                        | Logical AND                                     |               |
+| 15                | \vert\vert                                                |                                                 | Logical OR    |
+| 16                | a?b:c                                                     | Ternary conditional[note 2]                     | Right-to-left |
+| throw             | throw operator                                            |                                                 |               |
+| co_yield          | yield-expression (C++20)                                  |                                                 |               |
+| =                 | Direct assignment (provided by default for C++ classes)   |                                                 |               |
+| +=   -=           | Compound assignment by sum and difference                 |                                                 |               |
+| *=   /=   %=      | Compound assignment by product, quotient, and remainder   |                                                 |               |
+| <<=   >>=         | Compound assignment by bitwise left shift and right shift |                                                 |               |
+| &=   ^=           | =                                                         | Compound assignment by bitwise AND, XOR, and OR |               |
+| 17                | ,                                                         | Comma                                           | Left-to-right |
+|-------------------+-----------------------------------------------------------+-------------------------------------------------+---------------|
