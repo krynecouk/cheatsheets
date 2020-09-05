@@ -11,9 +11,17 @@ sudo apt-get update
 sudo apt-get install gcc-7 g++-7
 sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 20 --slave /usr/bin/g++ g++ /usr/bin/g++-7
 #+END_SRC
-** How to compile with assembly output?
+** How to compile with asm output?
 #+BEGIN_SRC sh
 g++ -S <file.cpp>
+#+END_SRC
+** How to get readable asm output?
+#+BEGIN_SRC sh
+g++ -O0 -S main.cpp
+# +END_SRC
+or
+,#+BEGIN_SRC sh
+g++ -g -c main.cpp && objdump -d -M intel -S main.o
 #+END_SRC
 * Namespaces
 #+BEGIN_SRC cpp
@@ -186,3 +194,205 @@ static_cast<double>(12);
 | &=   ^=           | =                                                         | Compound assignment by bitwise AND, XOR, and OR |               |
 | 17                | ,                                                         | Comma                                           | Left-to-right |
 |-------------------+-----------------------------------------------------------+-------------------------------------------------+---------------|
+* ~auto~
+Type inference keyword.
+#+BEGIN_SRC cpp
+// variables
+auto d{ 5.0 };            // double
+
+// functions
+auto add(int x, int y) {
+    return x + y;         // int
+}
+
+// function parameters (C++20)
+void addAndPrint(auto x, auto y) {
+    std::cout << x + y;
+}
+#+END_SRC
+* Strings
+- C style
+- C++ style
+** C style (array of chars)
+- array of characters
+- terminated by null character (character with value 0)
+- libs: ~[[http://www.cplusplus.com/reference/cstring/][<cstring>]]~ and ~[[http://www.cplusplus.com/reference/cstdlib/][<cstdlib>]]~
+
+#+BEGIN_SRC cpp
+char foo [8] {"foo"};   // literal
+cout << std::strlen(foo);  // (f | o | o | 0) = 3
+#+END_SRC
+** C++ style (string object)
+#+BEGIN_SRC cpp
+#include <string>
+using namespace std
+string s1;
+string s2 {"Frank"};
+string s3 {s2};
+string s4 {"Frank", 3} // Fra
+string s5 {s3, 0, 2}   // Fr
+string s6 (3, 'X');    // XXX
+#+END_SRC
+* ~std::size_t~
+- return type of ~sizeof~
+- unsigned integer with enough bytes to represent the size of any type
+- anything that you need to compare in the loop condition against something that is naturally a ~std::size_t~ itself.
+  #+BEGIN_SRC cpp
+  for (std::size_t i = 0; i < 10; ++i) {
+      // ...
+  }
+  #+END_SRC
+* Function Prototypes
+- Way to tell compiler about used functions.
+  #+BEGIN_SRC cpp
+  int foo(int);
+  int foo(int a); // same
+  #+END_SRC
+* pass-by-value by default
+Function arguments are copies by default. Even for objects (shallow copy).
+#+BEGIN_SRC cpp
+void change_by_value(string s) { s = "changed"; }
+void change_by_ref(string &s) { s = "changed"; }
+
+int main() {
+  string s = "original";
+
+  change_by_value(s);
+  cout << s << endl; // original
+
+  change_by_ref(s);
+  cout << s << endl; // changed
+}
+#+END_SRC
+* pass-by-reference
+Formal parameter will be an alias for the actual parameter.
+#+BEGIN_SRC cpp
+void foo(int &a, int &b);
+#+END_SRC
+
+* default arguments
+Must be tail of the function arguments.
+#+BEGIN_SRC cpp
+void foo(int bar, int baz = 10);
+#+END_SRC
+* function static variable
+Variable bound to a function declaration.
+#+BEGIN_SRC cpp
+void foo() {
+    static int bar = 5000;
+}
+#+END_SRC
+* function overloading
+Overloaded function must have different parameters (amount or type). Return value is not considered.
+#+BEGIN_SRC cpp
+void foo(int bar);
+void foo(double baz);
+int foo(double baz);  // error
+#+END_SRC
+* function stack
+|-----------|
+| heap      |
+| stack     |
+| registers |
+| opcodes   |
+|-----------|
+** c++
+#+BEGIN_SRC cpp
+int foo(int x, int y) {
+  int a = 0;
+  int b = x;
+  int c = y;
+  return 22;
+}
+
+int main() { int bar = foo(10, 20); }
+#+END_SRC
+** assembly
+~$ g++ -O0 -S main.cpp~
+#+BEGIN_SRC asm
+        .file   "main.cpp"
+        .text
+        .globl  _Z3fooii
+        .type   _Z3fooii, @function
+_Z3fooii:
+.LFB0:
+        ;; prologue
+        .cfi_startproc
+        pushq   %rbp
+        .cfi_def_cfa_offset 16
+        .cfi_offset 6, -16
+        movq    %rsp, %rbp
+        ;; main stack frame
+        .cfi_def_cfa_register 6
+        movl    %edi, -20(%rbp)
+        movl    %esi, -24(%rbp)
+        movl    $0, -12(%rbp)
+        movl    -20(%rbp), %eax
+        movl    %eax, -8(%rbp)
+        movl    -24(%rbp), %eax
+        movl    %eax, -4(%rbp)
+        movl    $22, %eax
+        ;; epilogue
+        popq    %rbp
+        .cfi_def_cfa 7, 8
+        ret
+        .cfi_endproc
+.LFE0:
+        .size   _Z3fooii, .-_Z3fooii
+        .globl  main
+        .type   main, @function
+main:
+.LFB1:
+        ;; prologue
+        .cfi_startproc
+        pushq   %rbp
+        .cfi_def_cfa_offset 16
+        .cfi_offset 6, -16
+        ;; main
+        movq    %rsp, %rbp
+        .cfi_def_cfa_register 6
+        movl    $20, %esi
+        movl    $10, %edi
+        call    _Z3fooii
+        movl    $0, %eax
+        ;; epilogue
+        popq    %rbp
+        .cfi_def_cfa 7, 8
+        ret
+        .cfi_endproc
+.LFE1:
+        .size   main, .-main
+        .ident  "GCC: (Ubuntu 7.5.0-3ubuntu1~16.04) 7.5.0"
+        .section        .note.GNU-stack,"",@progbits
+#+END_SRC
+- ~call~ instruction pushes the current instruction pointer onto the stack and then jumps to the address provided in its argument
+ - ~cfi_def_cfa_offset~ (CFA) is defined to be the value of the stack pointer at the call site in the previous frame
+- Heap runs in the same memory space as the stack, just on the other end of memory.
+- There is absolutely no difference between data in the heap and the stack, except for its location in the memory space.
+
+** table
+|----+----------+-------------------------------------------+----------------|
+|    | [ebp]    | pushq   %rbp                              |                |
+|----+----------+-------------------------------------------+----------------|
+| 20 | [ebp-4]  | movl    -24(%rbp), %eax                   | c              |
+|    |          | movl    %eax, -4(%rbp)                    |                |
+|    |          |                                           |                |
+| 10 | [ebp-8]  | movl    -20(%rbp), %eax                   | b              |
+|    |          | movl    %eax, -8(%rbp)                    |                |
+|    |          |                                           |                |
+|  0 | [ebp-12] | movl   $0, -12(%rbp)                      | a              |
+|    |          |                                           |                |
+|----+----------+-------------------------------------------+----------------|
+|    | [esp]    | sub    rsp,0x10 / .cfi_def_cfa_offset 16  |                |
+|    | [ebp]    | movq    %rsp, %rbp                        |                |
+|----+----------+-------------------------------------------+----------------|
+| RT | [ebp-16] | call    _Z3fooii                          | return address |
+|    |          |                                           |                |
+| 10 | [ebp-20] | movl    $10, %edi                         | argument#1     |
+|    |          | movl    %edi, -20(%rbp)                   |                |
+|    |          |                                           |                |
+| 20 | [ebp-24] | movl    $20, %esi                         | argument#2     |
+|    |          | movl    %esi, -24(%rbp)                   |                |
+|----+----------+-------------------------------------------+----------------|
+* Sources
+1. [[https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md][C++ Guidelines]]
