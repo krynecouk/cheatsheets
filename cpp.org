@@ -114,13 +114,14 @@ sizeof(char);  // 1 bytes
 #+BEGIN_SRC cpp
 climits::CHAR_MAX; // 127
 #+END_SRC
-* constants
+* Constants
 - literal                        // x = 12
 - declared (~const~)             // const pi {3.1415}
 - expression (~constexpr~)       // constexpr int factorial(int n) {...}
 - enumerated (~enum~)            // enum foo {bar} f;
 - defined (~#define~)            // #define pi 3.14
-* arrays
+* Arrays
+Just an address of the first element of the chunk of memory.
 #+BEGIN_SRC cpp
 int foo [3];           // sized array of 3
 int foo [] {1, 2, 3};  // automatically sized array
@@ -248,7 +249,7 @@ string s6 (3, 'X');    // XXX
   int foo(int);
   int foo(int a); // same
   #+END_SRC
-* pass-by-value by default
+* Pass-by-value by default
 Function arguments are copies by default. Even for objects (shallow copy).
 #+BEGIN_SRC cpp
 void change_by_value(string s) { s = "changed"; }
@@ -264,37 +265,36 @@ int main() {
   cout << s << endl; // changed
 }
 #+END_SRC
-* pass-by-reference
+* Pass-by-reference
 Formal parameter will be an alias for the actual parameter.
 #+BEGIN_SRC cpp
 void foo(int &a, int &b);
 #+END_SRC
-
-* default arguments
+* Default arguments
 Must be tail of the function arguments.
 #+BEGIN_SRC cpp
 void foo(int bar, int baz = 10);
 #+END_SRC
-* function static variable
+* Function static variable
 Variable bound to a function declaration.
 #+BEGIN_SRC cpp
 void foo() {
     static int bar = 5000;
 }
 #+END_SRC
-* function overloading
+* Function overloading
 Overloaded function must have different parameters (amount or type). Return value is not considered.
 #+BEGIN_SRC cpp
 void foo(int bar);
 void foo(double baz);
 int foo(double baz);  // error
 #+END_SRC
-* function stack
+* Function stack
 |-----------|
-| heap      |
-| stack     |
-| registers |
-| opcodes   |
+| Heap      |
+| Stack     |
+| Registers |
+| Opcodes   |
 |-----------|
 ** c++
 #+BEGIN_SRC cpp
@@ -386,7 +386,7 @@ main:
 |    | [esp]    | sub    rsp,0x10 / .cfi_def_cfa_offset 16 |                |
 |    | [ebp]    | movq    %rsp, %rbp                       |                |
 |----+----------+------------------------------------------+----------------|
-| RT | [ebp-16] | call    _Z3fooii                         | return address |
+| rT | [ebp-16] | call    _Z3fooii                         | return address |
 |    |          |                                          |                |
 | 10 | [ebp-20] | movl    $10, %edi                        | argument#1     |
 |    |          | movl    %edi, -20(%rbp)                  |                |
@@ -395,7 +395,7 @@ main:
 |    |          | movl    %esi, -24(%rbp)                  |                |
 |----+----------+------------------------------------------+----------------|
 * Operator Overload
-#+BEGIN_SRC cpp
+#+bEGIN_SRC cpp
 class Box {
    public:
       // Overload + operator to add two Box objects.
@@ -409,7 +409,7 @@ int main() {
    Box3 box3 = box1 + box2;
 }
 #+END_SRC
-* Functor
+* functor
 Class which defines the ~operator()~. That lets you create objects which "look like" a function:
 #+BEGIN_SRC cpp
 // this is a functor
@@ -426,7 +426,7 @@ int main() {
     int i = add42(8); // 50
 }
 #+END_SRC
-* Lambda
+* lambda
 Lambda functions are just syntactic sugar for anonymous functors.
 #+BEGIN_SRC cpp
 #include <functional>
@@ -445,6 +445,351 @@ int main() {
 - [=] captures all variables used in the lambda by value
 - [&, foo] captures variables like with [&], but foo by value
 - [=, &foo] captures variables like with [=], but foo by reference
+
+* Pointers
+*Variable* (with own memory alloc etc) with value of memory address to another variable or function. Unitialized pointer points *anywhere* in memory (dangerous).
+#+BEGIN_SRC cpp
+double *double_ptr {nullptr};
+#+END_SRC
+** Address operator (~&~)
+#+BEGIN_SRC cpp
+int num {10};
+cout << "Address of num is: " << &num << endl; // 0x61ff1c
+#+END_SRC
+** Dereference operator (~*~)
+#+BEGIN_SRC cpp
+int num{10};
+int *num_ptr{&num};
+cout << "Address of num is: " << num_ptr << endl; // 0x61ff1c
+cout << "Value of num is: " << *num_ptr << endl;  // 10
+#+END_SRC
+** Heap memory allocation (~new~)
+~new~ to allocate storage in heap
+#+BEGIN_SRC cpp
+int *int_ptr = new int; // give me heap storage for int and stores it in ~int_ptr~
+*int_ptr = 100;         // store 100 in heap address ~int_ptr~
+#+END_SRC
+Only way how to access that heap storage is through the ~int_ptr~. If the ~int_ptr~ is lost -> memory leak.
+** Heap memory deallocation (~delete~)
+Every ~new~ allocated space must be ~deleted~.
+#+BEGIN_SRC cpp
+int *int_ptr = new int; // give me heap storage for int and stores it in ~int_ptr~
+*int_ptr = 100;         // store 100 in heap address ~int_ptr~
+delete int_ptr;         // frees the allocated storage
+#+END_SRC
+** Heap memory allocation of chunk
+#+BEGIN_SRC cpp
+int *array_ptr {nullptr};
+array_ptr = new int[10];
+delete [] array_ptr;
+#+END_SRC
+** Pointer vs arrays
+#+BEGIN_SRC cpp
+int scores[] {100, 95, 89};
+cout << scores << endl;  // 0x61ff1c
+cout << *scores << endl; // 100
+
+int *scores_ptr {scores};
+cout << scores_ptr << endl;  // 0x61ff1c
+cout << *scores_ptr << endl; // 100
+#+eND_SRC
+** Pointer notations
+*** Pointer subscript notation
+Basically its ~*(address + offset)~
+#+BEGIN_SRC cpp
+int arr[]{1, 2, 3};
+int *arr_ptr = arr;
+cout << "#0:" << (arr_ptr[]) << endl;
+cout << "#1:" << (arr_ptr[1]) << endl;
+cout << "#2:" << (arr_ptr[2]) << endl;
+#+END_SRC
+*** Pointer offset notation
+#+BEGIN_SRC cpp
+int arr[]{1, 2, 3};
+int *arr_ptr = arr;
+cout << "#0:" << *(arr_ptr) << endl;      // 1
+cout << "#1:" << *(arr_ptr + 1) << endl;  // 2
+cout << "#2:" << *(arr_ptr + 2) << endl;  // 3
+#+END_SRC
+** Pointer Arithmetics
+*** ~++~ & ~--~
+#+BEGIN_SRC cpp
+int foo {10};
+int *int_ptr = &foo;
+int_ptr++ // next memory cell
+#+END_SRC
+*** ~+~ & ~-~
+increment pointer by ~n * sizeof(type)~
+*** ~==~ & ~!=~
+~==~ if pointer points to the same address
+** Pointers and ~const~
+*** Pointers to constants
+The data pointed to cannot be changed.
+#+BEGIN_SRC cpp
+int foo{10};
+int bar{100};
+const int *foo_ptr{&foo};
+*foo_ptr = 20;  // compiler error
+foo_ptr = &bar; // OK
+#+END_SRC
+*** Constant pointers
+Pointer cannot be changed.
+#+BEGIN_SRC cpp
+int foo{10};
+int bar{100};
+int *const foo_ptr{&foo};
+*foo_ptr = 20;  // OK
+foo_ptr = &bar; // OK
+#+END_SRC
+*** Constant pointers to constant
+The data pointed to cannot be changed && Pointer cannot be changed.
+#+BEGIN_SRC cpp
+int foo{10};
+int bar{100};
+const int *const foo_ptr{&foo};
+*foo_ptr = 20;  // ERROR
+foo_ptr = &bar; // ERROR
+#+END_SRC
+** Pointers as function param
+#+BEGIN_SRC cpp
+void foo(int *bar);
+
+void foo(int *bar) { cout << *bar << endl; }
+
+int main() {
+  int num{10};
+  foo(&num);
+};
+#+END_SRC
+** Pointer as return value
+#+BEGIN_SRC cpp
+int *foo(int *bar);
+
+int *foo(int *bar) {
+  cout << *bar << endl;
+  return bar;
+}
+#+END_SRC
+** Pointer bugs
+*** Uninitialized pointers
+~int *int_ptr~ points anywhere!
+~int *int_ptr = 100~ points anyhwere!
+*** Danging pointers
+Pointing to the released memory.
+*** ~new~ with failure
+If ~new~ fails with exception. Dereferencing ~nullptr~ causes exception.
+*** ~new~ without ~delete~ (memory leak)
+* References
+
+Reference to l-value. Act as *alias* for a variable.
+#+BEGIN_SRC cpp
+vector<string> foo{"foo", "bar", "baz"};
+for (string &str : foo) {
+  cout << str; // foobarbaz
+}
+#+END_SRC
+** Alias Detail
+*** c++
+#+BEGIN_SRC cpp
+void foo(int &foo) { }
+
+int main() {
+  int i{10};
+  int &ref = i;
+  foo(ref);
+};
+#+END_SRC
+*** asm
+~$ g++ -S -O0~
+#+BEGIN_SRC asm
+main:
+.LFB1491:
+        .cfi_startproc
+        pushq   %rbp
+        .cfi_def_cfa_offset 16
+        .cfi_offset 6, -16
+        movq    %rsp, %rbp
+        .cfi_def_cfa_register 6
+        subq    $32, %rsp
+        movq    %fs:40, %rax
+        movq    %rax, -8(%rbp)
+        xorl    %eax, %eax
+        ;==== importatant =====
+        movl    $10, -20(%rbp)   ; move value 10 to [rbp-20]
+        leaq    -20(%rbp), %rax  ; load *address* of [rbp-20] to register [rax]
+        movq    %rax, -16(%rbp)  ; move [rax] to [rbp-16] (main [rsp])
+        movq    -16(%rbp), %rax  ; move [rbp-16] to [rax]
+        movq    %rax, %rdi       ; move [rax] to [rdi] (foo stack)
+        ;=====================
+        call    _Z3fooRi
+        movl    $0, %eax
+        movq    -8(%rbp), %rdx
+        xorq    %fs:40, %rdx
+        je      .L4
+        call    __stack_chk_fail
+#+END_SRC
+- ~leaq~ (Load Effective Address Quad)
+- ~leaq    -20(%rbp), %rax~: loads the address of ~i~ to register ~rax~
+* [[https://stackoverflow.com/questions/57483/what-are-the-differences-between-a-pointer-variable-and-a-reference-variable-in][Pointer vs Reference]]
+|----------------------------------+------------------------------------|
+| Pointer                          | Reference                          |
+|----------------------------------+------------------------------------|
+| reassignable                     | not reassignable                   |
+|                                  |                                    |
+| variable                         | alias                              |
+|                                  |                                    |
+| pointers to pointers to pointers | reference to variable only         |
+|                                  |                                    |
+| can point to nullptr             | cannot reference nullptr           |
+|                                  |                                    |
+| pointer arithmetics              | no reference arithmetics           |
+|                                  |                                    |
+| pointer must be dereferenced     | reference must not be dereferenced |
+|                                  |                                    |
+| can be in array                  | cannot be in array                 |
+|----------------------------------+------------------------------------|
+* l-value | r-value
+** l-value
+- nameable
+- addresable
+- modifiable (if not ~const~)
+#+BEGIN_SRC cpp
+int x {20};  // x is l-value
+string name; // name is l-value
+#+END_SRC
+** r-value
+- not l-value
+  + not nameable
+  + not addresable
+  + not modifiable
+- literal
+- tmp
+#+BEGIN_SRC cpp
+int x {20};     // 20 is r-value
+int y = x + 100 // (x + 100) is r-value
+#+END_SRC
+* Classes
+#+BEGIN_SRC cpp
+class Foo {
+public:
+  int foo{10};
+  void bar();
+
+private:
+  int baz{10};
+};
+#+END_SRC
+** Access modifiers
+By default all attributes and methods are ~private~.
+- ~public~ (everywhere)
+- ~private~ (members and friends)
+- ~protected~ (children)
+** Pointer to a class
+#+BEGIN_SRC cpp
+Foo *foo = new Foo();   // on heap
+(*foo).bar();
+foo->bar;               // same
+delete foo;
+#+END_SRC
+** Outside ~class~ member/methods declarations
+*** ~Foo.h~
+#+BEGIN_SRC cpp
+#ifndef _FOO_H_
+#define _FOO_H_
+
+#include <string>
+
+class Foo {
+private:
+  int bar;
+
+public:
+  Foo();
+  Foo(std::string);
+  ~Foo();
+  int baz(std::string);
+};
+#endif
+#+END_SRC
+- #ifndef will prevent including same =h= file with every ~#include~
+- same as #pragma but not every compiler has implemented it
+
+#+BEGIN_SRC cpp
+#pragma once
+#include <string>
+
+class Foo {
+private:
+  int bar;
+
+public:
+  Foo::Foo(std::string) { bar = 10; }; // old (bar initialized twice)
+  Foo::Foo(std::string = "baz") : bar{10} {};     // better and with default
+  int baz(std::string);
+};
+#+END_SRC
+
+*** ~Foo.cpp~
+#+BEGIN_SRC cpp
+#include "Foo"
+
+int Foo::baz(std::string qux) { return 0; }
+#+END_SRC
+- #include with ~<>~ means system header files
+- #include with ~""~ means project header files
+*** ~main.cpp~
+#+BEGIN_SRC cpp
+#include "Foo.h"
+
+int main() {
+  // heap
+  Foo *foo_ptr = new Foo;
+  foo_ptr->baz("baz");
+  delete foo_ptr;         // desctructor foo_ptr called
+
+  // stack
+  Foo foo{"bar"};
+};                        // desctructor foo called
+#+END_SRC
+- never include =cpp= files, only =h=
+** contructor
+#+BEGIN_SRC cpp
+Foo::Foo(std::string b = "bar") : bar{b} {};
+#+END_SRC
+** destructor
+#+BEGIN_SRC cpp
+Foo::~Foo(){...};
+#+END_SRC
+** copy constructor
+_Best Practices:_
+- class has raw pointer members
+- copy constructor with ~const~ reference parameter
+- use STL classes (already with copy constructors)
+- avoid using raw pointer members (or use smart pointers)
+- if raw pointer member than *deep* copy
+
+#+BEGIN_SRC cpp
+Foo::Foo(const Foo &source) {
+    ...
+}
+#+END_SRC
+** move constructor
+Uses r-value reference (~&&~) in order to move object rather than copy it.
+#+BEGIN_SRC cpp
+void bar(int &baz){};
+
+int main() {
+  int foo{10};
+  int &l_value_ref = foo;
+  int &&r_value_ref = 10;
+  int &&r_value_ref2 = foo;   // compile error
+
+  bar(foo);
+  bar(10);                    // compile error
+};
+#+END_SRC
+
+
 * Sources
 1. [[https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md][C++ Guidelines]]
 2. [[https://www.cprogramming.com/c++11/c++11-lambda-closures.html][C++ Lambda details]]
