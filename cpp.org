@@ -668,7 +668,8 @@ string name; // name is l-value
 int x {20};     // 20 is r-value
 int y = x + 100 // (x + 100) is r-value
 #+END_SRC
-* Classes
+* OO
+** ~class~
 #+BEGIN_SRC cpp
 class Foo {
 public:
@@ -774,8 +775,17 @@ Foo::Foo(const Foo &source) {
 }
 #+END_SRC
 ** move constructor
-Uses r-value reference (~&&~) in order to move object rather than copy it.
+Uses r-value reference (~&&~) in order to move object rather than copy them.
+*Steal the data and then null out the source pointer.*
 #+BEGIN_SRC cpp
+class Bar {
+private:
+  int *data; // raw pointer
+public:
+  Bar(Bar &&source);
+};
+Bar::Bar(Bar &&source) : data{source.data} {};
+
 void bar(int &baz){};
 
 int main() {
@@ -786,9 +796,233 @@ int main() {
 
   bar(foo);
   bar(10);                    // compile error
+
+  vector<Move> vec;
+  vec.push_back(Bar{});       // move constructor called, no copy
 };
 #+END_SRC
+** ~this~ pointer
+#+BEGIN_SRC cpp
+class Foo {
+    int bar;
+    void set_bar(int bar) {
+        this->bar = bar;
+    }
+}
+#+END_SRC
+** ~const~ methods
+~get_name()~ can't change anything from Foo. Also can be called from ~const Foo~.
+#+BEGIN_SRC cpp
+class Foo {
+public:
+   string get_name() const;
+}
+#+END_SRC
+** ~static~ members
+#+BEGIN_SRC cpp
+class Bar {
+public:
+  static int baz;
+  static void get_baz();
+};
 
+int Bar::baz = 10;
+void Bar::get_baz(){};
+#+END_SRC
+** ~struct~
+Same as ~class~ but every member is public by default.
+** ~friend~
+Access to a private members of a ~class~ outside of a ~class~ declaration.
+- granted *NOT* taken
+- not symmetric (A friendof B, B !friendof A)
+- not transitive (A friendof B, B friendof C, C !friendof A)
+#+BEGIN_SRC cpp
+class Foo {
+public:
+  void change_bar(Bar bar) { bar.baz = 20; }
+};
+
+class Bar {
+private:
+  int baz;
+  friend class Foo; // Foo has now access to all members of Bar
+
+public:
+  friend void Foo::change_bar(int i);
+};
+#+END_SRC
+** Inheritance
+#+BEGIN_SRC cpp
+class Foo: public Bar {
+  int:
+    double double_value;
+  public:
+    Foo(): Bar{}, double_value{0} {}
+  // derived code
+}
+#+END_SRC
+- _public inheritance_: derived members has same access modifiers as base class members.
+- _protected inheritance_: derived members (~public~ and ~protected~) has ~protected~ access modifier.
+- _private inheritance_: derived member has ~private~ access.
+** Static Polymorphism (compile time, by default)
+- Static binding (performance reasons)
+#+BEGIN_SRC cpp
+class Base {
+public:
+  void foo();
+}
+Base *ptr = new Derived();
+ptr->foo(); // !!! Base called, not Derived !!!
+#+END_SRC
+** Runtime Polymorphism (in runtime)
+- Dynamic binding.
+#+BEGIN_SRC cpp
+class Base {
+public:
+  virtual void foo();
+}
+Base *ptr = new Derived();
+ptr->foo(); // !!! Derived called !!!
+#+END_SRC
+*IMPORTANT*: if ~class~ contains ~virtual~ members, ~virtual~ destructor must be provided
+#+BEGIN_SRC cpp
+class Base {
+  public:
+    virtual ~Base();
+}
+#+END_SRC
+** ~override~
+Use in order to throw compile time error when function signature is different.
+#+BEGIN_SRC cpp
+class Derived: public Base {
+public:
+  virtual void foo() override {}
+}
+** Abstract ~class~
+Is one with at least one pure virtual function.
+** Pure virtual functions
+#+BEGIN_SRC cpp
+virtual void foo() = 0;
+#+END_SRC
+** Interface
+Interface is ~class~ with only pure virtual functions.
+
+* ~constexpr~
+Ensures to be initialized at compile time.
+* ~const~
+Part of data type. Constraits about object immutability.
+* ~constexpr const~
+Ensures to be initialized at compile time and be immutable.
+* ~final~
+Can't be overwritten.
+#+BEGIN_SRC cpp
+class Foo final {}
+#+END_SRC
+* Resource Acquisition Is Initialization (RAII)
+ Paradigm which states that you should acquire resources when you are at the initialisation phase of an object's lifetime.
+- Resource Asquisition: open file/alloc memory/lock...
+- Is Initialization   : constructor
+* SmartPointers
+
+Wrapper around raw pointers. Points to the heap and are alloc/dealloc automatically when not needed.
+- ~unique_ptr~
+- ~shared_ptr~
+- ~weak_ptr~
+** ~unique_ptr~
+Unique ownership of heap object (one owner). Cannot by reassigned or copied. *Can* be moved.
+#+BEGIN_SRC cpp
+void foo(unique_ptr<int>){};
+
+int main() {
+  unique_ptr<int> p1{new int{100}};
+
+  cout << p1.get() << endl; // memory address
+  cout << *p1 << endl;      // 100
+  // p1.reset();            // p1 is now nullptr
+  if (p1) { // checks if p1 is initialized
+  }
+
+  // foo(p1); // compile error
+  foo(std::move(p1));
+
+  cout << *p1 << endl; // runtime error - p1 moved
+};                                // p1 automatically deleted
+#+END_SRC
+
+*** ~std::move()~
+Moves *ownership* of the pointer. Original pointer is set to ~nullptr~.
+#+BEGIN_SRC cpp
+foo(std::move(p1));
+#+END_SRC
+
+*** ~make_unique<type>(constructor)~ (C++14)
+- more efficient - no ~new~ or ~delete~ calls
+#+BEGIN_SRC cpp
+unique_ptr<int> p1 = make_unique<int>(100);
+auto p2 = make_unique<int>(100);             // same
+#+END_SRC
+** ~shared_ptr~
+Shared ownership of heap objects (multiple owners). When the ~use_count~ becomes 0 the heap object is deallocated (~delete~).
+#+BEGIN_SRC cpp
+void foo(shared_ptr<int> p1) {
+  cout << p1.use_count() << endl; // 2
+};
+
+int main() {
+  shared_ptr<int> p1{new int{100}};
+
+  cout << p1.get() << endl; // memory address
+  cout << *p1 << endl;      // 100
+  // p1.reset();            // p1 is now nullptr
+  if (p1) { // checks if p1 is initialized
+  }
+
+  foo(p1);                        // compile error
+  cout << p1.use_count() << endl; // 1
+  foo(p1);
+  cout << p1.use_count() << endl; // 1
+  p1.reset();
+  cout << p1.use_count() << endl; // 0
+};                                // p1 automatically deleted
+#+END_SRC
+*** ~make_shared<type>(constructor)~
+- more efficient - no ~new~ or ~delete~ calls
+#+BEGIN_SRC cpp
+unique_ptr<int> p1 = make_shared<int>(100);
+auto p2 = make_shared<int>(100);             // same
+#+END_SRC
+** ~weak_ptr~
+No ownership. Created from ~shared_ptr~. Used mainly when circular dependency.
+
+*** Problem
+#+BEGIN_SRC plantuml
+@startuml
+A -> B: shared_ptr
+B -> A: shared_ptr
+@enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:/tmp/babel-vNLoK3/plantuml-aGEwnp.png]]
+- A keeps B alive and vice versa. When A goes out of scope then ~delete~ is called but only after ~use_count~ is not 0. That never happens because B keeps alive A and vice versa.
+*** Solution
+#+BEGIN_SRC plantuml
+@startuml
+A -> B: shared_ptr
+B -> A: weak_ptr
+@enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:/tmp/babel-vNLoK3/plantuml-sEr1d5.png]]
+
+By using a ~weak_ptr~, you can create a ~shared_ptr~ that joins to an existing set of related instances, but only if the underlying memory resource is still valid. A ~weak_ptr~ itself does not participate in the reference counting, and therefore, it cannot prevent the reference count from going to zero. However, you can use a ~weak_ptr~ to try to obtain a new copy of the ~shared_ptr~ with which it was initialized. If the memory has already been deleted, the ~weak_ptr~'s bool operator returns false. If the memory is still valid, the new shared pointer increments the reference count and guarantees that the memory will be valid as long as the ~shared_ptr~ variable stays in scope.
+** Golden cascade
+Use ~unique_ptr~ as much as possible. Then ~shared_ptr~, then ~weak_ptr~.
+** custom deleter
+#+BEGIN_SRC cpp
+std::smart_pointer ptr {new Some_Class(), custom_delete_fn};
+#+END_SRC
 
 * Sources
 1. [[https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md][C++ Guidelines]]
