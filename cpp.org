@@ -801,6 +801,20 @@ int main() {
   vec.push_back(Bar{});       // move constructor called, no copy
 };
 #+END_SRC
+** default constructor
+Implicit or explicit.
+#+BEGIN_SRC cpp
+class Foo {
+  Foo() = default;
+};
+#+END_SRC
+** delete constructor
+Removes default (implicit) constructor.
+#+BEGIN_SRC cpp
+class Foo {
+  Foo() = delete;
+};
+#+END_SRC
 ** ~this~ pointer
 #+BEGIN_SRC cpp
 class Foo {
@@ -1023,6 +1037,140 @@ Use ~unique_ptr~ as much as possible. Then ~shared_ptr~, then ~weak_ptr~.
 #+BEGIN_SRC cpp
 std::smart_pointer ptr {new Some_Class(), custom_delete_fn};
 #+END_SRC
+* Exceptions
+If an exception is thrown but not caught in the current scope, C++ tries to find a handler for the exception by /unwinding the stack/. If no handler is found then application is terminated. If found then app continues in that stack (unwinded stack). If there is ~delete~ after unhandled exception -> memory leak.
+
+#+BEGIN_SRC cpp
+int main() {
+    try {
+        throw 0;    // everything can be thrown
+        // code
+    } catch(int &ex) {
+        // handling
+    } catch (std::string &ex) {
+        // handling
+    } catch(...) {
+        // default handling
+    }
+}
+#+END_SRC
+*** Custom exception
+#+BEGIN_SRC cpp
+class FooException : std::exception {
+public:
+  virtual const char *what() const noexcept { return "Foooo"; }
+};
+
+...
+try {
+    ...
+} catch (FooException &ex) {
+    cout << ex.what << endl;
+}
+#+END_SRC
+
+** ~noexcept~
+Keyword that indicates, that method or constructor will not thrown an exception.
+#+BEGIN_SRC cpp
+class Foo {
+    Foo() noexcept {
+        ...
+    }
+};
+
+#+END_SRC
+* TODO IO
+* TODO Streams
+* Macros
+#+BEGIN_SRC cpp
+#define MAX_SIZE 100      // removed
+cout << MAX_SIZE << endl; // replaced with 100
+#+END_SRC
+* Templates
+Way of creating generic functions and classes. Specific implementations are created by compiler at compile time.
+- Function Templates
+- Class Templates
+** Function Templates
+#+BEGIN_SRC cpp
+// template <class T>      // same as typename
+template <typename T>
+T foo(T a, T b) {};
+// is only bluprint and will not generate the code at compile time
+
+std::cout << foo<int>(10, 20); // now is generated foo with int params at compile time
+#+END_SRC
+** Class Templates
+#+BEGIN_SRC cpp
+template <typename T>
+class Foo {
+public:
+  T bar;
+};
+Foo<int> foo {};
+#+END_SRC
+** Variable Templates
+#+BEGIN_SRC cpp
+template<typename T> constexpr T pi = T(3.141592653589793238462643383L);
+#+END_SRC
+
+** Template Value Parameter
+~template~ can be with value and not a type.
+#+BEGIN_SRC cpp
+template <int N> int add2() { return 2 + N; };
+cout << add2<10>() << endl; // 12
+#+END_SRC
+** Template specialization
+First template will be used *unless* ~T~ will be ~char~. Then second one will be used.
+#+BEGIN_SRC cpp
+template <class T> class mycontainer { ... };
+template <> class mycontainer <char> { ... };
+#+END_SRC
+
+* Standard Library (STL)
+- Containers
+  + Collections of objects or primitive types.
+  + ~array~, ~vector~, ~deque~, ~stack~, ~set~, ~map~ etc.
+- Iterators
+  + Generate sequences of element from containers.
+  + ~forward~, ~reverse~, ~by value~, ~by reference~, ~constant~ etc.
+- Algorithms
+  + Functions for processing sequences of elements from containers.
+  + ~find~, ~max~, ~count~, ~accumulate~, ~sort~ etc.
+- Functors (Function Objects)
+  + Built-in functors of binary type (available from <functional>)
+  + ~plus<T>~, ~modulus<T>~, ~equal_to<T>~, ~logical_and<T>~ etc.
+- Allocators
+  + An Allocator is a handle to a heap.
+** Containers
+*** Type of containers
+- Sequences
+  + keep order
+  + ~array~, ~vector~, ~list~, ~forward_list~, ~deque~
+- Associative
+  + no order
+  + ~set~, ~multiset~, ~map~, ~multimap~
+- Adapters
+  + no iterators
+  + ~stack~, ~queue~, ~priorityqueue~
+** Iterators
+Iterator must be declared based on the container type they will iterate over.
+#+BEGIN_SRC cpp
+std::vector<int>::iterator it1 = vec.begin();
+auto it1 = vec.begin();                        // same
+std::list<std::string>::iterator it2;
+std::map<std::string, std::string>::iterator it3;
+std::set<char>::iterator it4;
+#+END_SRC
+*** Type of Iterators
+- Input iterators
+- Output interators
+- Forward iterators
+- Bi-directional iterators
+- Random access iterators
+** Algorithms
+*** Type of algorithms
+- non-modyfying
+- modyfying
 
 * Sources
 1. [[https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md][C++ Guidelines]]
