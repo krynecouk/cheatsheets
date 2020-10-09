@@ -3,71 +3,77 @@
 * [[https://en.cppreference.com/w/cpp/container][Containers]]
 ** Sequence
 Sequence containers implement data structures which can be accessed sequentially.
-|----------------------------+------------------------------------------------+-------------------------------------+-------------+-------------+----------------------------------|
-| name                       | template                                       | usage                               | Access      | Insert      | Desc                             |
-|----------------------------+------------------------------------------------+-------------------------------------+-------------+-------------+----------------------------------|
-| [[https://en.cppreference.com/w/cpp/container/array][array]]                      | template                                       | #include <array>                    | O(1)        | /           | - fixed size                     |
-| (static contiguous array)  | <class T, size_t N>                            | std::array<int, 3> arr {1, 2, 3};   |             |             | - index based                    |
-|                            | class array;                                   |                                     |             |             | - stored contiguously            |
-|                            |                                                |                                     |             |             |                                  |
-| [[https://en.cppreference.com/w/cpp/container/vector][vector]]                     | template                                       | #include <vector>                   | O(1)        | back:  O(1) | - dynamic size                   |
-| (dynamic contiguous array) | <class T, class Alloc = allocator<T>>          | std::vector<int> vec {1, 2, 3};     |             | other: O(n) | - NOT index based                |
-|                            | class vector;                                  |                                     |             |             | - stored contiguously            |
-|                            |                                                |                                     |             |             |                                  |
-| [[https://en.cppreference.com/w/cpp/container/deque][deque]]                      | template                                       | #include <deque>                    | O(1)        | front: O(1) | - dynamic size                   |
-| (double-ended queue)       | <class T, class Allocator = std::allocator<T>> | std::deque<int> deq {1, 2, 3};      |             | back:  O(1) | - NOT index based                |
-|                            | class deque;                                   |                                     |             | other: O(n) | - NOT stored contiguously        |
-|                            |                                                |                                     |             |             | ~ linked list of vectors         |
-|                            |                                                |                                     |             |             |                                  |
-| [[https://en.cppreference.com/w/cpp/container/list][list]]                       | template                                       | #include <list>                     | front: O(1) | O(1)        | - dynamic size                   |
-| (doubly-linked list)       | <class T, class Allocator = std::allocator<T>> | std::list<int> l {1, 2, 3};         | back:  O(1) |             | - NOT index based                |
-|                            | class list;                                    |                                     | iter:  O(n) |             | - NOT stored contiguously        |
-|                            |                                                |                                     |             |             | - NOT provided direct access     |
-|                            |                                                |                                     |             |             | ~ bidirectional linked list      |
-|                            |                                                |                                     |             |             |                                  |
-| [[https://en.cppreference.com/w/cpp/container/forward_list][forward_list]]               | template                                       | #include <forward_list>             | front: O(1) | O(1)        | - dynamic size                   |
-| (singly-linked list)       | <class T, class Allocator = std::allocator<T>> | std::forward_list<int> fl {1, 2, 3} | back:  O(1) |             | - NOT index based                |
-|                            | class forward_list;                            |                                     | iter:  O(n) |             | - NOT stored contiguously        |
-|                            |                                                |                                     |             |             | - NOT provided direct access     |
-|                            |                                                |                                     |             |             | - NOT provided reverse iterators |
-|                            |                                                |                                     |             |             | - NOT size()                     |
-|                            |                                                |                                     |             |             | - less overhead than list        |
-|                            |                                                |                                     |             |             | ~ unidirectional linked list     |
-|----------------------------+------------------------------------------------+-------------------------------------+-------------+-------------+----------------------------------|
+|--------------------------+--------------------------------------+-------------+-------------+----------------------------------|
+| name                     | usage                                | access      | insert      | desc                             |
+|--------------------------+--------------------------------------+-------------+-------------+----------------------------------|
+| [[https://en.cppreference.com/w/cpp/container/array][array]]                    | #include <array>                     | O(1)        | /           | - fixed size                     |
+| static contiguous array  | std::array<int, 3> arr {1, 2, 3};    |             |             | - index based                    |
+|                          |                                      |             |             | - stored contiguously            |
+|                          |                                      |             |             |                                  |
+| [[https://en.cppreference.com/w/cpp/container/vector][vector]]                   | #include <vector>                    | O(1)        | back:  O(1) | - dynamic size                   |
+| dynamic contiguous array | std::vector<int> vec {1, 2, 3};      |             | other: O(n) | - NOT index based                |
+|                          |                                      |             |             | - stored contiguously            |
+|                          |                                      |             |             |                                  |
+| [[https://en.cppreference.com/w/cpp/container/deque][deque]]                    | #include <deque>                     | O(1)        | front: O(1) | - dynamic size                   |
+| double-ended queue       | std::deque<int> deq {1, 2, 3};       |             | back:  O(1) | - NOT index based                |
+|                          |                                      |             | other: O(n) | - NOT stored contiguously        |
+|                          |                                      |             |             | ~ linked list of vectors         |
+|                          |                                      |             |             |                                  |
+| [[https://en.cppreference.com/w/cpp/container/list][list]]                     | #include <list>                      | front: O(1) | O(1)        | - dynamic size                   |
+| doubly-linked list       | std::list<int> l {1, 2, 3};          | back:  O(1) |             | - NOT index based                |
+|                          |                                      | iter:  O(n) |             | - NOT stored contiguously        |
+|                          |                                      |             |             | - NOT provided direct access     |
+|                          |                                      |             |             | ~ bidirectional linked list      |
+|                          |                                      |             |             |                                  |
+| [[https://en.cppreference.com/w/cpp/container/forward_list][forward_list]]             | #include <forward_list>              | front: O(1) | O(1)        | - dynamic size                   |
+| singly-linked list       | std::forward_list<int> fl {1, 2, 3}; | back:  O(1) |             | - NOT index based                |
+|                          |                                      | iter:  O(n) |             | - NOT stored contiguously        |
+|                          |                                      |             |             | - NOT provided direct access     |
+|                          |                                      |             |             | - NOT provided reverse iterators |
+|                          |                                      |             |             | - NOT size()                     |
+|                          |                                      |             |             | - less overhead than list        |
+|                          |                                      |             |             | ~ unidirectional linked list     |
+|--------------------------+--------------------------------------+-------------+-------------+----------------------------------|
 ** Associative
 Associative containers implement sorted data structures that can be quickly searched (O(log n) complexity).
-|-----------+-----------------------------------------------------------------------------------------------------------------+-----------------------------------+-----------------+----------+-------------------------|
-| name      | template                                                                                                        | usage                             | Access          | Insert   | Desc                    |
-|-----------+-----------------------------------------------------------------------------------------------------------------+-----------------------------------+-----------------+----------+-------------------------|
-| [[https://en.cppreference.com/w/cpp/container/set][set]]       | template                                                                                                        | #include <set>                    | front: O(1)     | O(log n) | - sorted by key         |
-|           | <class Key, class Compare = std::less<Key>, class Allocator = std::allocator<Key>>                              | std::set<int> s {1, 2, 3};        | back:  O(1)     |          | - has unordered variant |
-|           | class set;                                                                                                      |                                   | find:  O(log n) |          |                         |
-|           |                                                                                                                 |                                   |                 |          |                         |
-| [[https://en.cppreference.com/w/cpp/container/multiset][multi_set]] | template                                                                                                        | #include <set>                    | front: O(1)     | O(log n) | - sorted by key         |
-|           | <class Key, class Compare = std::less<Key>, class Allocator = std::allocator<Key>>                              | std::multi_set<int> ms {1, 2, 3}; | back:  O(1)     |          | - has unordered variant |
-|           | class multiset;                                                                                                 |                                   | find:  O(log n) |          | - allows duplicates     |
-|           |                                                                                                                 |                                   |                 |          |                         |
-| [[https://en.cppreference.com/w/cpp/container/map][map]]       | template                                                                                                        | #include <map>                    | front: O(1)     | O(log n) | - sorted by key         |
-|           | <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T>>> | std::map<std::string, int> m1 {   | back:  O(1)     |          | - has unordered variant |
-|           | class map;                                                                                                      | {"foo", 1},                       | find:  O(log n) |          | - etries std::pair      |
-|           |                                                                                                                 | {"bar", 2}                        |                 |          |                         |
-|           |                                                                                                                 | }                                 |                 |          |                         |
-|           |                                                                                                                 |                                   |                 |          |                         |
-| [[https://en.cppreference.com/w/cpp/container/multimap][multimap]]  | template                                                                                                        | #include <map>                    | front: O(1)     | O(log n) | - sorted by key         |
-|           | <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T>>> | std::map<std::string, int> m1 {   | back:  O(1)     |          | - has unordered variant |
-|           | class multimap;                                                                                                 | {"foo", 1},                       | find:  O(log n) |          | - etries std::pair      |
-|           |                                                                                                                 | {"bar", 2}                        |                 |          | - allow duplicates      |
-|           |                                                                                                                 | }                                 |                 |          |                         |
-|-----------+-----------------------------------------------------------------------------------------------------------------+-----------------------------------+-----------------+----------+-------------------------|
+|----------------------------------------------------------------+------------------------------------------------------------+-----------------+----------+-------------------------|
+| name                                                           | usage                                                      | access          | insert   | desc                    |
+|----------------------------------------------------------------+------------------------------------------------------------+-----------------+----------+-------------------------|
+| [[https://en.cppreference.com/w/cpp/container/set][set]]                                                            | #include <set>                                             | front: O(1)     | O(log n) | - sorted by key         |
+| collection of unique keys, sorted by keys                      | std::set<int> s {1, 2, 3};                                 | back:  O(1)     |          | - has unordered variant |
+|                                                                |                                                            | find:  O(log n) |          |                         |
+|                                                                |                                                            |                 |          |                         |
+| [[https://en.cppreference.com/w/cpp/container/multiset][multi_set]]                                                      | #include <set>                                             | front: O(1)     | O(log n) | - sorted by key         |
+| collection of keys, sorted by keys                             | std::multi_set<int> ms {1, 2, 3};                          | back:  O(1)     |          | - has unordered variant |
+|                                                                |                                                            | find:  O(log n) |          | - allows duplicates     |
+|                                                                |                                                            |                 |          |                         |
+| [[https://en.cppreference.com/w/cpp/container/map][map]]                                                            | #include <map>                                             | front: O(1)     | O(log n) | - sorted by key         |
+| collection of key-value pairs, sorted by keys, keys are unique | std::map<std::string, int> m1 { {"foo", 1}, {"bar", 2} };  | back:  O(1)     |          | - has unordered variant |
+|                                                                |                                                            | find:  O(log n) |          | - etries std::pair      |
+|                                                                |                                                            |                 |          |                         |
+|                                                                |                                                            |                 |          |                         |
+| [[https://en.cppreference.com/w/cpp/container/multimap][multimap]]                                                       | #include <map>                                             | front: O(1)     | O(log n) | - sorted by key         |
+| collection of key-value pairs, sorted by keys                  | std::map<std::string, int> m1 { {"foo", 1}, {"bar", 2} };  | back:  O(1)     |          | - has unordered variant |
+|                                                                |                                                            | find:  O(log n) |          | - etries std::pair      |
+|                                                                |                                                            |                 |          | - allow duplicates      |
+|----------------------------------------------------------------+------------------------------------------------------------+-----------------+----------+-------------------------|
 ** Adaptors
 Container adaptors provide a different interface for sequential containers.
-|----------------+----------+-------+--------+--------+------|
-| name           | template | usage | Access | Insert | Desc |
-|----------------+----------+-------+--------+--------+------|
-| [[https://en.cppreference.com/w/cpp/container/stack][stack]]          |          |       |        |        |      |
-| [[https://en.cppreference.com/w/cpp/container/queue][queue]]          |          |       |        |        |      |
-| [[https://en.cppreference.com/w/cpp/container/priority_queue][priority_queue]] |          |       |        |        |      |
-|----------------+----------+-------+--------+--------+------|
+|-----------------------------------------------------------+---------------------------------------+--------+------------------------------+-----------------------------------------|
+| name                                                      | usage                                 | access | insert                       | desc                                    |
+|-----------------------------------------------------------+---------------------------------------+--------+------------------------------+-----------------------------------------|
+| [[https://en.cppreference.com/w/cpp/container/stack][stack]]                                                     | #include <stack>                      | O(1)   | pop:  O(1)                   | - vector/list/deque                     |
+| adapts a container to provide stack (LIFO data structure) | std::stack<int> s;     // deque       |        | push: based on the container | - NO iterators                          |
+|                                                           | std::stack<int, std::vector<int>> s1; |        |                              |                                         |
+|                                                           | std::stack<int, std::list<int>> s2    |        |                              |                                         |
+|                                                           |                                       |        |                              |                                         |
+| [[https://en.cppreference.com/w/cpp/container/queue][queue]]                                                     | #include <queue>                      | O(1)   | pop:  O(1)                   | - list/deque                            |
+| adapts a container to provide queue (FIFO data structure) | std::queue<int> q; // deque           |        | push: based on the container | - push back, pop front                  |
+|                                                           | std::queue<int, std::list<int>> q2;   |        |                              | - NO iterators                          |
+|                                                           |                                       |        |                              |                                         |
+| [[https://en.cppreference.com/w/cpp/container/priority_queue][priority_queue]]                                            | #include <queue>                      | O(1)   | pop:  O(log n)               | - first element is the 'biggest'        |
+| adapts a container to provide priority queue              | std::priority_queue<int> q;           |        | push: O(log n)               | - biggest is determined with comparison |
+|-----------------------------------------------------------+---------------------------------------+--------+------------------------------+-----------------------------------------|
 * TODO [[https://en.cppreference.com/w/cpp/iterator][Iterator]]
 The iterator library provides definitions for five (until C++17)six (since C++17) kinds of iterators as well as iterator traits, adaptors, and utility functions.
 * TODO [[https://en.cppreference.com/w/cpp/algorithm][Algorithm]]

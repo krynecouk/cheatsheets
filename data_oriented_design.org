@@ -1,0 +1,7 @@
+#+TITLE: Data Oriented Design
+* Sources
+1. [[https://www.dataorienteddesign.com/dodbook/][Data Oriented Design book]]
+2. [[https://www.agner.org/optimize/][Software optimization resources]]
+3. [[https://lwn.net/Articles/250967/][What every programmer should know about memory]]
+4. [[https://web.archive.org/web/20160422113037/http://www.research.scea.com/research/pdfs/GDC2003_Memory_Optimization_18Mar03.pdf][Memory optimization (Santa Monica)]]
+5. Machine architecture and you ([[https://www.youtube.com/watch?v=L7zSU9HI-6I][video]] and [[https://nwcpp.org/talks/2007/Machine_Architecture_-_NWCPP.pdf][slides]])

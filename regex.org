@@ -1,0 +1,61 @@
+#+TITLE: Regular Expressions
+
+* Special Characters
+|-------+----------------------------------------+--------|
+| .     | any single character (a "wildcard")    |        |
+| [     | character class                        |        |
+| {     | count                                  | suffix |
+| (     | begin grouping                         |        |
+| )     | end grouping                           |        |
+| \     | \ next character has a special meaning |        |
+| \*    | zero or more                           | suffix |
+| +     | + one or more                          | suffix |
+| ?     | optional (zero or one)                 | suffix |
+| \vert | alternative (or)                       |        |
+| \^    | start of line; negation                |        |
+| \$    | $ end oi line                          |        |
+|-------+----------------------------------------+--------|
+
+* Character Classes
+|----+-------------------------------------------------------+------------|
+| \d | a decimal digit                                       | [:digit:]  |
+| \w | a letter (a-z or A-Z) or digit (0-9) or an underscore | [:alnum:]  |
+| \1 | a lowercase character                                 | [:lower:]  |
+| \u | an uppercase character                                | [:upper:]  |
+| \s | a space (space, tab, etc.)                            | [:space:]  |
+|----+-------------------------------------------------------+------------|
+| \D | not \d                                                | ^[:digit:] |
+| \W | not \w                                                | ^[:alnum:] |
+| \L | not \I                                                | ^[:lower:] |
+| \U | not \u                                                | ^[:upper:] |
+| \S | not \s                                                | ^[:space:] |
+|----+-------------------------------------------------------+------------|
+
+** Examples of Custom Character Classes
+|---------------+-------------------------------------------------------------|
+| [\w @]        | a word character, a space, or an @                          |
+| [a-z]         | the lowercase characters from a to z                        |
+| [a-zA-Z]      | upper or lowercase characters from a to z                   |
+| [Pp]          | an upper- or lowercase P                                    |
+| [\w\-]        | a word character or a dash (plain - means range)            |
+| [asdfghjkl;'] | the characters on the middle line of a U.S. QWERTY keyboard |
+| [.]           | a dot                                                       |
+| [.[{(\\*+l"$] | a character with special meaning in a regular expression    |
+|---------------+-------------------------------------------------------------|
+
+* Repeats
+|--------+-----------------------------------------|
+| { n }  | exactly n times                         |
+| { n, } | n or more times                         |
+| {n,m}  | at least n and at most m times          |
+| \*     | zero or more, that is, {0,}             |
+| +      | one or more, that is, {1,}              |
+| ?      | optional (zero or one), that is, {0, 1} |
+|--------+-----------------------------------------|
+
+* Examples
+** Zip Code
+*** Text
+TX77845-5629
+*** Pattern
+- \w{2}\s*\d{5}(-\d{4})?
