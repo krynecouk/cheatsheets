@@ -7,6 +7,7 @@
 | {     | count                                  | suffix |
 | (     | begin grouping                         |        |
 | )     | end grouping                           |        |
+| (?:)  | non-capturing group                    |        |
 | \     | \ next character has a special meaning |        |
 | \*    | zero or more                           | suffix |
 | +     | + one or more                          | suffix |
@@ -90,10 +91,13 @@
 | ?<= | match if preceded |
 |-----+-------------------|
 ** Examples
-|--------+---------------------------------|
-| d(?=r) | match d only if followed with r |
-| d(?=r) | match d only if proceded with r |
-|--------+---------------------------------|
+|---------+-------------------------------------|
+| d(?=r)  | match d only if followed with r     |
+| (?<=r)d | match d only if proceded with r     |
+|---------+-------------------------------------|
+| d(?!r)  | match d only if NOT followed with r |
+| (?<!r)d | match d only if NOT proceded with r |
+|---------+-------------------------------------|
 
 * Examples
 ** Zip Code
