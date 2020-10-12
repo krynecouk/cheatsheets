@@ -13,7 +13,7 @@
 | ?     | optional (zero or one)                 | suffix |
 | \vert | alternative (or)                       |        |
 | \^    | start of line; negation                |        |
-| \$    | $ end oi line                          |        |
+| \$    | end of line                            |        |
 |-------+----------------------------------------+--------|
 
 * Character Classes
@@ -31,7 +31,9 @@
 | \S | not \s                                                | ^[:space:] |
 |----+-------------------------------------------------------+------------|
 
-** Examples of Custom Character Classes
+* Custom Character Classes
+~[]~
+** Examples
 |---------------+-------------------------------------------------------------|
 | [\w @]        | a word character, a space, or an @                          |
 | [a-z]         | the lowercase characters from a to z                        |
@@ -52,6 +54,46 @@
 | +      | one or more, that is, {1,}              |
 | ?      | optional (zero or one), that is, {0, 1} |
 |--------+-----------------------------------------|
+
+* Anchors
+|---+-------|
+| ^ | start |
+| $ | end   |
+|---+-------|
+
+* Flags
+|----+-------------|
+| /g | global      |
+| /m | multi-line  |
+| /i | insensitive |
+|----+-------------|
+
+* Greedy/Lazy Match
+~?~
+** Examples
+|-------+---------------------------------------------------------------------|
+| <.*>  | This is a <div> simple div</div> test => { <div> simple div</div> } |
+| <.*?> | This is a <div> simple div</div> test => { <div>, </div> }          |
+|-------+---------------------------------------------------------------------|
+
+* Boundaries
+~\b~ and ~\B~
+|----+---------------------------------------------------------|
+| \b | one side is word char and other is not (space, \n etc.) |
+| \B | not \b                                                  |
+|----+---------------------------------------------------------|
+
+* Look ahead/behind
+~?=~ and ~?<=~
+|-----+-------------------|
+| ?=  | match if followed |
+| ?<= | match if preceded |
+|-----+-------------------|
+** Examples
+|--------+---------------------------------|
+| d(?=r) | match d only if followed with r |
+| d(?=r) | match d only if proceded with r |
+|--------+---------------------------------|
 
 * Examples
 ** Zip Code
