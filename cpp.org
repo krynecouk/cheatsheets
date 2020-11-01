@@ -127,7 +127,7 @@ int foo [3];           // sized array of 3
 int foo [] {1, 2, 3};  // automatically sized array
 int foo [3] {0};       // sized and init all to 0
 int foo [3] {};        // same as {0}
-foo[0] = 20;           // assignement
+foo[0] = 20;           // assignment
 foo[0];                // reading
 int foo [3][4] {}      // 2 dim
 int foo [3][4] {
@@ -878,7 +878,7 @@ class Foo: public Bar {
 - _public inheritance_: derived members has same access modifiers as base class members.
 - _protected inheritance_: derived members (~public~ and ~protected~) has ~protected~ access modifier.
 - _private inheritance_: derived member has ~private~ access.
-** Static Polymorphism (compile time, by default)
+** Static Binding (compile time, by default)
 - Static binding (performance reasons)
 #+BEGIN_SRC cpp
 class Base {
@@ -888,7 +888,7 @@ public:
 Base *ptr = new Derived();
 ptr->foo(); // !!! Base called, not Derived !!!
 #+END_SRC
-** Runtime Polymorphism (in runtime)
+** Dynamic Binding (in runtime)
 - Dynamic binding.
 #+BEGIN_SRC cpp
 class Base {
@@ -1133,7 +1133,7 @@ If a class defines any of the following then it should probably explicitly defin
 - copy assignment operator
  
 ** Reason
-In order to have a need for destructor/copy constructor/copy assignement operator, object must manage a pointer or non-sharable reference. If you write a class without unmanaged resources, there is no need to declare any of the five special member functions yourself, and you will get correct copy semantics and move semantics for free. Why? Because implicit implementation of these functions is using shallow copy and then every copy would share its resources.
+In order to have a need for destructor/copy constructor/copy assignment operator, object must manage a pointer or non-sharable reference. If you write a class without unmanaged resources, there is no need to declare any of the five special member functions yourself, and you will get correct copy semantics and move semantics for free. Why? Because implicit implementation of these functions is using shallow copy and then every copy would share its resources.
 ** Example
 #+BEGIN_SRC cpp
 #include <iostream>
@@ -1169,10 +1169,10 @@ RESULTS:
 25 25
 Segmentation fault // !!!
 
-In order to fix this we need destructor (to free memory), custom copy constructor (to do deep copy instead of shallow) and copy assignement operator (because it is used instead of copy when ~=~).
+In order to fix this we need destructor (to free memory), custom copy constructor (to do deep copy instead of shallow) and copy assignment operator (because it is used instead of copy when ~=~).
 
 * Rule of Five
-Expand of /Rule of Three/:
+Expand of /Rule of Three/ for performance reasons:
 - move constructor
 - move assignment operator
 ** Reason
@@ -1190,7 +1190,26 @@ string b(x + y);                                // MOVE (steal)
 string c(some_function_returning_a_string());   // MOVE (steal)
 #+END_SRC
 
+* Rule of 4,5
+Copy assignment and move assignment functions can be replaced with one assignment by value function.
+#+BEGIN_SRC cpp
+rule_of_five& operator=(rule_of_five other) noexcept
+{
+    std::swap(cstring, other.cstring);
+    return *this;
+}
+#+END_SRC
+** Reason
+RVO optimalisation by compiler. If called with /lvalue/ then copy is made either way, if with /rvalue/ then compiler will create memory from caller in its stack to save value from callee there. More info [[https://web.archive.org/web/20140113221447/http://cpp-next.com/archive/2009/08/want-speed-pass-by-value/][here]].
+
+* Rule of Zero
+Classes without resource *should not* have custom destructors, copy/move constructors or copy/move assignment operators. If base class will be use for polymorphism, then should use ~public virtual~ destructor (because ~delete~ is called on the static type not dynamic). In that case base class should suppress copying with ~=delete~ otherwise slice can happen. More info [[https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#Rc-copy-virtual][here]].
+
 * Sources
 1. [[https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md][C++ Guidelines]]
 2. [[https://www.cprogramming.com/c++11/c++11-lambda-closures.html][C++ Lambda details]]
 3. [[https://stackoverflow.com/questions/3106110/what-is-move-semantics][Move Semantics]]
+4. [[https://www.youtube.com/watch?v=XRBS_QuB9h0][Rule of Three/Five/Zero]]
+5. [[https://web.archive.org/web/20140113221447/http://cpp-next.com/archive/2009/08/want-speed-pass-by-value/][Want speed? Copy by value.]]
+6. [[https://www.slideshare.net/ripplelabs/howard-hinnant-accu2014][Move semantics presentation, Howard Hinnant]]
+7. [[https://www.modernescpp.com/index.php][Modern C++]]
