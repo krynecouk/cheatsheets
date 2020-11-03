@@ -1,0 +1,226 @@
+* Basics
+** ~ls~
+list directory contents
+|--------------------------+--------------------------------------------------|
+| flag                     | effect                                           |
+|--------------------------+--------------------------------------------------|
+| ~-l~                     | use a long listing format                        |
+| ~-a~, ~--all~            | include hidden files                             |
+| ~-color~                 | color output                                     |
+| ~-h~, ~--human-readable~ | human readable sizes                             |
+| ~-r~, ~--reverse~        | reverse order while sorting                      |
+| ~-R~, ~--recursive~      | list subdirectories recursively                  |
+| ~-s~, ~--size~           | print the allocated size of each file, in blocks |
+| ~-S~                     | sort by file size, largest first                 |
+| ~-t~                     | sort by time                                     |
+| ~-v~                     | sort by version                                  |
+| ~-X~                     | sort by extension                                |
+|--------------------------+--------------------------------------------------|
+** ~cp~
+copy
+|--------------------------------------+----------------------------------------------------------|
+| flag                                 | effect                                                   |
+|--------------------------------------+----------------------------------------------------------|
+| ~-i~, ~--interactive~                | prompt before overwrite (overrides a previous -n option) |
+| ~--backup=numbered~                  | creates numbered backup file                             |
+| ~-b~                                 | like --backup but does not accept an argument            |
+| ~-H~                                 | follow command-line symbolic links in SOURCE             |
+| ~-n~                                 | do not overwrite an existing file                        |
+| ~-p~                                 | same as --preserve=mode,ownership,timestamps             |
+| ~-R~, ~-r~, ~--recursive~            | copy directories recursively                             |
+| ~-s~, ~--symbolic-link~              | make symbolic links instead of copying                   |
+| ~-t~, ~--target-directory=DIRECTORY~ | copy all SOURCE arguments into DIRECTORY                 |
+| ~-v~, ~--verbose~                    | explain what is being done                               |
+|--------------------------------------+----------------------------------------------------------|
+** ~mv~
+move
+** ~rm~
+remove
+|-----------------------+---------------------------------------------------------------------------------|
+| flag                  | effect                                                                          |
+|-----------------------+---------------------------------------------------------------------------------|
+| ~-f~, ~--force~       | force remove                                                                    |
+| ~-i~                  | prompt before every removal                                                     |
+| ~-I~                  | prompt once before removing more than three files, or when removing recursively |
+| ~-r, -R, --recursive~ | remove directories and their contents recursively                               |
+| ~-d~, ~--dir~         | remove empty directories                                                        |
+| ~-v~, ~--verbose~     | explain what is being done                                                      |
+|-----------------------+---------------------------------------------------------------------------------|
+** ~mkdir~
+make directory
+|-------------------+---------------------------------------------------------|
+| flag              | effect                                                  |
+|-------------------+---------------------------------------------------------|
+| ~-p~, ~--parents~ | no error if existing, make parent directories as needed |
+|-------------------+---------------------------------------------------------|
+** ~cat~
+concatenate files and print on the standard output
+|-----------------------+-----------------|
+| flag                  | effect          |
+|-----------------------+-----------------|
+| ~-n~, ~b~, ~--number~ | display numbers |
+|-----------------------+-----------------|
+** ~tac~
+reverse of ~cat~
+** ~chmod~
+change mode
+|------+---------------------|
+| flag | effect              |
+|------+---------------------|
+| ~+~  | adds permissions    |
+| ~-~  | removes permissions |
+| ~=~  | sets permissions    |
+|------+---------------------|
+* Filters
+** ~head~/~tail~
+|----------------------------------+-------------------------------|
+| flag                             | effect                        |
+|----------------------------------+-------------------------------|
+| ~-n [NUM]~, ~-~, ~--lines=[NUM]~ | print number of lines         |
+| ~-n +[NUM]~                      | print lines starting at [NUM] |
+|----------------------------------+-------------------------------|
+** ~sort~
+|------------+-----------------------------------------------------------------------------|
+| flag       | effect                                                                      |
+|------------+-----------------------------------------------------------------------------|
+| ~-n~       | Sorts numerically (example: 10 will sort after 2), ignores blanks and tabs. |
+| ~-r~       | Reverses the order of sort.                                                 |
+| ~-f~       | Sorts upper and lowercase together.                                         |
+| ~-k [COL]~ | Sort by [COL]                                                               |
+|------------+-----------------------------------------------------------------------------|
+** ~wc~
+word count
+
+#+BEGIN_SRC sh
+$ wc filename
+2  19 103 filename
+$
+#+END_SRC
+
+File has 2 lines, 19 words, 103 bytes and name "filename".
+
+|-----------------+----------------------------|
+| flag            | effect                     |
+|-----------------+----------------------------|
+| ~-l~, ~--lines~ | print the newline counts   |
+| ~-w~, ~--words~ | print the word counts      |
+| ~-c~, ~--bytes~ | print the byte counts      |
+| ~-m~, ~--chars~ | print the character counts |
+|-----------------+----------------------------|
+** ~cut~
+|--------------------+---------------------------|
+| flag               | effect                    |
+|--------------------+---------------------------|
+| ~-f [FIELD,FIELD]~ | field to cut              |
+| ~-d [DELIMITER]~   | what [DELIMITER] was used |
+|--------------------+---------------------------|
+** ~sed~
+stream editor
+example: ~s/search/replace/g~
+|------+--------|
+| flag | effect |
+|------+--------|
+| ~-r~ | use    |
+|------+--------|
+** ~uniq~
+|------+------------------------------------|
+| flag | effect                             |
+|------+------------------------------------|
+| ~f~  | avoid comparing the first N fields |
+| ~i~  | ignore case                        |
+|------+------------------------------------|
+** ~grep~
+globally search for a regular expression and print all lines containing it
+- ~grep [OPTIONS] [FILES]~
+- ~[INPUT] | grep [OPTIONS]~
+
+|------------------------------------+-------------------------------------------------|
+| flag                               | effect                                          |
+|------------------------------------+-------------------------------------------------|
+| ~-i~, ~--ignore-case~              | ignore case distinctions                        |
+| ~-E~, ~--extended-regexp~, ~egrep~ | PATTERN is an extended regular expression (ERE) |
+| ~-F~, ~--fixed-strings~, ~fgrep~   | PATTERN is a set of newline-separated strings   |
+| ~-w~, ~--word-regexp~              | force PATTERN to match only whole words         |
+| ~-s~, ~--no-messages~              | suppress error messages                         |
+| ~-v~, ~--invert-match~             | select non-matching lines                       |
+| ~-m~, ~--max-count=NUM~            | stop after NUM matches                          |
+| ~-n~, ~--line-number~              | print line number with output lines             |
+| ~-I~                               | Prints the matched line and its line number.    |
+| ~-H~, ~--with-filename~            | print the file name for each match              |
+| ~-o~, ~--only-matching~            | show only the part of a line matching PATTERN   |
+| ~-q~, ~--quiet~, ~--silent~        | suppress all normal output                      |
+| ~-c~, ~--count~                    | print only a count of matching lines per FILE   |
+| ~-r~, ~--recursively~              | recursively grep                                |
+| ~--exclude-dir=REGEX~              | exclude directories from search                 |
+| ~--exclude=REGEX~                  | exclude from search                             |
+|------------------------------------+-------------------------------------------------|
+** ~more~
+#+BEGIN_SRC sh
+$ls -l | grep "Aug" | sort +4n | more
+-rw-rw-r--  1 carol doc      1605 Aug 23 07:35 macros
+-rw-rw-r--  1 john  doc      2488 Aug 15 10:51 intro
+-rw-rw-rw-  1 john  doc      8515 Aug  6 15:30 ch07
+-rw-rw-r--  1 john  doc     14827 Aug  9 12:40 ch03
+	.
+	.
+	.
+-rw-rw-rw-  1 john  doc     16867 Aug  6 15:56 ch05
+--More--(74%)
+#+END_SRC
+
+* Piping and Redirection
+** Output
+*** ~>~
+Saving to an existing file.
+*** ~>>~
+Append to an existing file.
+*** ~2>~
+Saving to an existing file error output.
+*** ~>/dev/null~
+Discard unwanted.
+
+** Input
+*** ~<~
+** Pipe
+~|~
+
+* Processes
+** ~top~
+View real-time data about processes running on the system.
+** ~ps~
+Get a listing of processes running on the system.
+** ~kill~
+End the running of a process.
+** ~jobs~
+Display a list of current jobs running in the background.
+** ~fg~
+Move a background process into the foreground.
+** ~ctrl + z~
+Pause the current foreground process and move it into the background.
+* Other
+** ~find~
+|------------------+----------------------------|
+| flag             | effect                     |
+|------------------+----------------------------|
+| ~--size +[NUM]M~ | find files larger than NUM |
+| ~-mtime -[NUM]~  | modified in last NUM days  |
+| ~-type [TYPE]~   | type of file               |
+| ~-name~          | name of file               |
+|------------------+----------------------------|
+** ~xargs~
+command line utility for building an execution pipeline from standard input
+|-----------------------+-------------------------------------------------------------|
+| flag                  | effect                                                      |
+|-----------------------+-------------------------------------------------------------|
+| ~-d '[DELIMITER]'~    | run commands on every stdin new line (default is ' ')       |
+| ~-t~, ~--verbose~     | verbose                                                     |
+| ~-p~, ~--interactive~ | run with prompt                                             |
+| ~-I [PLACEHOLDER]~    | run multiple commands and value can be ref by [PLACEHOLDER] |
+| ~-i~                  | same as ^ but [PLACEHOLDER] is ~{}~                         |
+| ~-0~                  | items are separated by a null, not a whitespace             |
+|-----------------------+-------------------------------------------------------------|
+
+* Sources
+1. [[https://www.tutorialspoint.com/unix/index.htm][Unix/Linux Tutorial]]
+2. [[https://ryanstutorials.net/linuxtutorial/][Ryans Linux Tutorial]]
+3. [[https://ryanstutorials.net/linuxtutorial/cheatsheet.php][Ryans Cheatsheet]]
