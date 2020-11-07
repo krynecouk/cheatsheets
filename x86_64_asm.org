@@ -1,0 +1,134 @@
+#+TITLE: X86-64 Assembly
+
+* ASM Code
+~[label:] instruction [operands] [; comment]~
+
+E.g.:
+~MOV COUNT, 48 ; Put value 48 in the COUNT variable~
+
+* Hello World
+[[syscall table][syscall table]]
+#+BEGIN_SRC c
+size_t sys_write(unsigned int fd, const char * buf, size_t count);
+#+END_SRC
+
+#+BEGIN_SRC asm
+section .data         ; section for constants
+    msg db      "hello, world!"
+
+section .text
+    global _start     ; entrypoint
+_start:
+    mov     rax, 1    ; move 1 to rax register (function pointer in syscall table)
+    mov     rdi, 1    ; sys_write 1st argument (stdin(0), stdout(1), stderr(2))
+    mov     rsi, msg  ; sys_write 2nd argument ("hello, world")
+    mov     rdx, 13   ; sys_write 3th argument ("hello, world".size() == 13)
+    syscall
+    mov    rax, 60    ; cleanup, 60 is a number of exit syscall
+    mov    rdi, 0     ; 0 return - success
+    syscall
+#+END_SRC
+* Sections
+|------+-------------------------------------------------------------|
+| data | section is used for declaring initialized data or constants |
+| bss  | section is used for declaring non initialized variables     |
+| text | section is used for code                                    |
+|------+-------------------------------------------------------------|
+
+* Registers
+General-purpose registers - there are 16 general-purpose registers - rax, rbx, rcx, rdx, rbp, rsp, rsi, rdi, r8, r9, r10, r11, r12, r13, r14, r15.
+|-----+----------------------------------------------------------------------------|
+| rax | temporary register; when we call a syscal, rax must contain syscall number |
+| rdi | first argument                                                             |
+| rsi | second argument                                                            |
+| rdx | third argument                                                             |
+| rcx | fourth argument                                                            |
+| r8  | fifth argument                                                             |
+| r9  | sixth                                                                      |
+|-----+----------------------------------------------------------------------------|
+Other arguments are 'passed' via stack.
+
+* Data Types
+|--------------+---------|
+| ~BYTE~       | 8 bits  |
+| ~WORD~       | 2 bytes |
+| ~DOUBLEWORD~ | 4 bytes |
+| ~QUADWORD~   | 8 bytes |
+|--------------+---------|
+
+* Pseudo-instructions
+#+BEGIN_SRC asm
+section .data
+    num1:   equ 100
+    num2:   equ 50
+    msg:    db "Sum is correct", 10
+#+END_SRC
+- DB, DW, DD, DQ, DT, DO, DY and DZ - are used for declaring initialized data. For example: ~db 0x01,0x02,0x03,0x04 ; 4 bytes~
+- RESB, RESW, RESD, RESQ, REST, RESO, RESY and RESZ - are used for declaring non initialized variables
+- INCBIN - includes External Binary Files
+- EQU - defines constant. For example: ~one equ 1~
+- TIMES - Repeating Instructions or Data. (description will be in next posts)
+* Arithmetic
+|--------+-------------------|
+| ~ADD~  | integer add       |
+| ~SUB~  | substract         |
+| ~MUL~  | unsigned multiply |
+| ~IMUL~ | signed multiply   |
+| ~DIV~  | unsigned divide   |
+| ~IDIV~ | signed divide     |
+| ~INC~  | increment         |
+| ~DEC~  | decrement         |
+| ~NEG~  | negate            |
+|--------+-------------------|
+* Control flow
+~CMP~ + Jump instruction:
+|-----+-----------------------------------------------------|
+| JE  | if equal                                            |
+| JZ  | if zero                                             |
+| JNE | if not equal                                        |
+| JNZ | if not zero                                         |
+| JG  | if first operand is greater than second             |
+| JGE | if first operand is greater or equal to second      |
+| JA  | the same that JG, but performs unsigned comparison  |
+| JAE | the same that JGE, but performs unsigned comparison |
+|-----+-----------------------------------------------------|
+** Example
+#+BEGIN_SRC c
+if (rax != 50) {
+    exit();
+} else {
+    right();
+}
+#+END_SRC
+#+BEGIN_SRC asm
+;; compare rax with 50
+cmp rax, 50
+;; perform .exit if rax is not equal 50
+jne .exit
+jmp .right
+#+END_SRC
+
+* Stack
+** Stack Registers
+|-----+-----------------------|
+| RBP | base pointer register |
+| RSP | stack pointer         |
+|-----+-----------------------|
+** Stack Pointer
+#+BEGIN_SRC asm
+global _start
+
+section .text
+
+_start:
+    mov rax, 1
+    mov rdx, 2
+    push rax
+    push rdx
+    mov rax, [rsp + 8]
+#+END_SRC
+RSP points to 2. ~[rsp + 8]~ points to value ~1~.
+
+* Sources
+1. [[Learning assembl  y  for linux x64][Learning assembly for linux x6  4]]
+2. [[https://cs.lmu.edu/~ray/notes/nasmtuto rial/][NASM tutorial]]
