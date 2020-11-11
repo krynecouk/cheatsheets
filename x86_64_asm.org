@@ -1,12 +1,50 @@
 #+TITLE: X86-64 Assembly
 
-* ASM Code
+* x86-64 Assembly Syntaxes
+** AT&T
+~[label:] instruction [operands] [# comment]~
+
+E.g.:
+~movl $48, COUNT # Put value 48 in the COUNT variable~
+
+*** Example
+#+BEGIN_SRC asm
+.section .data
+data_items:
+    .long 3,67,34,222,45,75,54,34,44,33,22,11,66,0
+
+.section .text
+.globl _start
+
+_start:
+    movq $0, %rdi
+    movl data_items(,%rdi,4), %eax
+    movl %eax, %ebx
+
+start_loop:
+    cmpl $0, %eax
+    je loop_exit
+    incq %rdi
+    movl data_items(,%rdi,4), %eax
+    cmpl %ebx, %eax
+    jle start_loop
+
+    movl %eax, %ebx
+    jmp start_loop
+
+loop_exit:
+    movq $60, %rax
+    movl %ebx, %edi
+    syscall
+#+END_SRC
+
+** Intel
 ~[label:] instruction [operands] [; comment]~
 
 E.g.:
-~MOV COUNT, 48 ; Put value 48 in the COUNT variable~
+~mov COUNT, 48 ; Put value 48 in the COUNT variable~
 
-* Hello World
+*** Example#1
 [[syscall table][syscall table]]
 #+BEGIN_SRC c
 size_t sys_write(unsigned int fd, const char * buf, size_t count);
@@ -28,71 +66,7 @@ _start:
     mov    rdi, 0     ; 0 return - success
     syscall
 #+END_SRC
-* Sections
-|------+-------------------------------------------------------------|
-| data | section is used for declaring initialized data or constants |
-| bss  | section is used for declaring non initialized variables     |
-| text | section is used for code                                    |
-|------+-------------------------------------------------------------|
-
-* Registers
-General-purpose registers - there are 16 general-purpose registers - rax, rbx, rcx, rdx, rbp, rsp, rsi, rdi, r8, r9, r10, r11, r12, r13, r14, r15.
-|-----+----------------------------------------------------------------------------|
-| rax | temporary register; when we call a syscal, rax must contain syscall number |
-| rdi | first argument                                                             |
-| rsi | second argument                                                            |
-| rdx | third argument                                                             |
-| rcx | fourth argument                                                            |
-| r8  | fifth argument                                                             |
-| r9  | sixth                                                                      |
-|-----+----------------------------------------------------------------------------|
-Other arguments are 'passed' via stack.
-
-* Data Types
-|--------------+---------|
-| ~BYTE~       | 8 bits  |
-| ~WORD~       | 2 bytes |
-| ~DOUBLEWORD~ | 4 bytes |
-| ~QUADWORD~   | 8 bytes |
-|--------------+---------|
-
-* Pseudo-instructions
-#+BEGIN_SRC asm
-section .data
-    num1:   equ 100
-    num2:   equ 50
-    msg:    db "Sum is correct", 10
-#+END_SRC
-- DB, DW, DD, DQ, DT, DO, DY and DZ - are used for declaring initialized data. For example: ~db 0x01,0x02,0x03,0x04 ; 4 bytes~
-- RESB, RESW, RESD, RESQ, REST, RESO, RESY and RESZ - are used for declaring non initialized variables
-- INCBIN - includes External Binary Files
-- EQU - defines constant. For example: ~one equ 1~
-- TIMES - Repeating Instructions or Data. (description will be in next posts)
-* Arithmetic
-|--------+-------------------|
-| ~ADD~  | integer add       |
-| ~SUB~  | substract         |
-| ~MUL~  | unsigned multiply |
-| ~IMUL~ | signed multiply   |
-| ~DIV~  | unsigned divide   |
-| ~IDIV~ | signed divide     |
-| ~INC~  | increment         |
-| ~DEC~  | decrement         |
-| ~NEG~  | negate            |
-|--------+-------------------|
-* Control flow
-~CMP~ + Jump instruction:
-|-----+-----------------------------------------------------|
-| JE  | if equal                                            |
-| JZ  | if zero                                             |
-| JNE | if not equal                                        |
-| JNZ | if not zero                                         |
-| JG  | if first operand is greater than second             |
-| JGE | if first operand is greater or equal to second      |
-| JA  | the same that JG, but performs unsigned comparison  |
-| JAE | the same that JGE, but performs unsigned comparison |
-|-----+-----------------------------------------------------|
-** Example
+*** Example#2
 #+BEGIN_SRC c
 if (rax != 50) {
     exit();
@@ -107,28 +81,284 @@ cmp rax, 50
 jne .exit
 jmp .right
 #+END_SRC
+* Compilation & linker
+#+BEGIN_SRC sh
+as <source_code>.s -o <object_code>.o && /
+ld <object_code>.o -o <executable>
+#+END_SRC
+* Directives
+** Sections
+Everything after ~.~ is not translated (assembler directive/pseudo operation). Serves only for assembler.
+|------+-------------------------------------------------------------|
+| data | section is used for declaring initialized data or constants |
+| bss  | section is used for declaring non initialized variables     |
+| text | section is used for code                                    |
+|------+-------------------------------------------------------------|
+** Memory Locations
+|----------+----------------------------------|
+| ~.byte~  | reserves memory per byte         |
+| ~.int~   | reserves memory per 4 bytes      |
+| ~.long~  | reserves memory per 8 bytes      |
+| ~.ascii~ | reserves memory per ascii string |
+|----------+----------------------------------|
+[[https://docs.oracle.com/cd/E26502_01/html/E28388/eoiyg.html][More...]]
 
-* Stack
-** Stack Registers
-|-----+-----------------------|
-| RBP | base pointer register |
-| RSP | stack pointer         |
-|-----+-----------------------|
-** Stack Pointer
+* Registers
+** General purpose registers
+There are 16 general-purpose registers - rax, rbx, rcx, rdx, rbp, rsp, rsi, rdi, r8, r9, r10, r11, r12, r13, r14, r15.
+|-----+----------------------------------------------------------------------------|
+| rax | temporary register; when we call a syscal, rax must contain syscall number |
+| rdi | first argument                                                             |
+| rsi | second argument                                                            |
+| rdx | third argument                                                             |
+| rcx | fourth argument                                                            |
+| r8  | fifth argument                                                             |
+| r9  | sixth                                                                      |
+|-----+----------------------------------------------------------------------------|
+Other arguments are 'passed' via stack.
+** Special purpose registers
+|------+------------------------------------------------------------|
+| rbp  | base pointer register - constant reference to a stackframe |
+| rsp  | stack pointer                                              |
+| rax  | function return value                                      |
+| rdi  | holds the return status                                    |
+| etc. |                                                            |
+|------+------------------------------------------------------------|
+
+* Data Types
+|--------------+---------|
+| ~BYTE~       | 8 bits  |
+| ~WORD~       | 2 bytes |
+| ~DOUBLEWORD~ | 4 bytes |
+| ~QUADWORD~   | 8 bytes |
+|--------------+---------|
+
+* Control flow
+** Unconditional
+Jumps every time.
+** Conditional
+~cmp~ + Jump instruction:
+|-------+-------------------------------------------------------------------------|
+| ~je~  | Jump if the values were equal                                           |
+| ~jg~  | Jump if the second value was greater than the first value12             |
+| ~jge~ | Jump if the second value was greater than or equal to the first value   |
+| ~jl~  | Jump if the second value was less than the first value                  |
+| ~jle~ | Jump if the second value was less than or equal to the first value      |
+| ~jmp~ | Jump no matter what. This does not need to be preceeded by a comparison |
+|-------+-------------------------------------------------------------------------|
+
+* Addressing Modes
+General form of memory address is: ~ADDRESS_OR_OFFSET(%BASE_OR_OFFSET,%INDEX,MULTIPLIER)~
+To perform address calculation   : ~FINAL ADDRESS = ADDRESS_OR_OFFSET + %BASE_OR_OFFSET + %INDEX * MULTIPLIER~
+
+** Immediate
+Data to access is embedded in the instruction itself.
 #+BEGIN_SRC asm
-global _start
+movq $12, %rax
+#+END_SRC
+** Direct
+Instruction contains the memory address to access.
+#+BEGIN_SRC asm
+movq ADDRESS, %eax
+#+END_SRC
+** Indexed
+Instruction contains a memory address to access, and also specifies an index register to offset that address.
+#+BEGIN_SRC asm
+movq BEGINNINGADDRESS(,%INDEXREGISTER,WORDSIZE)
+movq string_start(,%ecx, 1), %eax
+#+END_SRC
+** Indirect
+Instruction contains a register that contains a pointer to where the data should be accessed.
+#+BEGIN_SRC asm
+movq (%eax), %ebx
+#+END_SRC
+** Base pointer
+Instruction contains a register that contains a pointer to where the data should be accessed, and also number called the offset to add to the register’s value before using it for lookup.
+#+BEGIN_SRC asm
+movq 4(%eax), %ebx
+#+END_SRC
+* Stack Flow
+** Before fn
+1. ~push~ parameters in reverse order
+2. ~call~ function that implicitly:
+   a. ~push~ next instruction (Return address)
+   b. modify the instruction pointer (~eip~) to point to the start of the function
+#+BEGIN_SRC
+Parameter N
+...
+Parameter 2
+Parameter 1
+Return Address <-- (%rsp)
+#+END_SRC
+** Inside fn
+*** Prologue
+1. ~pushq %rbp~ of the old ~rbp~. This effectively makes a chain of rbp pointers on some machines you can "unwind the stack" or print a "stack trace" by following this chain of pointers.
+2. ~movq %rsp, %rbp~ base pointer now is a constant reference to our stack frame
+#+BEGIN_SRC
+Parameter N    <-- N*8(%rbp)
+...
+Parameter 2    <-- 24(%rbp)
+Parameter 1    <-- 16(%rbp)
+Return Address <-- 8(%rbp)
+Old %rbp           <-- (%rsp) and (%rbp)
+#+END_SRC
+*** Main
+1. ~subq $16, %rsp~ create space for 2 ~WORD~ local variables
+#+BEGIN_SRC
+Parameter N    <-- N*8(%rbp)
+...
+Parameter 2    <-- 24(%rbp)
+Parameter 1    <-- 16(%rbp)
+Return Address <-- 8(%rbp)
+Old %rbp           <-- (%rsp) and (%rbp)
+Local Var 1    <-- -8(%rbp)
+Local Var 2    <-- -16(%rbp) and (%rsp)
+#+END_SRC
+*** Epilogue
+1. ~movq $xy %eax~ store return value
+2. ~movq %rbp %rsp~ and ~popq %rbp~ reset the stack to what it was when it was called
+3. ~ret~ function that implicitly:
+   a. ~pop~ Return address
+   b. modify the instruction pointer (~eip~) to point to the popped value
+** Example#1
+*** NO-ABI
+#+BEGIN_SRC asm
+.section .data
+.section .text
+.globl _start
+_start:
+    pushq $3                  #push second argument
+    pushq $2                  #push first argument
+    call  power               #call the function
+    addq  $16, %rsp           #move the stack pointer back
 
-section .text
+    pushq %rax                #save the first answer before
+                              #calling the next function
+    pushq $2                  #push second argument
+    pushq $5                  #push first argument
+    call  power               #call the function
+    addq  $16, %rsp           #move the stack pointer back
+    popq  %rdi                #The second answer is already
+                              #in %rax.  We saved the
+                              #first answer onto the stack,
+                              #so now we can just pop it
+                              #out into %rdi (this register will be set up for syscall)
+    addq  %rax, %rdi          #add them together
+                              #the result is in %ebx
+    movq  $60, %rax           #exit (%rdi is returned)
+    syscall
+
+.type power, @function
+power:
+    pushq %rbp           #save old base pointer
+    movq  %rsp, %rbp     #make stack pointer the base pointer
+    subq  $8, %rsp       #get room for our local storage
+    movq  16(%rbp), %rbx #put first argument in %rbx
+    movq  24(%rbp), %rcx #put second argument in %rcx
+    movq  %rbx, -8(%rbp) #store current result
+power_loop_start:
+    cmpq  $1, %rcx       #if the power is 1, we are done
+    je    end_power
+    movq  -8(%rbp), %rax #move the current result into %rax
+    imulq %rbx, %rax     #multiply the current result by
+                         #the base number
+    movq  %rax, -8(%rbp) #store the current result
+    decq  %rcx           #decrease the power
+    jmp   power_loop_start #run for the next power
+
+end_power:
+    movq -8(%rbp), %rax  #return value goes in %rax
+    movq %rbp, %rsp      #restore the stack pointer
+    popq %rbp            #restore the base pointer
+    ret
+#+END_SRC
+
+*** [[https://en.wikipedia.org/wiki/X86_calling_conventions#System_V_AMD64_ABI][ABI]] (without stack because 1-6 params passed by registers)
+#+BEGIN_SRC asm
+.section .data
+.section .text
+.globl _start
+_start:
+    movq $3, %rsi             #push second argument
+    movq $2, %rdi             #push first argument
+    call  power               #call the function
+    
+    pushq %rax                #save the first answer before
+                              #calling the next function
+    movq $2, %rsi             #push second argument
+    movq $5, %rdi             #push first argument
+    call  power               #call the function
+    
+    popq  %rdi                #The second answer is already
+                              #in %rax.  We saved the
+                              #first answer onto the stack,
+                              #so now we can just pop it
+                              #out into %rdi (this register will be set up for syscall)
+    addq  %rax, %rdi          #add them together
+                              #the result is in %ebx
+    movq  $60, %rax           #exit (%rdi is returned)
+    syscall
+
+.type power, @function
+power:
+    #we do no use stack, so we do not change %rbp, %rsp
+    movq $1, %rax #result in rax
+power_loop_start:
+    cmpq  $0, %rsi         #if the power is 0, we are done
+    je    end_power
+    imulq %rdi, %rax       #multiply the current result by
+                           #the base number
+    decq  %rsi             #decrease the power
+    jmp   power_loop_start #run for the next power
+
+end_power:
+    ret
+#+END_SRC
+** Example#2
+#+BEGIN_SRC asm
+.section .data
+.section .text
+.globl _start
+.globl factorial
 
 _start:
-    mov rax, 1
-    mov rdx, 2
-    push rax
-    push rdx
-    mov rax, [rsp + 8]
+    pushq $4
+    call factorial
+    addq $8, %rsp
+
+    movq %rax, %rdi
+    movq  $60, %rax
+    syscall
+
+.type factorial, @function
+factorial:
+    # prologue
+    pushq %rbp
+    movq %rsp, %rbp
+    # main
+    movq 16(%rbp), %rax       #8(%rbp) is RET
+    cmpq $1, %rax
+    je factorial_end
+    decq %rax
+    pushq %rax
+    call factorial
+    movq 16(%rbp), %rbx
+    imulq %rbx, %rax
+factorial_end:
+    # epilogue
+    movq %rbp, %rsp
+    popq %rbp
+    ret
 #+END_SRC
-RSP points to 2. ~[rsp + 8]~ points to value ~1~.
+
+* Appendix
+
 
 * Sources
 1. [[Learning assembl  y  for linux x64][Learning assembly for linux x6  4]]
 2. [[https://cs.lmu.edu/~ray/notes/nasmtuto rial/][NASM tutorial]]
+3. [[https://download-mirror.savannah.gnu.org/releases/pgubook/ProgrammingGroundUp-1-0-booksize.pdf][Programming from Ground Up]]
+4. [[https://github.com/realead/pgu_64][Programming from Ground Up 64 bit]]
+5. [[http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/][Linux System Call table]]
+6. [[http://staffwww.fullcoll.edu/aclifton/courses/cs241/syntax.html][Intel vs AT&T Syntax]]
+7. [[http://flint.cs.yale.edu/cs421/papers/x86-asm/asm.html][Nice x86 assembly guide]]
